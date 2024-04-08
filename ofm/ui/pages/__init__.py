@@ -19,3 +19,4 @@ from .home import HomePage
 from .player_profile import PlayerProfilePage
 from .settings import SettingsPage
 from .team_selection import TeamSelectionPage
+from .team_explorer import TeamExplorerPage
