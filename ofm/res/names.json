@@ -6109,7 +6109,13 @@
       "Zigmund",
       "Zolt\\u00e1n"
     ],
-    "female": [],
+    "female": [
+      "Eli\\u0161ka",
+      "Tereza",
+      "Anna",
+      "Ad\\u00e9la",
+      "Nat\\u00e1lie"
+    ],
     "surnames": [
       "Abrah\\u00e1m",
       "Adam",
@@ -7577,34 +7583,6 @@
       "\\u017di\\u017eka",
       "\\u017dof\\u010d\\u00e1k",
       "\\u017d\\u016frek"
-    ]
-  },
-  {
-    "region": "CZE",
-    "male": [
-      "Jakub",
-      "Tom\\u00e1\\u0161",
-      "Jan",
-      "Maty\\u00e1\\u0161",
-      "Adam"
-    ],
-    "female": [
-      "Eli\\u0161ka",
-      "Tereza",
-      "Anna",
-      "Ad\\u00e9la",
-      "Nat\\u00e1lie"
-    ],
-    "surnames": [
-      "Adamec",
-      "Babik",
-      "Bartusek",
-      "Kopriva",
-      "Krempasky",
-      "Radecki",
-      "Skoda",
-      "Zelenka",
-      "Zima"
     ]
   },
   {
