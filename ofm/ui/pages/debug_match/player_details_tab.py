@@ -104,7 +104,7 @@ class TeamTableComponent(ttk.Frame):
         self.team_formation_label.grid(row=1, column=0, padx=10, pady=10, sticky=EW)
 
         self.team_strategy_label = ttk.Label(self, text="Strategy: ")
-        self.team_strategy = ttk.Combobox(self, values=[""])
+        self.team_strategy = ttk.Combobox(self, values=[""], state="readonly")
         self.team_strategy_label.grid(row=2, column=0, padx=10, pady=10, sticky=EW)
         self.team_strategy.grid(row=2, column=1, padx=10, pady=10, sticky=EW)
 
