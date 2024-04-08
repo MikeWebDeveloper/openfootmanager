@@ -87,6 +87,7 @@ class GUI:
             "team_selection": self._add_frame(TeamSelectionPage),
             "settings": self._add_frame(SettingsPage),
             "player_profile": self._add_frame(PlayerProfilePage),
+            "team_explorer": self._add_frame(TeamExplorerPage),
         }
 
         self.current_page = self.pages["home"]

@@ -114,3 +114,39 @@ def test_formation_change_formation(simulation_teams):
                 assert player.current_position == Positions.MF
             if player in formation.fw:
                 assert player.current_position == Positions.FW
+
+
+def test_move_player_from_fw_to_mf(simulation_teams):
+    formation = simulation_teams[0].formation
+    original_formation = deepcopy(formation)
+
+    player = formation.fw[0]
+    player_out = formation.mf[0]
+    formation.move_player(player, player_out)
+
+    assert original_formation != formation
+    assert player in formation.mf
+    assert player_out in formation.fw
+    assert player.current_position == Positions.MF
+    assert player_out.current_position == Positions.FW
+    assert original_formation.df == formation.df
+    assert original_formation.gk == formation.gk
+    assert original_formation.bench == formation.bench
+
+
+def test_move_player_fw_to_gk(simulation_teams):
+    formation = simulation_teams[0].formation
+    original_formation = deepcopy(formation)
+
+    player = formation.fw[0]
+    player_out = formation.gk
+    formation.move_player(player, player_out)
+
+    assert original_formation != formation
+    assert player == formation.gk
+    assert player_out in formation.fw
+    assert player.current_position == Positions.GK
+    assert player_out.current_position == Positions.FW
+    assert original_formation.df == formation.df
+    assert original_formation.mf == formation.mf
+    assert original_formation.bench == formation.bench

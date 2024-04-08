@@ -23,6 +23,7 @@ from .home_controller import HomePageController
 from .player_profile_controller import PlayerProfilePageController
 from .settings_controller import SettingsController
 from .team_selection_controller import TeamSelectionController
+from .team_explorer_controller import TeamExplorerController
 
 
 class OFMController(ControllerInterface):
@@ -48,6 +49,10 @@ class OFMController(ControllerInterface):
             "settings": SettingsController(self, self.gui.pages["settings"]),
             "player_profile": PlayerProfilePageController(
                 self, self.gui.pages["player_profile"]
+            ),
+            "team_explorer": TeamExplorerController(
+                self,
+                self.gui.pages["team_explorer"],
             ),
         }
 

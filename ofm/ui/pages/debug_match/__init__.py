@@ -70,8 +70,7 @@ class DebugMatchPage(ttk.Frame):
         self.delay_label.grid(row=4, column=0, padx=5, pady=5, sticky=W)
 
         self.delay_box = ttk.Combobox(
-            self,
-            values=list(x.value for x in DelayComboBoxValues),
+            self, values=list(x.value for x in DelayComboBoxValues), state="readonly"
         )
         self.delay_box.set(DelayComboBoxValues.NONE.value)
         self.delay_box.grid(row=4, column=1, padx=5, pady=5, sticky=NSEW)
@@ -79,8 +78,7 @@ class DebugMatchPage(ttk.Frame):
         self.commentary_label = ttk.Label(self, text="Commentary verbosity:")
         self.commentary_label.grid(row=5, column=0, padx=5, pady=5, sticky=W)
         self.commentary_box = ttk.Combobox(
-            self,
-            values=list(x.value for x in CommentaryVerbosity),
+            self, values=list(x.value for x in CommentaryVerbosity), state="readonly"
         )
         self.commentary_box.set(CommentaryVerbosity.ALL.value)
         self.commentary_box.grid(row=5, column=1, padx=5, pady=5, sticky=NSEW)
