@@ -84,12 +84,16 @@ class ShotEvent(SimulationEvent):
                 + self.defending_player.attributes.gk.positioning
             ) / 4
         else:
-            gk_skills = self.defending_player.attributes.gk.get_general_overall()
+            gk_skills = (
+                self.defending_player.attributes.gk.jumping
+                + self.defending_player.attributes.gk.positioning * 2
+                + self.defending_player.attributes.gk.reflexes
+            ) / 4
 
         probabilities = [
             110 - shot_on_goal,
             gk_skills,
-            120 - gk_skills,  # Even very good goalies can let balls pass sometimes
+            110 - gk_skills,  # Even very good goalies can let balls pass sometimes
         ]
         return random.choices(outcomes, probabilities)[0]
 
