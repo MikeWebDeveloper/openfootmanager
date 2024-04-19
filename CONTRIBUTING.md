@@ -42,9 +42,41 @@ Your code must be GPLv3 compliant, which means you understand that any code subm
 
 Once you understand that concept, you're welcome to submit new code.
 
+### Installing dependencies
+
+This project uses [Pipenv](https://pipenv.pypa.io/en/latest/) to manage virtual environments, and you can install it with the following command:
+
+```
+pip install pipenv
+```
+
+After cloning the repository, install the virtualenv and its dependencies (black, isort, flake8, pytest, pre-commit, ttkbootstrap):
+
+```
+pipenv install --dev
+```
+
+To commit to the repo, install pre-commit:
+
+```
+pipenv run python -m pre-commit install
+```
+
+To run the tests:
+
+```
+pipenv run pytest
+```
+
+To run the debug version of the project, use the `run.py` file at the root of this project folder:
+
+```
+pipenv run python run.py
+```
+
 ### Understanding the code
 
-Soon I'll provide more explanations about the code. For now, read the code and try to understand it. See the tests to see what is expected from the code.
+Most of the most important features are covered by unit tests. For an overview of how the match simulation works, see [Match Simulation in Openfootmanager](docs/source/simulation.rst).
 
 ### Fork and Pull
 
@@ -54,8 +86,9 @@ If you're working on a new feature that has no prior **Issue** related to it, pl
 
 ### Code conventions
 
-- Follow [PEP 8](https://www.python.org/dev/peps/pep-0008/). It's a must. Run autopep8 to ensure that your code is PEP 8-compliant.
-- I'm still studying a way to make the entire code uniform, and I'm inclined to only accepting [Black](https://github.com/psf/black) formatted code.
+- Use pre-commit hooks to automatically format and test your code before you submit any commits. See **Installing dependencies** for more information.
+- Follow [PEP 8](https://www.python.org/dev/peps/pep-0008/). It's a must. Run flake8 to ensure that your code is PEP 8-compliant.
+- Run [Black](https://github.com/psf/black) and [isort](https://pypi.org/project/isort/) to format your code.
 - Make descriptive variable names, as best as you can.
 - Use typehints as much as possible. Static typing helps others understand what you expect your code to do.
 - Try to keep your code documented. If it's a complex method/function, use docstrings to explain what you need to do.
@@ -73,6 +106,4 @@ I'll soon be adding CI/CD to this repo, and we can test pull requests on the fly
 
 ### Python versions
 
-Python is rapidly changing, and I plan to adjust to Python's changes as we go. Currently supported Python version is 3.11.
-
-This repo's CI/CD will use [tox](https://github.com/tox-dev/tox) to test version compatibility.
+Python is rapidly changing, and I plan to adjust to Python's changes as we go. Currently supported Python version is 3.10 and higher.
