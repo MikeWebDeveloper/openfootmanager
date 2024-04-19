@@ -29,21 +29,38 @@ class TeamExplorerPage(ttk.Frame):
         )
 
         self.team_details = ttk.Frame(self)
+        default_regions = ["UEFA", "CONMEBOL", "CAF", "AFC"]
+        self.region_selection_variable = ttk.StringVar(value=default_regions[0])
         self.region_selection = ttk.Combobox(
             self.team_details,
-            values=["UEFA", "CONMEBOL", "CAF", "AFC"],
+            textvariable=self.region_selection_variable,
+            values=default_regions,
             state="readonly",
         )
-        self.region_selection.set("UEFA")
         self.region_selection.grid(row=0, column=0, padx=10, pady=10, sticky=EW)
 
+        default_countries = ["Spain", "Germany", "England", "France"]
+        self.country_selection_variable = ttk.StringVar(value=default_countries[0])
         self.country_selection = ttk.Combobox(
-            self.team_details, values=["Spain", "Germany", "England", "France"]
+            self.team_details,
+            textvariable=self.country_selection_variable,
+            values=default_countries,
+            state="readonly",
         )
         self.country_selection.set("Spain")
         self.country_selection.grid(row=1, column=0, padx=10, pady=10, sticky=EW)
 
-        self.team_selection = tk.Listbox(self.team_details, height=15, width=30)
+        self.team_selection_items = tk.Variable(
+            value=["Team 1", "Team 2", "Team 3", "Team 4", "Team 5"]
+        )
+        self.team_selection = tk.Listbox(
+            self.team_details,
+            height=15,
+            width=30,
+            listvariable=self.team_selection_items,
+            selectmode=ttk.BROWSE,
+        )
+        self.team_selection.selection_set(0)
         self.team_selection.grid(
             row=2, column=0, rowspan=2, padx=10, pady=10, sticky=EW
         )
@@ -78,7 +95,7 @@ class TeamExplorerPage(ttk.Frame):
             autofit=True,
             paginated=False,
             pagesize=8,
-            height=20,
+            height=18,
         )
         self.team_table.grid(row=0, column=1, rowspan=4, padx=10, pady=10, sticky=EW)
 

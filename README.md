@@ -10,7 +10,43 @@ The purpose of this project is to provide an interesting and fun game for simula
 
 ## INSTALLATION
 
-The game is still under development and it is not even close to ready for gameplay action.
+The game is still under development and it is not even close to ready for gameplay action. However, we already have a debug version of the game for testing purposes.
+
+To run the debug build, ensure that you have Python 3.10 or higher. This project uses [Pipenv](https://pipenv.pypa.io/en/latest/) to manage virtual environments, and you can install it with the following command:
+
+```
+pip install pipenv
+```
+
+After cloning the repository, install the virtualenv and its dependencies using:
+
+```
+pipenv install
+```
+
+For contributors, you might also need development dependencies (black, isort, flake8, pytest, pre-commit):
+
+```
+pipenv install --dev
+```
+
+If you want to commit to the repo, install pre-commit:
+
+```
+pipenv run python -m pre-commit install
+```
+
+To run the tests:
+
+```
+pipenv run pytest
+```
+
+To run the debug version of the project, use the `run.py` file at the root of this project folder:
+
+```
+pipenv run python run.py
+```
 
 ## CONTRIBUTING
 
