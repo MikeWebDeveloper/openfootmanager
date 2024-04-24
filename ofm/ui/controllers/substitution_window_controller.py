@@ -41,10 +41,31 @@ class SubstitutionCommand(Command):
     time: timedelta
     additional_time: timedelta
 
+    def temporary(self, team: TeamSimulation):
+        team.sub_player(
+            self.player_out,
+            self.player_in,
+            self.time,
+            self.additional_time,
+            temporary=True,
+        )
+
     def execute(self, team: TeamSimulation):
         team.sub_player(
-            self.player_out, self.player_in, self.time, self.additional_time
+            self.player_out,
+            self.player_in,
+            self.time,
+            self.additional_time,
+            temporary=False,
         )
+
+    def undo(
+        self,
+        player_in: PlayerSimulation,
+        player_out: PlayerSimulation,
+        team: TeamSimulation,
+    ):
+        team.undo_sub(player_in, player_out)
 
 
 @dataclass

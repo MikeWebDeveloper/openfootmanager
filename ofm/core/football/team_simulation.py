@@ -39,6 +39,7 @@ class GameEventType(Enum):
     RED_CARD = auto()
     OWN_GOAL = auto()
     SUBSTITUTION = auto()
+    TEMPORARY_SUB = auto()
 
 
 @dataclass
@@ -246,6 +247,7 @@ class TeamSimulation:
         player_in: PlayerSimulation,
         time: timedelta,
         additional_time: timedelta,
+        temporary: bool,
     ):
         if player_out.subbed:
             raise SubbingError("Player is already subbed!")
@@ -256,11 +258,37 @@ class TeamSimulation:
 
         self.substitutions += 1
 
-        sub = SubstitutionEvent(
-            player_out, time, GameEventType.SUBSTITUTION, player_in, additional_time
-        )
+        if not temporary:
+            sub = SubstitutionEvent(
+                player_out, time, GameEventType.SUBSTITUTION, player_in, additional_time
+            )
+        else:
+            sub = SubstitutionEvent(
+                player_out,
+                time,
+                GameEventType.TEMPORARY_SUB,
+                player_in,
+                additional_time,
+            )
         self.sub_history.append(sub)
-        self.formation.substitute_player(player_out, player_in)
+        self.formation.substitute_player(player_out, player_in, temporary)
+
+    def undo_sub(self, player_in: PlayerSimulation, player_out: PlayerSimulation):
+        if not player_in.temporary_subbed:
+            raise SubbingError("Player is not temporary subbed!")
+        if player_in.sent_off or player_out.sent_off:
+            raise SubbingError("Cannot un-sub a player that has been sent off!")
+        if player_in.subbed:
+            raise SubbingError("Player was already subbed!")
+
+        self.substitutions -= 1
+
+        for event in self.sub_history:
+            if event.player_subbed_in == player_out:
+                self.sub_history.remove(event)
+                break
+
+        self.formation.undo_substitution(player_out, player_in)
 
     def get_best_penalty_taker(self) -> PlayerSimulation:
         best_penalty_taker = None

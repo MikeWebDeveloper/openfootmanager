@@ -16,6 +16,7 @@
 from dataclasses import dataclass, field
 from typing import Optional, Union
 from copy import copy
+from abc import ABC, abstractmethod
 
 from .player import PlayerSimulation, PlayerTeam, Positions
 
@@ -36,15 +37,6 @@ class FormationError(Exception):
 
 
 @dataclass
-class FormationMemento:
-    gk: Optional[PlayerSimulation] = None
-    df: list[PlayerSimulation] = field(default_factory=list)
-    mf: list[PlayerSimulation] = field(default_factory=list)
-    fw: list[PlayerSimulation] = field(default_factory=list)
-    bench: list[PlayerSimulation] = field(default_factory=list)
-
-
-@dataclass
 class Formation:
     formation_string: str
     gk: Optional[PlayerSimulation] = None
@@ -54,12 +46,10 @@ class Formation:
     bench: list[PlayerSimulation] = field(default_factory=list)
     _players: list[PlayerSimulation] = field(default_factory=list)
     _all_players: list[PlayerSimulation] = field(default_factory=list)
-    _history: list[FormationMemento] = field(default_factory=list)
 
     def __post_init__(self):
         if not self.validate_formation():
             raise FormationError("Invalid formation string!")
-        self._save_history()
 
     @property
     def players(self):
@@ -78,17 +68,6 @@ class Formation:
         self._all_players = self.players
         self._all_players.extend(self.bench)
         return self._all_players
-
-    def _save_history(self):
-        self._history.append(
-            FormationMemento(
-                copy(self.gk),
-                copy(self.df),
-                copy(self.mf),
-                copy(self.fw),
-                copy(self.bench),
-            )
-        )
 
     def get_num_players(self) -> tuple[int, int, int]:
         defenders, midfielders, forwards = self.formation_string.split("-")
@@ -171,12 +150,10 @@ class Formation:
             self.add_player(pos, player)
 
     def substitute_player(
-        self, player_out: PlayerSimulation, player_in: PlayerSimulation
+        self, player_out: PlayerSimulation, player_in: PlayerSimulation, temporary: bool
     ):
         if player_in not in self.all_players or player_out not in self.all_players:
             raise FormationError("Invalid player!")
-
-        self._save_history()
 
         current_position = player_out.current_position
 
@@ -191,16 +168,42 @@ class Formation:
         else:
             raise FormationError("Invalid position!")
 
-        player_out.subbed = True
+        if temporary:
+            player_out.temporary_subbed = not player_out.temporary_subbed
+            player_in.temporary_subbed_in = not player_in.temporary_subbed_in
+        else:
+            player_out.subbed = True
+            player_in.subbed_in = True
+
         self.bench.remove(player_in)
         self.bench.append(player_out)
         player_in.current_position = current_position
 
+    def undo_substitution(
+        self, player_out: PlayerSimulation, player_in: PlayerSimulation
+    ):
+        if not player_in.temporary_subbed:
+            raise FormationError("Player is not temporarily subbed!")
+
+        player_in.temporary_subbed = False
+
+        self.bench.remove(player_in)
+        self.bench.append(player_out)
+
+        if player_in.current_position == Positions.GK:
+            self.gk = player_in
+        elif player_in.current_position == Positions.DF:
+            self.df[self.df.index(player_out)] = player_in
+        elif player_in.current_position == Positions.MF:
+            self.mf[self.mf.index(player_out)] = player_in
+        elif player_in.current_position == Positions.FW:
+            self.fw[self.fw.index(player_out)] = player_in
+        else:
+            raise FormationError("Invalid position!")
+
     def move_player(self, player: PlayerSimulation, player_out: PlayerSimulation):
         if player not in self.all_players:
             raise FormationError("Invalid player!")
-
-        self._save_history()
 
         pos = player.current_position
         new_pos = player_out.current_position
@@ -229,16 +232,6 @@ class Formation:
             self.fw[self.fw.index(player)] = player_out
         else:
             raise FormationError("Invalid position!")
-
-    def restore(self, memento: FormationMemento):
-        self.gk = memento.gk
-        self.df = memento.df
-        self.mf = memento.mf
-        self.fw = memento.fw
-        self.bench = memento.bench
-
-    def clear_history(self):
-        self._history.clear()
 
     def validate_formation(self) -> bool:
         return self.formation_string in FORMATION_STRINGS

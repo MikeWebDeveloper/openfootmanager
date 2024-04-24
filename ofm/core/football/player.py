@@ -237,7 +237,10 @@ class PlayerSimulation:
         self.statistics = PlayerStats(player.details.player_id)
         self.initial_stamina = player.details.stamina
         self.received_ball: Optional[PlayerSimulation] = None
+        self.temporary_subbed = False
+        self.temporary_subbed_in = False
         self.subbed = False
+        self.subbed_in = True
         self.able_to_play = True
         self.minutes_played = datetime.timedelta(seconds=0)
 

@@ -256,6 +256,7 @@ def test_substitute_same_player(live_game):
             home_team.formation.fw[0],
             timedelta(minutes=45),
             timedelta(minutes=0),
+            temporary=False,
         )
 
 
@@ -268,6 +269,7 @@ def test_substitute_invalid_player(live_game):
             away_team.formation.fw[0],
             timedelta(minutes=45),
             timedelta(minutes=0),
+            temporary=False,
         )
 
 
@@ -283,7 +285,11 @@ def test_substitute_player(live_game):
         timedelta(minutes=0),
     )
     home_team.sub_player(
-        player_out, player_in, timedelta(minutes=45), timedelta(minutes=0)
+        player_out,
+        player_in,
+        timedelta(minutes=45),
+        timedelta(minutes=0),
+        temporary=False,
     )
     assert player_in == home_team.formation.fw[0]
     assert player_out in home_team.formation.bench
@@ -296,7 +302,11 @@ def test_substitute_invalid_order(live_game):
     player_out = home_team.formation.fw[0]
     with pytest.raises(ValueError):
         home_team.sub_player(
-            player_in, player_out, timedelta(minutes=45), timedelta(minutes=0)
+            player_in,
+            player_out,
+            timedelta(minutes=45),
+            timedelta(minutes=0),
+            temporary=False,
         )
 
 
@@ -307,7 +317,11 @@ def test_substitute_no_available_substitutions(live_game):
     player_out = home_team.formation.fw[0]
     with pytest.raises(SubbingError):
         home_team.sub_player(
-            player_out, player_in, timedelta(minutes=45), timedelta(minutes=0)
+            player_out,
+            player_in,
+            timedelta(minutes=45),
+            timedelta(minutes=0),
+            temporary=False,
         )
 
 
@@ -318,7 +332,11 @@ def test_substitute_sent_off_player(live_game):
     player_out.statistics.red_cards = 1
     with pytest.raises(SubbingError):
         home_team.sub_player(
-            player_out, player_in, timedelta(minutes=45), timedelta(minutes=0)
+            player_out,
+            player_in,
+            timedelta(minutes=45),
+            timedelta(minutes=0),
+            temporary=False,
         )
 
 
@@ -329,7 +347,11 @@ def test_substitute_player_in_was_sent_off(live_game):
     player_out = home_team.formation.fw[0]
     with pytest.raises(SubbingError):
         home_team.sub_player(
-            player_out, player_in, timedelta(minutes=45), timedelta(minutes=0)
+            player_out,
+            player_in,
+            timedelta(minutes=45),
+            timedelta(minutes=0),
+            temporary=False,
         )
 
 
@@ -342,3 +364,39 @@ def test_get_player_on_pitch(live_game):
             player = home_team.get_player_on_pitch(position)
             assert isinstance(player, PlayerSimulation) is True
             assert player != unable_player
+
+
+def test_substitute_player_temporarily(live_game):
+    home_team = live_game.engine.home_team
+    player_in = home_team.formation.bench[0]
+    player_out = home_team.formation.fw[0]
+    home_team.sub_player(
+        player_out,
+        player_in,
+        timedelta(minutes=45),
+        timedelta(minutes=0),
+        temporary=True,
+    )
+    assert player_in == home_team.formation.fw[0]
+    assert player_out in home_team.formation.bench
+    assert home_team.sub_history != []
+    assert home_team.sub_history[-1].player_subbed_in == player_in
+    assert player_out.temporary_subbed is True
+
+
+def test_substitute_player_temporarily_undo(live_game):
+    home_team = live_game.engine.home_team
+    player_in = home_team.formation.bench[0]
+    player_out = home_team.formation.fw[0]
+    home_team.sub_player(
+        player_out,
+        player_in,
+        timedelta(minutes=45),
+        timedelta(minutes=0),
+        temporary=True,
+    )
+    home_team.undo_sub(player_out, player_in)
+    assert player_out == home_team.formation.fw[0]
+    assert player_in in home_team.formation.bench
+    assert home_team.sub_history == []
+    assert player_out.temporary_subbed is False
