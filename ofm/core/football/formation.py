@@ -15,8 +15,6 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 from dataclasses import dataclass, field
 from typing import Optional, Union
-from copy import copy
-from abc import ABC, abstractmethod
 
 from .player import PlayerSimulation, PlayerTeam, Positions
 

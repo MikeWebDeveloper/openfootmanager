@@ -22,8 +22,8 @@ from .debug_match_controller import DebugMatchController
 from .home_controller import HomePageController
 from .player_profile_controller import PlayerProfilePageController
 from .settings_controller import SettingsController
-from .team_selection_controller import TeamSelectionController
 from .team_explorer_controller import TeamExplorerController
+from .team_selection_controller import TeamSelectionController
 
 
 class OFMController(ControllerInterface):
