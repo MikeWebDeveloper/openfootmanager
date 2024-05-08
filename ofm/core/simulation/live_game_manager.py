@@ -16,7 +16,7 @@
 from threading import Thread
 from typing import Optional
 
-from .simulation import LiveGame, TeamSimulation
+from .simulation import LiveGame
 
 
 class LiveGameManager:
@@ -25,6 +25,9 @@ class LiveGameManager:
         self.live_game: Optional[LiveGame] = None
 
     def start_live_game(self):
+        if self.live_game is None:
+            return
+
         if not self.live_game.is_game_over:
             self.live_game.run()
 
