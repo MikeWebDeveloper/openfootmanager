@@ -108,6 +108,15 @@ class TeamSimulation:
         self._score = len(self.goals_history)
         return self._score
 
+    @property
+    def temporary_subs(self) -> int:
+        subs = 0
+        for player in self.formation.players:
+            if player.temporary_subbed_in:
+                subs += 1
+
+        return subs
+
     def add_game_event(self, game_event: GameEvent):
         self.game_events.append(game_event)
 
@@ -246,21 +255,27 @@ class TeamSimulation:
         player_in: PlayerSimulation,
         time: timedelta,
         additional_time: timedelta,
+        temporary: bool,
     ):
-        if player_out.subbed:
+        if player_in.subbed:
             raise SubbingError("Player is already subbed!")
         if player_out.sent_off or player_in.sent_off:
             raise SubbingError("Cannot sub a player that has been sent off!")
         if self.substitutions == self.max_substitutions:
             raise SubbingError(f"Already made {self.max_substitutions} substitutions!")
 
-        self.substitutions += 1
+        if not temporary:
+            sub = SubstitutionEvent(
+                player_out,
+                time,
+                GameEventType.SUBSTITUTION,
+                player_in,
+                additional_time,
+            )
+            self.sub_history.append(sub)
+            self.substitutions += 1
 
-        sub = SubstitutionEvent(
-            player_out, time, GameEventType.SUBSTITUTION, player_in, additional_time
-        )
-        self.sub_history.append(sub)
-        self.formation.substitute_player(player_out, player_in)
+        self.formation.substitute_player(player_out, player_in, temporary)
 
     def get_best_penalty_taker(self) -> PlayerSimulation:
         best_penalty_taker = None
