@@ -39,7 +39,6 @@ class GameEventType(Enum):
     RED_CARD = auto()
     OWN_GOAL = auto()
     SUBSTITUTION = auto()
-    TEMPORARY_SUB = auto()
 
 
 @dataclass
@@ -108,6 +107,15 @@ class TeamSimulation:
     def score(self) -> int:
         self._score = len(self.goals_history)
         return self._score
+
+    @property
+    def temporary_subs(self) -> int:
+        subs = 0
+        for player in self.formation.players:
+            if player.temporary_subbed_in:
+                subs += 1
+
+        return subs
 
     def add_game_event(self, game_event: GameEvent):
         self.game_events.append(game_event)
@@ -249,46 +257,25 @@ class TeamSimulation:
         additional_time: timedelta,
         temporary: bool,
     ):
-        if player_out.subbed:
+        if player_in.subbed:
             raise SubbingError("Player is already subbed!")
         if player_out.sent_off or player_in.sent_off:
             raise SubbingError("Cannot sub a player that has been sent off!")
         if self.substitutions == self.max_substitutions:
             raise SubbingError(f"Already made {self.max_substitutions} substitutions!")
 
-        self.substitutions += 1
-
         if not temporary:
-            sub = SubstitutionEvent(
-                player_out, time, GameEventType.SUBSTITUTION, player_in, additional_time
-            )
-        else:
             sub = SubstitutionEvent(
                 player_out,
                 time,
-                GameEventType.TEMPORARY_SUB,
+                GameEventType.SUBSTITUTION,
                 player_in,
                 additional_time,
             )
-        self.sub_history.append(sub)
+            self.sub_history.append(sub)
+            self.substitutions += 1
+
         self.formation.substitute_player(player_out, player_in, temporary)
-
-    def undo_sub(self, player_in: PlayerSimulation, player_out: PlayerSimulation):
-        if not player_in.temporary_subbed:
-            raise SubbingError("Player is not temporary subbed!")
-        if player_in.sent_off or player_out.sent_off:
-            raise SubbingError("Cannot un-sub a player that has been sent off!")
-        if player_in.subbed:
-            raise SubbingError("Player was already subbed!")
-
-        self.substitutions -= 1
-
-        for event in self.sub_history:
-            if event.player_subbed_in == player_out:
-                self.sub_history.remove(event)
-                break
-
-        self.formation.undo_substitution(player_out, player_in)
 
     def get_best_penalty_taker(self) -> PlayerSimulation:
         best_penalty_taker = None
