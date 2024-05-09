@@ -155,16 +155,7 @@ class Formation:
 
         current_position = player_out.current_position
 
-        if current_position == Positions.GK:
-            self.gk = player_in
-        elif current_position == Positions.DF:
-            self.df[self.df.index(player_out)] = player_in
-        elif current_position == Positions.MF:
-            self.mf[self.mf.index(player_out)] = player_in
-        elif current_position == Positions.FW:
-            self.fw[self.fw.index(player_out)] = player_in
-        else:
-            raise FormationError("Invalid position!")
+        self._assign_player_to_position(player_in, player_out, current_position)
 
         if temporary:
             player_out.temporary_subbed = not player_out.temporary_subbed
@@ -188,13 +179,23 @@ class Formation:
         self.bench.remove(player_in)
         self.bench.append(player_out)
 
-        if player_in.current_position == Positions.GK:
+        self._assign_player_to_position(
+            player_in, player_out, player_in.current_position
+        )
+
+    def _assign_player_to_position(
+        self,
+        player_in: PlayerSimulation,
+        player_out: PlayerSimulation,
+        position: Positions,
+    ):
+        if position == Positions.GK:
             self.gk = player_in
-        elif player_in.current_position == Positions.DF:
+        elif position == Positions.DF:
             self.df[self.df.index(player_out)] = player_in
-        elif player_in.current_position == Positions.MF:
+        elif position == Positions.MF:
             self.mf[self.mf.index(player_out)] = player_in
-        elif player_in.current_position == Positions.FW:
+        elif position == Positions.FW:
             self.fw[self.fw.index(player_out)] = player_in
         else:
             raise FormationError("Invalid position!")
@@ -209,27 +210,8 @@ class Formation:
         player.current_position = new_pos
         player_out.current_position = pos
 
-        if new_pos == Positions.GK:
-            self.gk = player
-        elif new_pos == Positions.DF:
-            self.df[self.df.index(player_out)] = player
-        elif new_pos == Positions.MF:
-            self.mf[self.mf.index(player_out)] = player
-        elif new_pos == Positions.FW:
-            self.fw[self.fw.index(player_out)] = player
-        else:
-            raise FormationError("Invalid position!")
-
-        if pos == Positions.GK:
-            self.gk = player_out
-        elif pos == Positions.DF:
-            self.df[self.df.index(player)] = player_out
-        elif pos == Positions.MF:
-            self.mf[self.mf.index(player)] = player_out
-        elif pos == Positions.FW:
-            self.fw[self.fw.index(player)] = player_out
-        else:
-            raise FormationError("Invalid position!")
+        self._assign_player_to_position(player, player_out, new_pos)
+        self._assign_player_to_position(player_out, player, pos)
 
     def validate_formation(self) -> bool:
         return self.formation_string in FORMATION_STRINGS
