@@ -291,82 +291,86 @@ class PlayerProfilePage(ttk.Frame):
         # PLAYER DETAILS
 
         self.player_personal_info_frame = ttk.Frame(self.player_details_frame)
-        self.player_name_image_frame = ttk.Frame(self.player_personal_info_frame)
 
         self.player_image = ttk.PhotoImage(file="ofm/res/images/placeholder.png")
         self.player_image = self.player_image.subsample(5, 5)
         width = self.player_image.width()
         height = self.player_image.height()
 
-        self.canvas = ttk.Canvas(self.player_name_image_frame)
+        self.canvas = ttk.Canvas(self.player_personal_info_frame)
         self.canvas.create_image(0, 0, image=self.player_image, anchor=NW)
         self.canvas.config(width=width, height=height)
-        self.canvas.grid(row=0, column=0, padx=10, pady=10, sticky=NSEW)
+        self.canvas.grid(row=0, rowspan=5, column=0, padx=10, pady=10, sticky=NSEW)
 
         self.player_name_value = ttk.StringVar(value="Allejo")
 
         self.player_name_label = ttk.Label(
-            self.player_name_image_frame,
+            self.player_personal_info_frame,
             textvariable=self.player_name_value,
             font=("Helvetica", 20),
         )
-        self.player_name_label.grid(row=0, column=1, padx=10, pady=10, sticky=NSEW)
+        self.player_name_label.grid(row=0, column=1, padx=20, pady=10, sticky=NSEW)
 
-        self.player_name_image_frame.grid(
-            row=0, column=0, columnspan=2, padx=10, pady=10, sticky=NSEW
-        )
+        self.player_personal_details_frame = ttk.Frame(self.player_personal_info_frame)
         self.player_birth_date_label = ttk.Label(
-            self.player_personal_info_frame, text="Birth date: ", font=("Helvetica", 12)
+            self.player_personal_details_frame,
+            text="Birth date: ",
+            font=("Helvetica", 12),
         )
         self.player_birth_date_label.grid(
-            row=1, column=0, padx=10, pady=10, sticky=NSEW
+            row=0, column=0, padx=20, pady=10, sticky=NSEW
         )
 
         self.player_birth_date_value = ttk.StringVar(value="22-09-1995")
 
         self.player_birth_date_label = ttk.Label(
-            self.player_personal_info_frame,
+            self.player_personal_details_frame,
             textvariable=self.player_birth_date_value,
             font=("Helvetica", 12),
         )
         self.player_birth_date_label.grid(
-            row=1, column=1, padx=10, pady=10, sticky=NSEW
+            row=0, column=1, padx=10, pady=10, sticky=NSEW
         )
 
         self.player_nationality_label = ttk.Label(
-            self.player_personal_info_frame,
+            self.player_personal_details_frame,
             text="Nationality: ",
             font=("Helvetica", 12),
         )
         self.player_nationality_label.grid(
-            row=2, column=0, padx=20, pady=10, sticky=NSEW
+            row=1, column=0, padx=20, pady=10, sticky=NSEW
         )
 
         self.player_nationality_value = ttk.StringVar(value="Brazil")
 
         self.player_nationality_value_label = ttk.Label(
-            self.player_personal_info_frame,
+            self.player_personal_details_frame,
             textvariable=self.player_nationality_value,
             font=("Helvetica", 12),
         )
         self.player_nationality_value_label.grid(
-            row=2, column=1, padx=10, pady=10, sticky=NSEW
+            row=1, column=1, padx=10, pady=10, sticky=NSEW
         )
 
         self.positions_value = ttk.StringVar(value="FW")
 
         self.positions_label = ttk.Label(
-            self.player_personal_info_frame, text="Positions: ", font=("Helvetica", 12)
+            self.player_personal_details_frame,
+            text="Positions: ",
+            font=("Helvetica", 12),
         )
-        self.positions_label.grid(row=3, column=0, padx=20, pady=10, sticky=NSEW)
+        self.positions_label.grid(row=2, column=0, padx=20, pady=10, sticky=NSEW)
 
         self.positions_value_label = ttk.Label(
-            self.player_personal_info_frame,
+            self.player_personal_details_frame,
             textvariable=self.positions_value,
             font=("Helvetica", 12),
         )
-        self.positions_value_label.grid(row=3, column=1, padx=10, pady=10, sticky=NSEW)
+        self.positions_value_label.grid(row=2, column=1, padx=10, pady=10, sticky=NSEW)
 
+        self.player_personal_details_frame.grid(
+            row=1, column=1, padx=10, pady=10, sticky=NSEW
+        )
         self.player_personal_info_frame.grid(
             row=0, column=0, columnspan=3, padx=10, pady=10, sticky=NSEW
         )
