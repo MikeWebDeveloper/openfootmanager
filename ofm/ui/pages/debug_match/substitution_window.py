@@ -17,6 +17,7 @@ import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 from ttkbootstrap.dialogs.dialogs import Messagebox, MessageCatalog
 from ttkbootstrap.tableview import Tableview
+from ofm.ui.table import AutoResizeTreeview
 
 
 class SubstitutionWindow(ttk.Toplevel):
@@ -39,11 +40,11 @@ class SubstitutionWindow(ttk.Toplevel):
         )
 
         self.columns = [
-            {"text": "Name", "stretch": False},
-            {"text": "Position", "stretch": False},
-            {"text": "Stamina", "stretch": False},
-            {"text": "Injured", "stretch": False},
-            {"text": "Overall", "stretch": False},
+            "Name",
+            "Position",
+            "Stamina",
+            "Injured",
+            "Overall",
         ]
 
         rows = [
@@ -60,31 +61,26 @@ class SubstitutionWindow(ttk.Toplevel):
             ("Da Silva", "GK", "100", "No", "92"),
         ]
 
-        self.team_table = Tableview(
+        self.team_table = AutoResizeTreeview(
             self.main_frame,
-            coldata=self.columns,
-            rowdata=rows,
-            searchable=False,
-            autofit=True,
-            paginated=False,
-            pagesize=8,
+            columns=self.columns,
+            rows=rows,
             height=11,
+            show="headings",
         )
+
         self.formation_label = ttk.Label(self.main_frame, text="Formation: ")
         self.formation_combobox = ttk.Combobox(self.main_frame, values=["4-4-2"])
 
         self.button_in = ttk.Button(self.main_frame, text=">")
         self.button_out = ttk.Button(self.main_frame, text="<")
 
-        self.reserves_table = Tableview(
+        self.reserves_table = AutoResizeTreeview(
             self.main_frame,
-            coldata=self.columns,
-            rowdata=rows,
-            searchable=False,
-            autofit=True,
-            paginated=False,
-            pagesize=8,
+            columns=self.columns,
+            rows=rows,
             height=11,
+            show="headings",
         )
         self.substitutions_left_label = ttk.Label(
             self.main_frame, text="Substitutions left: 0"
@@ -136,16 +132,15 @@ class SubstitutionWindow(ttk.Toplevel):
         )
 
     def update_team_table(self, players: list[tuple]):
-        self.team_table.delete_rows()
-        self.team_table.insert_rows(END, players)
-        self.team_table.autofit_columns()
-        self.team_table.load_table_data()
+        self.team_table.delete(*self.team_table.get_children())
+        self.team_table.add_rows(players)
 
     def update_reserves_table(self, players: list[tuple]):
-        self.reserves_table.delete_rows()
-        self.reserves_table.insert_rows(END, players)
-        self.reserves_table.autofit_columns()
-        self.reserves_table.load_table_data()
+        self.reserves_table.delete(*self.reserves_table.get_children())
+        self.reserves_table.add_rows(players)
+
+    def update_substitution_amount(self, amount: int):
+        self.substitutions_left_label["text"] = f"Substitutions left: {amount}"
 
     def get_yes_result(self):
         return MessageCatalog.translate("Yes")

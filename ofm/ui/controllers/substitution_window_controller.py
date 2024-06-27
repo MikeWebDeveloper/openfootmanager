@@ -14,7 +14,7 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 from abc import ABC, abstractmethod
-from copy import copy
+from copy import deepcopy
 from dataclasses import dataclass
 from datetime import timedelta
 from typing import Callable
@@ -58,14 +58,6 @@ class SubstitutionCommand(Command):
             temporary=False,
         )
 
-    def undo(
-        self,
-        player_in: PlayerSimulation,
-        player_out: PlayerSimulation,
-        team: TeamSimulation,
-    ):
-        team.undo_sub(player_in, player_out)
-
 
 @dataclass
 class FormationChangeCommand(Command):
@@ -85,7 +77,7 @@ class SubstitutionWindowController:
     ):
         self.page = SubstitutionWindow(parent)
         self.original_team = team
-        self.team = copy(team)
+        self.team = deepcopy(team)
         self.live_game_manager = live_game_manager
         self.start_match = start_match
         self.commands: list[Command] = []
@@ -107,6 +99,11 @@ class SubstitutionWindowController:
         self.update_reserves_table()
         self.page.update_formations(FORMATION_STRINGS)
         self.page.update_formation_box(self.team.formation.formation_string)
+        self.get_substitution_amount()
+
+    def get_substitution_amount(self):
+        subs = self.team.max_substitutions - len(self.team.sub_history)
+        self.page.update_substitution_amount(subs)
 
     def get_player_data(self, players: list[PlayerSimulation]) -> list[tuple]:
         return [
@@ -161,10 +158,59 @@ class SubstitutionWindowController:
         if result == self.page.get_yes_result():
             self.return_game()
 
+    def get_player_from_table(self, player_data: list) -> PlayerSimulation:
+        for player in self.team.formation.players:
+            pl = [
+                player.player.details.short_name.encode("utf-8").decode(
+                    "unicode_escape"
+                ),
+                player.current_position.name.encode("utf-8").decode("unicode_escape"),
+                str(player.stamina),
+                "Yes" if player.is_injured else "No",
+                player.current_skill,
+            ]
+            if pl == player_data:
+                return player
+
+    def get_player_from_reserves_table(self, player_data: list) -> PlayerSimulation:
+        for player in self.team.formation.bench:
+            pl = [
+                player.player.details.short_name.encode("utf-8").decode(
+                    "unicode_escape"
+                ),
+                player.current_position.name.encode("utf-8").decode("unicode_escape"),
+                str(player.stamina),
+                "Yes" if player.is_injured else "No",
+                player.current_skill,
+            ]
+            if pl == player_data:
+                return player
+
+    def sub_player(self):
+        player_out = self.page.team_table.item(self.page.team_table.focus())["values"]
+        player_in = self.page.reserves_table.item(self.page.reserves_table.focus())[
+            "values"
+        ]
+        player_out = self.get_player_from_table(player_out)
+        player_in = self.get_player_from_reserves_table(player_in)
+
+        if player_out and player_in:
+            time = self.live_game_manager.live_game.minutes
+            additional_time = self.live_game_manager.live_game.added_time
+            command = SubstitutionCommand(player_in, player_out, time, additional_time)
+            self.commands.append(command)
+            command.temporary(self.team)
+
+        self.update_formation_table()
+        self.update_reserves_table()
+        self.get_substitution_amount()
+
     def _bind(self):
         self.page.cancel_button.config(command=self.cancel)
         self.page.apply_button.config(command=self.apply_changes)
         self.page.formation_combobox.bind(
             "<<ComboboxSelected>>", self.update_team_formation
         )
+        self.page.button_in.config(command=self.sub_player)
+        self.page.button_out.config(command=self.sub_player)
         self.page.protocol("WM_DELETE_WINDOW", self.cancel)
