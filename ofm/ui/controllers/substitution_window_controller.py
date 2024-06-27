@@ -58,14 +58,6 @@ class SubstitutionCommand(Command):
             temporary=False,
         )
 
-    def undo(
-        self,
-        player_in: PlayerSimulation,
-        player_out: PlayerSimulation,
-        team: TeamSimulation,
-    ):
-        team.undo_sub(player_in, player_out)
-
 
 @dataclass
 class FormationChangeCommand(Command):
@@ -107,6 +99,11 @@ class SubstitutionWindowController:
         self.update_reserves_table()
         self.page.update_formations(FORMATION_STRINGS)
         self.page.update_formation_box(self.team.formation.formation_string)
+        self.get_substitution_amount()
+
+    def get_substitution_amount(self):
+        subs = self.team.max_substitutions - len(self.team.sub_history)
+        self.page.update_substitution_amount(subs)
 
     def get_player_data(self, players: list[PlayerSimulation]) -> list[tuple]:
         return [
@@ -161,10 +158,22 @@ class SubstitutionWindowController:
         if result == self.page.get_yes_result():
             self.return_game()
 
+    def sub_player(self):
+        player_out_index = self.page.team_table.focus()
+        print(player_out_index)
+        player_out = self.page.team_table.item(player_out_index)
+        print(player_out)
+        player_in_index = self.page.reserves_table.focus()
+        print(player_in_index)
+        player_in = self.page.reserves_table.item(player_in_index)
+        print(player_in)
+
     def _bind(self):
         self.page.cancel_button.config(command=self.cancel)
         self.page.apply_button.config(command=self.apply_changes)
         self.page.formation_combobox.bind(
             "<<ComboboxSelected>>", self.update_team_formation
         )
+        self.page.button_in.config(command=self.sub_player)
+        self.page.button_out.config(command=self.sub_player)
         self.page.protocol("WM_DELETE_WINDOW", self.cancel)
