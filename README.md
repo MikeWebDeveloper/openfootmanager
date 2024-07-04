@@ -12,7 +12,21 @@ The purpose of this project is to provide an interesting and fun game for simula
 
 The game is still under development and it is not even close to ready for gameplay action. However, we already have a debug version of the game for testing purposes.
 
-To run the debug build, ensure that you have Python 3.10 or higher. This project uses [Pipenv](https://pipenv.pypa.io/en/latest/) to manage virtual environments, and you can install it with the following command:
+To run the debug build, ensure that you have Python 3.10 or higher.
+
+Clone the repository using:
+
+```
+git clone https://github.com/openfootmanager/openfootmanager.git
+```
+
+We don't use external git repositories, so there's no need for a `--recursive` clone.
+
+This project uses [Pipenv](https://pipenv.pypa.io/en/latest/) or [Poetry](https://python-poetry.org/) to manage virtual environments and dependencies.
+
+### Pipenv
+
+To install Pipenv and install the project's dependencies, run the following commands:
 
 ```
 pip install pipenv
@@ -46,6 +60,52 @@ To run the debug version of the project, use the `run.py` file at the root of th
 
 ```
 pipenv run python run.py
+```
+
+### Poetry
+
+Poetry is a standard in most Python projects. It uses the `pyproject.toml`, introduced in [PEP 518](https://peps.python.org/pep-0518/), to manage
+the project's dependencies and virtualenvs. It's a little more convenient than Pipenv, so you can use it to run the project as well.
+
+To install Poetry:
+
+```
+pip install poetry
+```
+
+Then you can just install the dependencies with:
+
+```
+poetry install
+```
+
+This will also install the development dependencies. If you only wish to run the project and do not want to contribute,
+install it using the following command:
+
+```
+poetry install --without dev
+```
+
+Similar to Pipenv, you can run things inside poetry's virtualenv with the `poetry run` command. If you wish to contribute,
+you must install the `pre-commit` package to allow pre-commit hooks:
+
+```
+poetry run pre-commit install
+```
+
+We use them to ensure code standards and formatting used throughout the project, so we don't need to nitpick on little
+issues with formatting and following PEP8.
+
+To run the tests, use `pytest`:
+
+```
+poetry run pytest
+```
+
+And to run the current version of the project, run:
+
+```
+poetry run python run.py
 ```
 
 ## CONTRIBUTING
