@@ -128,7 +128,7 @@ The game will have a number of features inspired by other established games on t
 - [ ] Simulation of games with Match Live Events (Descriptions of most important match events)
 - [ ] Simulate results of other games
 - [ ] Talk to the press
-- [ ] Database of ficticious players
+- [ ] Database of fictitious players
 
 ### ADDITIONAL FEATURES
 
