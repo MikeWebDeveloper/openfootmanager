@@ -16,28 +16,149 @@
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 from ttkbootstrap.dialogs.dialogs import Messagebox, MessageCatalog
-from ttkbootstrap.tableview import Tableview
 from ofm.ui.table import AutoResizeTreeview
 
 
-class SubstitutionWindow(ttk.Toplevel):
-    def __init__(self, parent):
-        super().__init__(parent)
-        self.parent = parent
-        self.wm_title("Substitute Players")
-        self.resizable(False, False)
-        self.geometry("")
-        self.grab_set()
+class CornerKickTab(ttk.Frame):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
-        self.main_frame = ttk.Frame(self)
+        self.columns = ["Name", "Corner Kick", "Passing", "Crossing"]
+        rows = [
+            ("Gomez", "78", "88", "87"),
+            ("Allejo", "95", "87", "97"),
+            ("Beranco", "99", "83", "85"),
+            ("Pardilla", "82", "79", "84"),
+            ("Santos", "83", "78", "83"),
+            ("Ferreira", "77", "78", "79"),
+            ("Roca", "83", "87", "84"),
+            ("Vincento", "65", "75", "70"),
+            ("Cicero", "68", "88", "46"),
+            ("Marengez", "55", "55", "78"),
+            ("Da Silva", "32", "50", "45"),
+        ]
 
-        self.team_name_variable = ttk.StringVar()
-        self.team_name = ttk.Label(
-            self.main_frame,
-            text="TeamName",
-            font="Arial 18 bold",
-            textvariable=self.team_name_variable,
+        self.team_table = AutoResizeTreeview(
+            self,
+            columns=self.columns,
+            rows=rows,
+            height=11,
+            show="headings",
         )
+
+        self.corner_kick_taker_label = ttk.Label(self, text="Corner Kick Taker: ")
+        self.corner_kick_taker = ttk.StringVar()
+
+        self.team_table.grid(
+            row=0, column=0, columnspan=2, padx=10, pady=10, sticky=NSEW
+        )
+        self.corner_kick_taker_label.grid(
+            row=1, column=0, padx=10, pady=10, sticky=NSEW
+        )
+
+    def update_players(self, players: list[tuple[str, str, str, str]]):
+        self.team_table.delete(*self.team_table.get_children())
+        self.team_table.add_rows(players)
+
+    def update_taker(self, player: str):
+        self.corner_kick_taker.set(player)
+        self.corner_kick_taker_label["text"] = f"Corner Kick Taker: {player}"
+
+
+class PenaltyKickTab(ttk.Frame):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.columns = ["Name", "Penalty", "Shooting"]
+        rows = [
+            ("Gomez", "78", "87"),
+            ("Allejo", "95", "97"),
+            ("Beranco", "99", "85"),
+            ("Pardilla", "82", "84"),
+            ("Santos", "83", "83"),
+            ("Ferreira", "77", "79"),
+            ("Roca", "83", "84"),
+            ("Vincento", "65", "70"),
+            ("Cicero", "68", "46"),
+            ("Marengez", "55", "78"),
+            ("Da Silva", "32", "45"),
+        ]
+
+        self.team_table = AutoResizeTreeview(
+            self,
+            columns=self.columns,
+            rows=rows,
+            height=11,
+            show="headings",
+        )
+
+        self.penalty_kick_taker_label = ttk.Label(self, text="Penalty Kick Taker: ")
+        self.penalty_kick_taker = ttk.StringVar()
+
+        self.team_table.grid(
+            row=0, column=0, columnspan=2, padx=10, pady=10, sticky=NSEW
+        )
+        self.penalty_kick_taker_label.grid(
+            row=1, column=0, padx=10, pady=10, sticky=NSEW
+        )
+
+    def update_players(self, players: list[tuple[str, str, str, str]]):
+        self.team_table.delete(*self.team_table.get_children())
+        self.team_table.add_rows(players)
+
+    def update_taker(self, player: str):
+        self.penalty_kick_taker.set(player)
+        self.penalty_kick_taker_label["text"] = f"Penalty Kick Taker: {player}"
+
+
+class FreeKickTab(ttk.Frame):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.columns = ["Name", "Free Kick", "Passing", "Shooting"]
+        rows = [
+            ("Gomez", "78", "88", "87"),
+            ("Allejo", "95", "87", "97"),
+            ("Beranco", "99", "83", "85"),
+            ("Pardilla", "82", "79", "84"),
+            ("Santos", "83", "78", "83"),
+            ("Ferreira", "77", "78", "79"),
+            ("Roca", "83", "87", "84"),
+            ("Vincento", "65", "75", "70"),
+            ("Cicero", "68", "88", "46"),
+            ("Marengez", "55", "55", "78"),
+            ("Da Silva", "32", "50", "45"),
+        ]
+
+        self.team_table = AutoResizeTreeview(
+            self,
+            columns=self.columns,
+            rows=rows,
+            height=11,
+            show="headings",
+        )
+
+        self.free_kick_taker_label = ttk.Label(self, text="Free Kick Taker: ")
+        self.free_kick_taker = ttk.StringVar()
+
+        self.team_table.grid(
+            row=0, column=0, columnspan=2, padx=10, pady=10, sticky=NSEW
+        )
+        self.free_kick_taker_label.grid(row=1, column=0, padx=10, pady=10, sticky=NSEW)
+
+    def update_players(self, players: list[tuple[str, str, str, str]]):
+        self.team_table.delete(*self.team_table.get_children())
+        self.team_table.add_rows(players)
+
+    def update_taker(self, player: str):
+        self.free_kick_taker.set(player)
+        self.free_kick_taker_label["text"] = f"Free Kick Taker: {player}"
+
+
+class SubstitutionTab(ttk.Frame):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.main_frame = ttk.Frame(self)
 
         self.columns = [
             "Name",
@@ -86,30 +207,19 @@ class SubstitutionWindow(ttk.Toplevel):
             self.main_frame, text="Substitutions left: 0"
         )
 
-        self.team_name.grid(row=0, column=0, columnspan=3, padx=10, pady=10, sticky=NS)
-        self.team_table.grid(row=1, rowspan=2, column=0, padx=10, pady=10, sticky=NSEW)
-        self.button_in.grid(row=1, column=1, padx=10, pady=10, sticky=NS)
-        self.button_out.grid(row=2, column=1, padx=10, pady=10, sticky=NS)
+        self.team_table.grid(row=0, rowspan=2, column=0, padx=10, pady=10, sticky=NSEW)
+        self.button_in.grid(row=0, column=1, padx=10, pady=10, sticky=NS)
+        self.button_out.grid(row=1, column=1, padx=10, pady=10, sticky=NS)
         self.reserves_table.grid(
-            row=1, rowspan=2, column=2, padx=10, pady=10, sticky=NSEW
+            row=0, rowspan=2, column=2, padx=10, pady=10, sticky=NSEW
         )
         self.formation_label.grid(row=3, column=0, padx=10, pady=10, sticky=NSEW)
         self.formation_combobox.grid(
-            row=3, column=1, columnspan=2, padx=10, pady=10, sticky=NSEW
+            row=2, column=1, columnspan=2, padx=10, pady=10, sticky=NSEW
         )
         self.substitutions_left_label.grid(
-            row=4, column=0, columnspan=3, padx=10, pady=10, sticky=NSEW
+            row=3, column=0, columnspan=3, padx=10, pady=10, sticky=NSEW
         )
-
-        self.button_frame = ttk.Frame(self)
-        self.apply_button = ttk.Button(self.button_frame, text="Apply")
-        self.cancel_button = ttk.Button(self.button_frame, text="Cancel")
-
-        self.button_frame.grid(
-            row=5, column=0, columnspan=3, padx=10, pady=10, sticky=NS
-        )
-        self.apply_button.grid(row=0, column=0, padx=10, pady=10, sticky=EW)
-        self.cancel_button.grid(row=0, column=1, padx=10, pady=10, sticky=EW)
 
         self.main_frame.grid(row=0, column=0, sticky=NSEW)
 
@@ -123,14 +233,6 @@ class SubstitutionWindow(ttk.Toplevel):
         else:
             self.formation_combobox.set(formations[0])
 
-    def cancel_dialog(self):
-        return Messagebox.yesno(
-            parent=self,
-            title="Cancel formation",
-            message="Are you sure you want to cancel the change? All changes will be lost.",
-            alert=True,
-        )
-
     def update_team_table(self, players: list[tuple]):
         self.team_table.delete(*self.team_table.get_children())
         self.team_table.add_rows(players)
@@ -141,6 +243,72 @@ class SubstitutionWindow(ttk.Toplevel):
 
     def update_substitution_amount(self, amount: int):
         self.substitutions_left_label["text"] = f"Substitutions left: {amount}"
+
+
+class SubstitutionWindow(ttk.Toplevel):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.parent = parent
+        self.wm_title("Substitute Players")
+        self.resizable(False, False)
+        self.geometry("")
+        self.grab_set()
+
+        self.notebook = ttk.Notebook(self)
+        self.substitution_tab = SubstitutionTab(self.notebook)
+        self.free_kick_tab = FreeKickTab(self.notebook)
+        self.penalty_kick_tab = PenaltyKickTab(self.notebook)
+        self.corner_kick_tab = CornerKickTab(self.notebook)
+
+        self.team_name_variable = ttk.StringVar()
+        self.team_name = ttk.Label(
+            self,
+            text="TeamName",
+            font="Arial 18 bold",
+            textvariable=self.team_name_variable,
+        )
+
+        self.team_name.grid(row=0, column=0, columnspan=3, padx=10, pady=10, sticky=NS)
+
+        self.button_frame = ttk.Frame(self)
+        self.apply_button = ttk.Button(self.button_frame, text="Apply")
+        self.cancel_button = ttk.Button(self.button_frame, text="Cancel")
+
+        self.notebook.add(self.substitution_tab, text="Substitution")
+        self.notebook.add(self.free_kick_tab, text="Free Kick")
+        self.notebook.add(self.penalty_kick_tab, text="Penalty Kick")
+        self.notebook.add(self.corner_kick_tab, text="Corner Kick")
+
+        self.notebook.grid(row=1, column=0, columnspan=3, padx=10, pady=10, sticky=NSEW)
+
+        self.button_frame.grid(
+            row=2, column=0, columnspan=3, padx=10, pady=10, sticky=NS
+        )
+        self.apply_button.grid(row=2, column=0, padx=10, pady=10, sticky=EW)
+        self.cancel_button.grid(row=2, column=1, padx=10, pady=10, sticky=EW)
+
+    def update_formations(self, formations: list[str]):
+        self.substitution_tab.update_formations(formations)
+
+    def update_formation_box(self, formation: str):
+        self.substitution_tab.update_formation_box(formation)
+
+    def cancel_dialog(self):
+        return Messagebox.yesno(
+            parent=self,
+            title="Cancel formation",
+            message="Are you sure you want to cancel the change? All changes will be lost.",
+            alert=True,
+        )
+
+    def update_team_table(self, players: list[tuple]):
+        self.substitution_tab.update_team_table(players)
+
+    def update_reserves_table(self, players: list[tuple]):
+        self.substitution_tab.update_reserves_table(players)
+
+    def update_substitution_amount(self, amount: int):
+        self.substitution_tab.update_substitution_amount(amount)
 
     def get_yes_result(self):
         return MessageCatalog.translate("Yes")
