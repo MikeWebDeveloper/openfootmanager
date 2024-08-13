@@ -50,7 +50,7 @@ class FreeKickEvent(SimulationEvent):
         defending_team: TeamSimulation,
     ) -> GameState:
         if self.state.position in OFF_POSITIONS:
-            self.attacking_player = attacking_team.get_best_free_kick_taker()
+            self.attacking_player = attacking_team.get_free_kick_taker()
         else:
             self.attacking_player = attacking_team.get_player_on_pitch(
                 self.state.position
