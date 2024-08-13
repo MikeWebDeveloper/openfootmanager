@@ -68,7 +68,7 @@ class GameEvent(GameEventAdditionalTime, GameEventBase):
 
 @dataclass
 class SubstitutionEventBase(GameEventBase):
-    player_subbed_in: PlayerSimulation
+    player_in: PlayerSimulation
 
 
 @dataclass(repr=False)
@@ -77,7 +77,7 @@ class SubstitutionEvent(GameEventAdditionalTime, SubstitutionEventBase):
         minutes = f"{int(self.minutes.total_seconds() / 60)}'"
         if self.additional_time > timedelta(0):
             minutes = f"{minutes} + {ceil(self.additional_time.total_seconds() / 60)}'"
-        return f"{self.player} -> {self.player_subbed_in} {minutes}"
+        return f"{self.player} -> {self.player_in} {minutes}"
 
 
 class TeamSimulation:

@@ -16,7 +16,6 @@
 import datetime
 import json
 import uuid
-
 import pytest
 
 from ..core.db.generators import PlayerGenerator, TeamGenerator
@@ -26,6 +25,7 @@ from ..core.football.player import Player, PlayerInjury, PlayerSimulation, Prefe
 from ..core.football.player_attributes import *
 from ..core.football.playercontract import PlayerContract
 from ..core.football.team_simulation import TeamSimulation
+from ..core.simulation.simulation import LiveGame, SimulationEngine, Fixture
 from ..core.settings import Settings
 
 
@@ -200,3 +200,35 @@ def simulation_teams(
     away_team_sim = TeamSimulation(away_team, away_team_formation)
 
     return home_team_sim, away_team_sim
+
+
+class MockSimulationEngine:
+    def run(self):
+        pass
+
+
+@pytest.fixture
+def live_game(monkeypatch, simulation_teams) -> LiveGame:
+    def get_simulation_engine(*args, **kwargs):
+        return MockSimulationEngine()
+
+    home_team_sim, away_team_sim = simulation_teams
+    home_team = home_team_sim.club
+    away_team = away_team_sim.club
+    fixture = Fixture(
+        uuid.uuid4(),
+        uuid.uuid4(),
+        home_team.club_id,
+        away_team.club_id,
+        home_team.stadium,
+    )
+
+    def get_event_duration(self):
+        return datetime.timedelta(seconds=5)
+
+    monkeypatch.setattr(SimulationEngine, "run", get_simulation_engine)
+    monkeypatch.setattr(SimulationEngine, "get_event_duration", get_event_duration)
+
+    live_game = LiveGame(fixture, home_team_sim, away_team_sim, False, False, True)
+    live_game.running = True
+    return live_game
