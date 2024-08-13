@@ -35,7 +35,7 @@ class PenaltyKickEvent(SimulationEvent):
     ) -> GameState:
         self.commentary.append("Penalty Kick!")
         self.defending_player = defending_team.formation.gk
-        self.attacking_player = attacking_team.get_best_penalty_taker()
+        self.attacking_player = attacking_team.get_penalty_taker()
 
         self.commentary.append(f"{self.attacking_player} goes to the ball")
         self.sub_event = ShotEvent(

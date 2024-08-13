@@ -68,7 +68,7 @@ class GameEvent(GameEventAdditionalTime, GameEventBase):
 
 @dataclass
 class SubstitutionEventBase(GameEventBase):
-    player_subbed_in: PlayerSimulation
+    player_in: PlayerSimulation
 
 
 @dataclass(repr=False)
@@ -77,7 +77,7 @@ class SubstitutionEvent(GameEventAdditionalTime, SubstitutionEventBase):
         minutes = f"{int(self.minutes.total_seconds() / 60)}'"
         if self.additional_time > timedelta(0):
             minutes = f"{minutes} + {ceil(self.additional_time.total_seconds() / 60)}'"
-        return f"{self.player} -> {self.player_subbed_in} {minutes}"
+        return f"{self.player} -> {self.player_in} {minutes}"
 
 
 class TeamSimulation:
@@ -102,6 +102,9 @@ class TeamSimulation:
         self._score: int = 0
         self.team_strategy: TeamStrategy = strategy
         self.stats: TeamStats = TeamStats(self.club.club_id)
+        self._free_kick_taker = None
+        self._penalty_taker = None
+        self._corner_kick_taker = None
 
     @property
     def score(self) -> int:
@@ -276,6 +279,24 @@ class TeamSimulation:
             self.substitutions += 1
 
         self.formation.substitute_player(player_out, player_in, temporary)
+
+    def get_penalty_taker(self):
+        if self._penalty_taker is None:
+            self._penalty_taker = self.get_best_penalty_taker()
+
+        return self._penalty_taker
+
+    def get_free_kick_taker(self):
+        if self._free_kick_taker is None:
+            self._free_kick_taker = self.get_best_free_kick_taker()
+
+        return self._free_kick_taker
+
+    def get_corner_kick_taker(self, is_pass: bool):
+        if self._corner_kick_taker is None:
+            self._corner_kick_taker = self.get_best_corner_kick_taker(is_pass)
+
+        return self._corner_kick_taker
 
     def get_best_penalty_taker(self) -> PlayerSimulation:
         best_penalty_taker = None

@@ -51,7 +51,7 @@ class CornerKickEvent(SimulationEvent):
     ) -> GameState:
         self.corner_kick_type = self.get_corner_kick_type(attacking_team)
         is_pass = self.corner_kick_type == CornerKickType.PASS
-        self.attacking_player = attacking_team.get_best_corner_kick_taker(is_pass)
+        self.attacking_player = attacking_team.get_corner_kick_taker(is_pass)
 
         self.commentary.append(
             f"{self.attacking_player} goes to the ball to take the corner kick!"
