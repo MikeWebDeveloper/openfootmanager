@@ -39,7 +39,7 @@ class GoalKickEvent(SimulationEvent):
     receiving_player: Optional[PlayerSimulation] = None
     sub_event: Optional[PassEvent | CrossEvent] = None
 
-    def get_goal_kick_type(self):
+    def get_goal_kick_type(self) -> GoalKickType:
         goal_kick_types = list(GoalKickType)
         return random.choice(goal_kick_types)
 

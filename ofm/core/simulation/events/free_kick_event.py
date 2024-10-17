@@ -33,7 +33,7 @@ class FreeKickEvent(SimulationEvent):
     free_kick_type: Optional[FreeKickType] = None
     sub_event: Optional[PassEvent | ShotEvent | CrossEvent] = None
 
-    def get_free_kick_type(self):
+    def get_free_kick_type(self) -> FreeKickType:
         free_kick_types = [
             FreeKickType.PASS,
             FreeKickType.CROSS,
