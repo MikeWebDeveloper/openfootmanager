@@ -16,6 +16,7 @@
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 from ttkbootstrap.dialogs.dialogs import Messagebox, MessageCatalog
+
 from ofm.ui.table import AutoResizeTreeview
 
 

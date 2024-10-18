@@ -80,3 +80,13 @@ def test_dribble_success_event(simulation_teams, monkeypatch):
     assert event.attacking_player.statistics.dribbles_failed == 0
     assert home_team.stats.dribbles == 1
     assert home_team.stats.dribbles_failed == 0
+
+
+def test_dribble_get_end_position(simulation_teams) -> None:
+    event = get_dribble_event()
+    home_team, away_team = simulation_teams
+    home_team.in_possession = True
+    home_team.player_in_possession = home_team.get_player_on_pitch(event.state.position)
+    away_team.in_possession = False
+    away_team.player_in_possession = None
+    assert isinstance(event.get_end_position(home_team), PitchPosition)

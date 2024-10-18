@@ -16,6 +16,7 @@
 import datetime
 import json
 import uuid
+
 import pytest
 
 from ..core.db.generators import PlayerGenerator, TeamGenerator
@@ -25,8 +26,8 @@ from ..core.football.player import Player, PlayerInjury, PlayerSimulation, Prefe
 from ..core.football.player_attributes import *
 from ..core.football.playercontract import PlayerContract
 from ..core.football.team_simulation import TeamSimulation
-from ..core.simulation.simulation import LiveGame, SimulationEngine, Fixture
 from ..core.settings import Settings
+from ..core.simulation.simulation import Fixture, LiveGame, SimulationEngine
 
 
 @pytest.fixture

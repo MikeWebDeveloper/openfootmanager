@@ -37,7 +37,7 @@ class ShotEvent(SimulationEvent):
         self.commentary.append(f"{self.defending_player} saved the ball!")
         return random.choice(final_outcomes)
 
-    def get_shot_on_goal(
+    def get_shot_miss_or_on_goal(
         self, shot_on_goal: float, defending_team: TeamSimulation
     ) -> EventOutcome:
         basic_event_outcomes = [
@@ -61,7 +61,7 @@ class ShotEvent(SimulationEvent):
 
         return random.choices(basic_event_outcomes, event_probabilities)[0]
 
-    def get_shot_blocked(self):
+    def get_shot_blocked(self) -> EventOutcome:
         outcomes = [
             EventOutcome.SHOT_BLOCKED_CHANGE_POSSESSION,
             EventOutcome.SHOT_BLOCKED_BACK,
@@ -106,40 +106,31 @@ class ShotEvent(SimulationEvent):
 
         return random.choice(final_outcomes)
 
-    def calculate_event(
-        self,
-        attacking_team: TeamSimulation,
-        defending_team: TeamSimulation,
-    ) -> GameState:
+    def get_players_involved(
+        self, attacking_team: TeamSimulation, defending_team: TeamSimulation
+    ):
         if self.attacking_player is None:
             self.attacking_player = attacking_team.player_in_possession
         if self.defending_player is None:
             self.defending_player = defending_team.get_player_on_pitch(
                 self.state.position
             )
+
+    def calculate_event(
+        self,
+        attacking_team: TeamSimulation,
+        defending_team: TeamSimulation,
+    ) -> GameState:
+        self.get_players_involved(attacking_team, defending_team)
         self.attacking_player.statistics.shots += 1
 
-        if self.event_type == EventType.FREE_KICK:
-            shot_on_goal = (
-                self.attacking_player.attributes.offensive.shot_accuracy
-                + self.attacking_player.attributes.offensive.shot_power
-                + self.attacking_player.attributes.offensive.free_kick * 2
-            ) / 4
-        elif self.event_type == EventType.PENALTY_KICK:
-            shot_on_goal = (
-                self.attacking_player.attributes.offensive.penalty * 2
-                + self.attacking_player.attributes.offensive.shot_power
-                + self.attacking_player.attributes.offensive.shot_accuracy
-            ) / 4
-        else:
-            shot_on_goal = (
-                self.attacking_player.attributes.offensive.shot_accuracy
-                + self.attacking_player.attributes.offensive.shot_power
-            ) / 2
+        shot_on_goal = self.attacking_player.get_shot_on_goal_probability(
+            self.event_type
+        )
 
         self.commentary.append(f"{self.attacking_player} shoots!")
 
-        first_outcome = self.get_shot_on_goal(shot_on_goal, defending_team)
+        first_outcome = self.get_shot_miss_or_on_goal(shot_on_goal, defending_team)
 
         if first_outcome == EventOutcome.SHOT_MISS:
             self.attacking_player.statistics.shots_missed += 1

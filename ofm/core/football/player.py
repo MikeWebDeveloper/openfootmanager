@@ -19,6 +19,7 @@ from enum import IntEnum, auto
 from typing import Optional, Union
 from uuid import UUID
 
+from ..simulation.event_type import EventType
 from .injury import PlayerInjury
 from .player_attributes import PlayerAttributes
 from .playercontract import PlayerContract
@@ -295,6 +296,25 @@ class PlayerSimulation:
             * (2 ** (-self.minutes_played.total_seconds() / (144 * fitness * form))),
             2,
         )
+
+    def get_shot_on_goal_probability(self, event_type: EventType) -> float:
+        if event_type == EventType.FREE_KICK:
+            return (
+                self.attributes.offensive.shot_accuracy
+                + self.attributes.offensive.shot_power
+                + self.attributes.offensive.free_kick * 2
+            ) / 4
+        elif event_type == EventType.PENALTY_KICK:
+            return (
+                self.attributes.offensive.penalty * 2
+                + self.attributes.offensive.shot_power
+                + self.attributes.offensive.shot_accuracy
+            ) / 4
+        else:
+            return (
+                self.attributes.offensive.shot_accuracy
+                + self.attributes.offensive.shot_power
+            ) / 2
 
     def __eq__(self, other):
         if not isinstance(other, PlayerSimulation):

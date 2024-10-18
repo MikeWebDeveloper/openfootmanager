@@ -1,4 +1,7 @@
+from datetime import timedelta
+
 import pytest
+
 from ofm.core.football.formation import FormationError
 from ofm.core.football.team_simulation import (
     GameEventType,
@@ -6,8 +9,8 @@ from ofm.core.football.team_simulation import (
     SubbingError,
     SubstitutionEvent,
 )
+
 from ..core.simulation.simulation import LiveGame, PitchPosition
-from datetime import timedelta
 
 
 def test_substitute_same_player(live_game: LiveGame):
