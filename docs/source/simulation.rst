@@ -52,24 +52,12 @@ My approach was very simple:
 
 - Before each game, you picked a champion for each player.
 - Each player has their own skill level, and each champion also has a skill level.
-- Players have their preferred champions, which we call a "Champion Pool". Players that play their preferred champions
-can extract more out of the champion's skill level. It's simple math: if a champion's skill is at 78, a player that has
-that champion in their champion pool can boost that to up to 30%. (In earlier stages, if a champion was not in their
-champion pool, they could only extract 50% of that champion's skill level, which could grow to 100%, but I thought that
-was a bad design choice, and changed it to boosting the champion's skill level instead).
-- Each event had its own probability of happening. It's common that MOBA matches have nothing particular happening at any point,
-so the probability of Nothing was higher than others in the early game.
-- As the game progresses, some events are unlocked. For example, the Tower assault event is only unlocked after 10 minutes,
-because it is not really common for teams to take a tower before that time. The inhibitor event is only unlocked after
-one team takes down the 3 towers from one lane. And the nexus event only comes up if an inhibitor is down and if the base towers
-are also down.
-- Before each event, we calculate the probability of one team making the move over the other team. The probability is
-guided by each team skill level, which is calculated as the sum of each player + champion skill levels, divided by the sum
-of both teams skill levels. So whoever has more skill, has a higher chance of making the next move.
-- Each event awards points to the teams. These points add up to the skill level, making the team stronger, and increasing
-their win probability.
-- Even though there is no limit time for matches to end in LoL, with high probabilities for the Nexus event, eventually
-one team would take all the base towers down and win the game.
+- Players have their preferred champions, which we call a "Champion Pool". Players that play their preferred champions can extract more out of the champion's skill level. It's simple math: if a champion's skill is at 78, a player that has that champion in their champion pool can boost that to up to 30%. (In earlier stages, if a champion was not in their champion pool, they could only extract 50% of that champion's skill level, which could grow to 100%, but I thought that was a bad design choice, and changed it to boosting the champion's skill level instead).
+- Each event had its own probability of happening. It's common that MOBA matches have nothing particular happening at any point, so the probability of Nothing was higher than others in the early game.
+- As the game progresses, some events are unlocked. For example, the Tower assault event is only unlocked after 10 minutes, because it is not really common for teams to take a tower before that time. The inhibitor event is only unlocked after one team takes down the 3 towers from one lane. And the nexus event only comes up if an inhibitor is down and if the base towers are also down.
+- Before each event, we calculate the probability of one team making the move over the other team. The probability is guided by each team skill level, which is calculated as the sum of each player + champion skill levels, divided by the sum of both teams skill levels. So whoever has more skill, has a higher chance of making the next move.
+- Each event awards points to the teams. These points add up to the skill level, making the team stronger, and increasing their win probability.
+- Even though there is no limit time for matches to end in LoL, with high probabilities for the Nexus event, eventually one team would take all the base towers down and win the game.
 
 This is a very oversimplified overview of how I made that match simulation. I didn't talk about how I calculated kills,
 or even how the events were calculated, that's not the focus here. That's just to show how you can simplify a complex
