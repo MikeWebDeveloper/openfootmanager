@@ -18,6 +18,7 @@ import json
 import os
 import random
 import uuid
+from pathlib import Path
 from typing import Optional
 
 from ofm.core.football.club import Club
@@ -40,27 +41,27 @@ class DB:
         self.settings = settings
 
     @property
-    def players_file(self) -> str:
+    def players_file(self) -> Path:
         return self.settings.players_file
 
     @property
-    def squads_file(self) -> str:
+    def squads_file(self) -> Path:
         return self.settings.squads_file
 
     @property
-    def clubs_file(self) -> str:
+    def clubs_file(self) -> Path:
         return self.settings.clubs_file
 
     @property
-    def clubs_def_file(self) -> str:
+    def clubs_def_file(self) -> Path:
         return self.settings.clubs_def
 
     @property
-    def fifa_codes_file(self) -> str:
+    def fifa_codes_file(self) -> Path:
         return self.settings.fifa_codes
 
     @property
-    def fifa_conf_file(self) -> str:
+    def fifa_conf_file(self) -> Path:
         return self.settings.fifa_conf
 
     def load_clubs(self) -> list[dict]:
@@ -157,7 +158,7 @@ class DB:
         region: Optional[str] = None,
         desired_pos: Optional[list[Positions]] = None,
     ) -> list[dict]:
-        players = PlayerGenerator()
+        players = PlayerGenerator(self.settings)
         players.generate(amount, region, desired_pos)
         players_dict = players.get_players_dictionaries()
         with open(self.players_file, "w") as fp:
@@ -178,7 +179,7 @@ class DB:
 
         fifa_conf = self.load_fifa_conf()
 
-        team_gen = TeamGenerator(clubs_def, fifa_conf, season_start)
+        team_gen = TeamGenerator(clubs_def, fifa_conf, self.settings, season_start)
         clubs = team_gen.generate()
         clubs_dict = [club.serialize() for club in clubs]
 

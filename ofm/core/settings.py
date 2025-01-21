@@ -19,7 +19,7 @@ from typing import Union
 
 import yaml
 
-from ofm.defaults import PROJECT_DIR
+from ofm.defaults import NAMES_FILE, PROJECT_DIR
 
 
 class Settings:
@@ -29,45 +29,48 @@ class Settings:
         settings: Union[str, Path] = os.path.join(PROJECT_DIR, "settings.yaml"),
     ) -> None:
         self.root_dir = root_dir
-        self.res: str = os.path.join(root_dir, "res")
-        self.images: str = os.path.join(root_dir, "images")
-        self.db: str = os.path.join(self.res, "db")
-        self.save: str = os.path.join(root_dir, "save")
-        self.clubs_def: str = os.path.join(self.res, "clubs_def.json")
-        self.fifa_codes: str = os.path.join(self.res, "fifa_country_codes.json")
-        self.fifa_conf: str = os.path.join(self.res, "fifa_confederations.json")
-        self.squads_file: str = os.path.join(self.db, "squads.json")
-        self.players_file: str = os.path.join(self.db, "players.json")
-        self.clubs_file: str = os.path.join(self.db, "clubs.json")
-        self.settings_file: str = settings
+        self.res: Path = Path(os.path.join(root_dir, "res"))
+        self.images: Path = Path(os.path.join(root_dir, "images"))
+        self.db: Path = Path(os.path.join(self.res, "db"))
+        self.save: Path = Path(os.path.join(root_dir, "save"))
+        self.clubs_def: Path = Path(os.path.join(self.res, "clubs_def.json"))
+        self.fifa_codes: Path = Path(os.path.join(self.res, "fifa_country_codes.json"))
+        self.fifa_conf: Path = Path(os.path.join(self.res, "fifa_confederations.json"))
+        self.squads_file: Path = Path(os.path.join(self.db, "squads.json"))
+        self.players_file: Path = Path(os.path.join(self.db, "players.json"))
+        self.clubs_file: Path = Path(os.path.join(self.db, "clubs.json"))
+        self.names_file: Path = Path(NAMES_FILE)
+        self.settings_file: Path = Path(settings)
 
     def get_data(self) -> dict:
         return {
-            "res": self.res,
-            "images": self.images,
-            "db": self.db,
-            "save": self.save,
-            "clubs_def": self.clubs_def,
-            "fifa_codes": self.fifa_codes,
-            "fifa_conf": self.fifa_conf,
-            "squads": self.squads_file,
-            "players": self.players_file,
-            "clubs": self.clubs_file,
+            "res": str(self.res),
+            "images": str(self.images),
+            "db": str(self.db),
+            "save": str(self.save),
+            "clubs_def": str(self.clubs_def),
+            "fifa_codes": str(self.fifa_codes),
+            "fifa_conf": str(self.fifa_conf),
+            "squads": str(self.squads_file),
+            "players": str(self.players_file),
+            "clubs": str(self.clubs_file),
+            "names": str(self.names_file),
         }
 
     def parse_settings(self, data: dict) -> None:
         default_settings = self.get_data()
         try:
-            self.res = data["res"]
-            self.images = data["images"]
-            self.db = data["db"]
-            self.save = data["save"]
-            self.clubs_def = data["clubs_def"]
-            self.fifa_codes = data["fifa_codes"]
-            self.fifa_conf = data["fifa_conf"]
-            self.squads_file = data["squads"]
-            self.players_file = data["players"]
-            self.clubs_file = data["clubs"]
+            self.res = Path(data["res"])
+            self.images = Path(data["images"])
+            self.db = Path(data["db"])
+            self.save = Path(data["save"])
+            self.clubs_def = Path(data["clubs_def"])
+            self.fifa_codes = Path(data["fifa_codes"])
+            self.fifa_conf = Path(data["fifa_conf"])
+            self.squads_file = Path(data["squads"])
+            self.players_file = Path(data["players"])
+            self.clubs_file = Path(data["clubs"])
+            self.names_file = Path(data["names"])
         except KeyError:
             self.parse_settings(default_settings)
 

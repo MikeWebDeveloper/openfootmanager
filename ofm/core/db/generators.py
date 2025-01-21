@@ -31,6 +31,7 @@ from ofm.core.football.player_attributes import (
     PlayerAttributes,
 )
 from ofm.core.football.playercontract import PlayerContract
+from ofm.core.settings import Settings
 from ofm.defaults import NAMES_FILE
 
 
@@ -164,6 +165,7 @@ class PlayerAttributeGenerator(Generator):
 class PlayerGenerator(Generator):
     def __init__(
         self,
+        settings: Settings,
         today: Union[datetime, date] = date.today(),
         max_age: int = 35,
         min_age: int = 16,
@@ -175,6 +177,7 @@ class PlayerGenerator(Generator):
             )
 
         self.players_obj: List[Player] = []
+        self.settings = settings
         self.nationalities = self._get_nationalities()
         self.names = self._get_names()
 
@@ -184,15 +187,13 @@ class PlayerGenerator(Generator):
         self.min_age = min_age * year
         self.max_skill_lvl = max_skill_lvl
 
-    @staticmethod
-    def _get_nationalities():
-        with open(NAMES_FILE, "r", encoding="utf-8") as fp:
+    def _get_nationalities(self):
+        with open(self.settings.names_file, "r", encoding="utf-8") as fp:
             data = json.load(fp)
             return [d["region"] for d in data]
 
-    @staticmethod
-    def _get_names():
-        with open(NAMES_FILE, "r", encoding="utf-8") as fp:
+    def _get_names(self):
+        with open(self.settings.names_file, "r", encoding="utf-8") as fp:
             return json.load(fp)
 
     def _get_names_from_region(self, region: str) -> dict:
@@ -396,12 +397,14 @@ class TeamGenerator(Generator):
         self,
         club_definitions: list[dict],
         fifa_confederations: list[dict],
+        settings: Settings,
         season_start: date = date.today(),
     ) -> None:
         self.fifa_confederations = fifa_confederations
         self.club_definitions = club_definitions
         self.season_start = season_start
-        self.player_gen = PlayerGenerator()
+        self.settings = settings
+        self.player_gen = PlayerGenerator(self.settings)
 
     def _get_nationalities(
         self, country: str, countries: list

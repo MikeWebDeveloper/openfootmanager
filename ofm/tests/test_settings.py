@@ -14,30 +14,25 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import os
-
-import pytest
+from pathlib import Path
 
 from ofm.core.settings import Settings
+from ofm.defaults import NAMES_FILE
 
 
-@pytest.fixture
-def settings(tmp_path):
-    f = tmp_path / "settings.yaml"
-    return Settings(tmp_path, f)
-
-
-def test_get_settings(settings, tmp_path):
+def test_get_settings(settings: Settings):
     expected_data = {
-        "res": os.path.join(tmp_path, "res"),
-        "images": os.path.join(tmp_path, "images"),
-        "db": os.path.join(tmp_path, "res", "db"),
-        "save": os.path.join(tmp_path, "save"),
-        "clubs_def": os.path.join(tmp_path, "res", "clubs_def.json"),
-        "fifa_codes": os.path.join(tmp_path, "res", "fifa_country_codes.json"),
-        "fifa_conf": os.path.join(tmp_path, "res", "fifa_confederations.json"),
-        "squads": os.path.join(tmp_path, "res", "db", "squads.json"),
-        "players": os.path.join(tmp_path, "res", "db", "players.json"),
-        "clubs": os.path.join(tmp_path, "res", "db", "clubs.json"),
+        "res": str(settings.res),
+        "images": str(settings.images),
+        "db": str(settings.db),
+        "save": str(settings.save),
+        "clubs_def": str(settings.clubs_def),
+        "fifa_codes": str(settings.fifa_codes),
+        "fifa_conf": str(settings.fifa_conf),
+        "squads": os.path.join(settings.db, "squads.json"),
+        "players": os.path.join(settings.db, "players.json"),
+        "clubs": os.path.join(settings.db, "clubs.json"),
+        "names": NAMES_FILE,
     }
     settings.create_settings()
     settings.load_settings()

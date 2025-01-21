@@ -25,16 +25,8 @@ from ofm.core.settings import Settings
 
 
 @pytest.fixture
-def db(tmp_path, confederations_file) -> DB:
-    settings_file = tmp_path / "settings.yaml"
-    settings = Settings(tmp_path, settings_file)
-    res = tmp_path / "res"
-    res.mkdir()
-    db = res / "db"
-    db.mkdir()
-    settings.res = res
-    settings.db = db
-    fifa_conf = res / "fifa_confederations.json"
+def db(settings, confederations_file) -> DB:
+    fifa_conf = settings.res / "fifa_confederations.json"
     with fifa_conf.open("w") as fp:
         json.dump(confederations_file, fp)
 
@@ -59,14 +51,14 @@ def test_get_player_from_empty_players_list(db: DB):
 
 
 def test_get_player_from_player_list(db: DB):
-    player = PlayerGenerator().generate_player()
+    player = PlayerGenerator(db.settings).generate_player()
     player_dict = player.serialize()
     pl_id = player.player_id
     assert db.get_player_object_from_id(pl_id, [player_dict]) == player
 
 
 def test_load_player_from_dict(db: DB):
-    player = PlayerGenerator().generate_player()
+    player = PlayerGenerator(db.settings).generate_player()
     player_dict = player.serialize()
     assert db.load_player_objects([player_dict]) == [player]
 
