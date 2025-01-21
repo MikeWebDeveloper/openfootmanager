@@ -94,8 +94,6 @@ class DebugMatchPage(ttk.Frame):
         self.cancel_btn = ttk.Button(self.button_frame, text="Cancel")
         self.cancel_btn.grid(row=0, column=3, padx=10, sticky=NSEW)
 
-        self.button_frame.grid(row=6, column=0, columnspan=3, padx=10, pady=10)
-
         self.player_details_tab.place(anchor=CENTER, relx=0.5, rely=0.5)
         self.player_reserves_tab.place(anchor=CENTER, relx=0.5, rely=0.5)
         self.team_stats_tab.place(anchor=CENTER, relx=0.5, rely=0.5)
@@ -108,6 +106,7 @@ class DebugMatchPage(ttk.Frame):
         self.notebook.add(self.team_stats_tab, text="Stats", sticky=NS)
 
         self.notebook.grid(row=2, column=0, columnspan=2)
+        self.button_frame.grid(row=6, column=0, columnspan=3, padx=10, pady=10)
 
     def update_tables(
         self,

@@ -46,12 +46,12 @@ def get_pass_event() -> PassEvent:
 
 
 def test_shot_miss_event(simulation_teams, monkeypatch):
-    def get_shot_on_goal(
+    def get_shot_miss_or_on_goal(
         self, shot_on_goal: float, defending_team: TeamSimulation
     ) -> EventOutcome:
         return EventOutcome.SHOT_MISS
 
-    monkeypatch.setattr(ShotEvent, "get_shot_on_goal", get_shot_on_goal)
+    monkeypatch.setattr(ShotEvent, "get_shot_miss_or_on_goal", get_shot_miss_or_on_goal)
     event = get_shot_event()
     home_team, away_team = simulation_teams
     home_team.in_possession = True
@@ -69,7 +69,7 @@ def test_shot_miss_event(simulation_teams, monkeypatch):
 
 
 def test_shot_blocked_change_event(simulation_teams, monkeypatch):
-    def get_shot_on_goal(
+    def get_shot_miss_or_on_goal(
         self, shot_on_goal: float, defending_team: TeamSimulation
     ) -> EventOutcome:
         return EventOutcome.SHOT_BLOCKED
@@ -77,7 +77,7 @@ def test_shot_blocked_change_event(simulation_teams, monkeypatch):
     def get_shot_blocked(self) -> EventOutcome:
         return EventOutcome.SHOT_BLOCKED_CHANGE_POSSESSION
 
-    monkeypatch.setattr(ShotEvent, "get_shot_on_goal", get_shot_on_goal)
+    monkeypatch.setattr(ShotEvent, "get_shot_miss_or_on_goal", get_shot_miss_or_on_goal)
     monkeypatch.setattr(ShotEvent, "get_shot_blocked", get_shot_blocked)
     event = get_shot_event()
     home_team, away_team = simulation_teams
@@ -98,7 +98,7 @@ def test_shot_blocked_change_event(simulation_teams, monkeypatch):
 
 
 def test_shot_blocked_back_event(simulation_teams, monkeypatch):
-    def get_shot_on_goal(
+    def get_shot_miss_or_on_goal(
         self, shot_on_goal: float, defending_team: TeamSimulation
     ) -> EventOutcome:
         return EventOutcome.SHOT_BLOCKED
@@ -106,7 +106,7 @@ def test_shot_blocked_back_event(simulation_teams, monkeypatch):
     def get_shot_blocked(self) -> EventOutcome:
         return EventOutcome.SHOT_BLOCKED_BACK
 
-    monkeypatch.setattr(ShotEvent, "get_shot_on_goal", get_shot_on_goal)
+    monkeypatch.setattr(ShotEvent, "get_shot_miss_or_on_goal", get_shot_miss_or_on_goal)
     monkeypatch.setattr(ShotEvent, "get_shot_blocked", get_shot_blocked)
     event = get_shot_event()
     home_team, away_team = simulation_teams
@@ -127,7 +127,7 @@ def test_shot_blocked_back_event(simulation_teams, monkeypatch):
 
 
 def test_shot_saved_secured_event(simulation_teams, monkeypatch):
-    def get_shot_on_goal(
+    def get_shot_miss_or_on_goal(
         self, shot_on_goal: float, defending_team: TeamSimulation
     ) -> EventOutcome:
         return EventOutcome.SHOT_ON_GOAL
@@ -138,7 +138,7 @@ def test_shot_saved_secured_event(simulation_teams, monkeypatch):
     def get_shot_saved_outcomes(self) -> EventOutcome:
         return EventOutcome.SHOT_SAVED_SECURED
 
-    monkeypatch.setattr(ShotEvent, "get_shot_on_goal", get_shot_on_goal)
+    monkeypatch.setattr(ShotEvent, "get_shot_miss_or_on_goal", get_shot_miss_or_on_goal)
     monkeypatch.setattr(ShotEvent, "get_shot_saved_outcomes", get_shot_saved_outcomes)
     monkeypatch.setattr(
         ShotEvent, "get_shot_on_goal_outcomes", get_shot_on_goal_outcomes
@@ -161,7 +161,7 @@ def test_shot_saved_secured_event(simulation_teams, monkeypatch):
 
 
 def test_shot_hit_post_change_event(simulation_teams, monkeypatch):
-    def get_shot_on_goal(
+    def get_shot_miss_or_on_goal(
         self, shot_on_goal: float, defending_team: TeamSimulation
     ) -> EventOutcome:
         return EventOutcome.SHOT_ON_GOAL
@@ -172,7 +172,7 @@ def test_shot_hit_post_change_event(simulation_teams, monkeypatch):
     def get_shot_hit_post(self) -> EventOutcome:
         return EventOutcome.SHOT_HIT_POST_CHANGE_POSSESSION
 
-    monkeypatch.setattr(ShotEvent, "get_shot_on_goal", get_shot_on_goal)
+    monkeypatch.setattr(ShotEvent, "get_shot_miss_or_on_goal", get_shot_miss_or_on_goal)
     monkeypatch.setattr(
         ShotEvent, "get_shot_on_goal_outcomes", get_shot_on_goal_outcomes
     )
@@ -198,7 +198,7 @@ def test_shot_hit_post_change_event(simulation_teams, monkeypatch):
 
 
 def test_shot_hit_post_event(simulation_teams, monkeypatch):
-    def get_shot_on_goal(
+    def get_shot_miss_or_on_goal(
         self, shot_on_goal: float, defending_team: TeamSimulation
     ) -> EventOutcome:
         return EventOutcome.SHOT_ON_GOAL
@@ -209,7 +209,7 @@ def test_shot_hit_post_event(simulation_teams, monkeypatch):
     def get_shot_hit_post(self) -> EventOutcome:
         return EventOutcome.SHOT_HIT_POST
 
-    monkeypatch.setattr(ShotEvent, "get_shot_on_goal", get_shot_on_goal)
+    monkeypatch.setattr(ShotEvent, "get_shot_miss_or_on_goal", get_shot_miss_or_on_goal)
     monkeypatch.setattr(
         ShotEvent, "get_shot_on_goal_outcomes", get_shot_on_goal_outcomes
     )
@@ -235,7 +235,7 @@ def test_shot_hit_post_event(simulation_teams, monkeypatch):
 
 
 def test_shot_hit_post_goal_kick_event(simulation_teams, monkeypatch):
-    def get_shot_on_goal(
+    def get_shot_miss_or_on_goal(
         self, shot_on_goal: float, defending_team: TeamSimulation
     ) -> EventOutcome:
         return EventOutcome.SHOT_ON_GOAL
@@ -246,7 +246,7 @@ def test_shot_hit_post_goal_kick_event(simulation_teams, monkeypatch):
     def get_shot_hit_post(self) -> EventOutcome:
         return EventOutcome.SHOT_GOAL_KICK
 
-    monkeypatch.setattr(ShotEvent, "get_shot_on_goal", get_shot_on_goal)
+    monkeypatch.setattr(ShotEvent, "get_shot_miss_or_on_goal", get_shot_miss_or_on_goal)
     monkeypatch.setattr(
         ShotEvent, "get_shot_on_goal_outcomes", get_shot_on_goal_outcomes
     )
@@ -272,7 +272,7 @@ def test_shot_hit_post_goal_kick_event(simulation_teams, monkeypatch):
 
 
 def test_shot_saved_left_corner_event(simulation_teams, monkeypatch):
-    def get_shot_on_goal(
+    def get_shot_miss_or_on_goal(
         self, shot_on_goal: float, defending_team: TeamSimulation
     ) -> EventOutcome:
         return EventOutcome.SHOT_ON_GOAL
@@ -283,7 +283,7 @@ def test_shot_saved_left_corner_event(simulation_teams, monkeypatch):
     def get_shot_saved_outcomes(self) -> EventOutcome:
         return EventOutcome.SHOT_LEFT_CORNER_KICK
 
-    monkeypatch.setattr(ShotEvent, "get_shot_on_goal", get_shot_on_goal)
+    monkeypatch.setattr(ShotEvent, "get_shot_miss_or_on_goal", get_shot_miss_or_on_goal)
     monkeypatch.setattr(ShotEvent, "get_shot_saved_outcomes", get_shot_saved_outcomes)
     monkeypatch.setattr(
         ShotEvent, "get_shot_on_goal_outcomes", get_shot_on_goal_outcomes
@@ -308,7 +308,7 @@ def test_shot_saved_left_corner_event(simulation_teams, monkeypatch):
 
 
 def test_shot_saved_right_corner_event(simulation_teams, monkeypatch):
-    def get_shot_on_goal(
+    def get_shot_miss_or_on_goal(
         self, shot_on_goal: float, defending_team: TeamSimulation
     ) -> EventOutcome:
         return EventOutcome.SHOT_ON_GOAL
@@ -319,7 +319,7 @@ def test_shot_saved_right_corner_event(simulation_teams, monkeypatch):
     def get_shot_saved_outcomes(self) -> EventOutcome:
         return EventOutcome.SHOT_RIGHT_CORNER_KICK
 
-    monkeypatch.setattr(ShotEvent, "get_shot_on_goal", get_shot_on_goal)
+    monkeypatch.setattr(ShotEvent, "get_shot_miss_or_on_goal", get_shot_miss_or_on_goal)
     monkeypatch.setattr(ShotEvent, "get_shot_saved_outcomes", get_shot_saved_outcomes)
     monkeypatch.setattr(
         ShotEvent, "get_shot_on_goal_outcomes", get_shot_on_goal_outcomes
@@ -344,7 +344,7 @@ def test_shot_saved_right_corner_event(simulation_teams, monkeypatch):
 
 
 def test_shot_goal_event(simulation_teams, monkeypatch):
-    def get_shot_on_goal(
+    def get_shot_miss_or_on_goal(
         self, shot_on_goal: float, defending_team: TeamSimulation
     ) -> EventOutcome:
         return EventOutcome.SHOT_ON_GOAL
@@ -352,7 +352,7 @@ def test_shot_goal_event(simulation_teams, monkeypatch):
     def get_shot_on_goal_outcomes(self, shot_on_goal: float) -> EventOutcome:
         return EventOutcome.GOAL
 
-    monkeypatch.setattr(ShotEvent, "get_shot_on_goal", get_shot_on_goal)
+    monkeypatch.setattr(ShotEvent, "get_shot_miss_or_on_goal", get_shot_miss_or_on_goal)
     monkeypatch.setattr(
         ShotEvent, "get_shot_on_goal_outcomes", get_shot_on_goal_outcomes
     )
@@ -377,7 +377,7 @@ def test_shot_goal_event(simulation_teams, monkeypatch):
 
 
 def test_goals_from_different_players(simulation_teams, monkeypatch):
-    def get_shot_on_goal(
+    def get_shot_miss_or_on_goal(
         self, shot_on_goal: float, defending_team: TeamSimulation
     ) -> EventOutcome:
         return EventOutcome.SHOT_ON_GOAL
@@ -385,7 +385,7 @@ def test_goals_from_different_players(simulation_teams, monkeypatch):
     def get_shot_on_goal_outcomes(self, shot_on_goal: float) -> EventOutcome:
         return EventOutcome.GOAL
 
-    monkeypatch.setattr(ShotEvent, "get_shot_on_goal", get_shot_on_goal)
+    monkeypatch.setattr(ShotEvent, "get_shot_miss_or_on_goal", get_shot_miss_or_on_goal)
     monkeypatch.setattr(
         ShotEvent, "get_shot_on_goal_outcomes", get_shot_on_goal_outcomes
     )
@@ -413,7 +413,7 @@ def test_goals_from_different_players(simulation_teams, monkeypatch):
 
 
 def test_goal_with_assist(simulation_teams, monkeypatch):
-    def get_shot_on_goal(
+    def get_shot_miss_or_on_goal(
         self, shot_on_goal: float, defending_team: TeamSimulation
     ) -> EventOutcome:
         return EventOutcome.SHOT_ON_GOAL
@@ -430,7 +430,7 @@ def test_goal_with_assist(simulation_teams, monkeypatch):
     def get_secondary_outcome(self) -> EventOutcome:
         return EventOutcome.PASS_SUCCESS
 
-    monkeypatch.setattr(ShotEvent, "get_shot_on_goal", get_shot_on_goal)
+    monkeypatch.setattr(ShotEvent, "get_shot_miss_or_on_goal", get_shot_miss_or_on_goal)
     monkeypatch.setattr(
         ShotEvent, "get_shot_on_goal_outcomes", get_shot_on_goal_outcomes
     )
@@ -457,7 +457,7 @@ def test_goal_with_assist(simulation_teams, monkeypatch):
 
 
 def test_goal_after_pass_miss(simulation_teams, monkeypatch):
-    def get_shot_on_goal(
+    def get_shot_miss_or_on_goal(
         self, shot_on_goal: float, defending_team: TeamSimulation
     ) -> EventOutcome:
         return EventOutcome.SHOT_ON_GOAL
@@ -474,7 +474,7 @@ def test_goal_after_pass_miss(simulation_teams, monkeypatch):
     def get_intercept_prob(self) -> EventOutcome:
         return EventOutcome.PASS_MISS
 
-    monkeypatch.setattr(ShotEvent, "get_shot_on_goal", get_shot_on_goal)
+    monkeypatch.setattr(ShotEvent, "get_shot_miss_or_on_goal", get_shot_miss_or_on_goal)
     monkeypatch.setattr(
         ShotEvent, "get_shot_on_goal_outcomes", get_shot_on_goal_outcomes
     )
@@ -499,3 +499,59 @@ def test_goal_after_pass_miss(simulation_teams, monkeypatch):
     assert shot_event.outcome == EventOutcome.GOAL
     assert shot_event.attacking_player.statistics.goals == 1
     assert away_team.stats.assists == 0
+
+
+def test_shot_event_shot_saved_outcomes(simulation_teams):
+    event = get_shot_event()
+    home_team, away_team = simulation_teams
+    home_team.in_possession = True
+    home_team.player_in_possession = home_team.formation.fw[0]
+    away_team.in_possession = False
+    away_team.player_in_possession = None
+    assert isinstance(event.get_shot_saved_outcomes(), EventOutcome)
+
+
+def test_shot_event_shot_miss_or_on_goal_outcomes(simulation_teams):
+    event = get_shot_event()
+    home_team, away_team = simulation_teams
+    home_team.in_possession = True
+    home_team.player_in_possession = home_team.formation.fw[0]
+    away_team.in_possession = False
+    away_team.player_in_possession = None
+    event.get_players_involved(home_team, away_team)
+    shot_on_goal = event.attacking_player.get_shot_on_goal_probability(event.event_type)
+    assert isinstance(
+        event.get_shot_miss_or_on_goal(shot_on_goal, away_team), EventOutcome
+    )
+
+
+def test_shot_event_shot_blocked_outcome(simulation_teams):
+    event = get_shot_event()
+    home_team, away_team = simulation_teams
+    home_team.in_possession = True
+    home_team.player_in_possession = home_team.formation.fw[0]
+    away_team.in_possession = False
+    away_team.player_in_possession = None
+    assert isinstance(event.get_shot_blocked(), EventOutcome)
+
+
+def test_shot_event_shot_on_goal_outcomes(simulation_teams):
+    event = get_shot_event()
+    home_team, away_team = simulation_teams
+    home_team.in_possession = True
+    home_team.player_in_possession = home_team.formation.fw[0]
+    away_team.in_possession = False
+    away_team.player_in_possession = None
+    event.get_players_involved(home_team, away_team)
+    shot_on_goal = event.attacking_player.get_shot_on_goal_probability(event.event_type)
+    assert isinstance(event.get_shot_on_goal_outcomes(shot_on_goal), EventOutcome)
+
+
+def test_shot_event_shot_hit_post_outcome(simulation_teams):
+    event = get_shot_event()
+    home_team, away_team = simulation_teams
+    home_team.in_possession = True
+    home_team.player_in_possession = home_team.formation.fw[0]
+    away_team.in_possession = False
+    away_team.player_in_possession = None
+    assert isinstance(event.get_shot_hit_post(), EventOutcome)

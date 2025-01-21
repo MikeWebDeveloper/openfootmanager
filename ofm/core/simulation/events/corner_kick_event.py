@@ -42,7 +42,7 @@ class CornerKickEvent(SimulationEvent):
         team_strategy = attacking_team.team_strategy
         probabilities = team_corner_kick_strategy(team_strategy)
         corner_types = list(CornerKickType)
-        return random.choices(corner_types, probabilities)
+        return random.choices(corner_types, probabilities)[0]
 
     def calculate_event(
         self,

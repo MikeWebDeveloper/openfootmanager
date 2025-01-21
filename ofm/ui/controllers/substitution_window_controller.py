@@ -13,10 +13,7 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-from abc import ABC, abstractmethod
 from copy import deepcopy
-from dataclasses import dataclass
-from datetime import timedelta
 from typing import Callable
 
 from ttkbootstrap import Toplevel
@@ -25,46 +22,6 @@ from ...core.football.formation import FORMATION_STRINGS
 from ...core.football.team_simulation import PlayerSimulation, TeamSimulation
 from ...core.simulation.live_game_manager import LiveGameManager
 from ..pages.debug_match.substitution_window import SubstitutionWindow
-
-
-class Command(ABC):
-    @abstractmethod
-    def execute(self, *args):
-        return NotImplemented
-
-
-@dataclass
-class SubstitutionCommand(Command):
-    player_in: PlayerSimulation
-    player_out: PlayerSimulation
-    time: timedelta
-    additional_time: timedelta
-
-    def temporary(self, team: TeamSimulation):
-        team.sub_player(
-            self.player_out,
-            self.player_in,
-            self.time,
-            self.additional_time,
-            temporary=True,
-        )
-
-    def execute(self, team: TeamSimulation):
-        team.sub_player(
-            self.player_out,
-            self.player_in,
-            self.time,
-            self.additional_time,
-            temporary=False,
-        )
-
-
-@dataclass
-class FormationChangeCommand(Command):
-    formation_string: str
-
-    def execute(self, team: TeamSimulation):
-        team.formation.change_formation(self.formation_string)
 
 
 class SubstitutionWindowController:
@@ -80,7 +37,6 @@ class SubstitutionWindowController:
         self.team = deepcopy(team)
         self.live_game_manager = live_game_manager
         self.start_match = start_match
-        self.commands: list[Command] = []
         self.initialize()
         self._bind()
 
@@ -102,7 +58,11 @@ class SubstitutionWindowController:
         self.get_substitution_amount()
 
     def get_substitution_amount(self):
-        subs = self.team.max_substitutions - len(self.team.sub_history)
+        subs = (
+            self.team.max_substitutions
+            - self.team.substitutions
+            - self.team.temporary_subs
+        )
         self.page.update_substitution_amount(subs)
 
     def get_player_data(self, players: list[PlayerSimulation]) -> list[tuple]:
@@ -120,10 +80,6 @@ class SubstitutionWindowController:
         ]
 
     def update_team_formation(self, *args):
-        formation = self.page.formation_combobox.get()
-        command = FormationChangeCommand(formation)
-        self.commands.append(command)
-        command.execute(self.team)
         self.update_formation_table()
 
     def update_formation_table(self):
@@ -136,12 +92,9 @@ class SubstitutionWindowController:
 
     def apply_changes(self):
         if self.original_team == self.live_game.engine.home_team:
-            team = self.live_game.engine.home_team
+            self.live_game.engine.home_team = self.team
         else:
-            team = self.live_game.engine.away_team
-
-        for command in self.commands:
-            command.execute(team)
+            self.live_game.engine.away_team = self.team
 
         self.return_game()
 
@@ -187,30 +140,26 @@ class SubstitutionWindowController:
                 return player
 
     def sub_player(self):
-        player_out = self.page.team_table.item(self.page.team_table.focus())["values"]
-        player_in = self.page.reserves_table.item(self.page.reserves_table.focus())[
-            "values"
-        ]
+        player_out = self.page.substitution_tab.team_table.item(
+            self.page.substitution_tab.team_table.focus()
+        )["values"]
+        player_in = self.page.substitution_tab.reserves_table.item(
+            self.page.substitution_tab.reserves_table.focus()
+        )["values"]
         player_out = self.get_player_from_table(player_out)
         player_in = self.get_player_from_reserves_table(player_in)
 
         if player_out and player_in:
-            time = self.live_game_manager.live_game.minutes
-            additional_time = self.live_game_manager.live_game.added_time
-            command = SubstitutionCommand(player_in, player_out, time, additional_time)
-            self.commands.append(command)
-            command.temporary(self.team)
-
-        self.update_formation_table()
-        self.update_reserves_table()
-        self.get_substitution_amount()
+            self.update_formation_table()
+            self.update_reserves_table()
+            self.get_substitution_amount()
 
     def _bind(self):
         self.page.cancel_button.config(command=self.cancel)
         self.page.apply_button.config(command=self.apply_changes)
-        self.page.formation_combobox.bind(
+        self.page.substitution_tab.formation_combobox.bind(
             "<<ComboboxSelected>>", self.update_team_formation
         )
-        self.page.button_in.config(command=self.sub_player)
-        self.page.button_out.config(command=self.sub_player)
+        self.page.substitution_tab.button_in.config(command=self.sub_player)
+        self.page.substitution_tab.button_out.config(command=self.sub_player)
         self.page.protocol("WM_DELETE_WINDOW", self.cancel)
