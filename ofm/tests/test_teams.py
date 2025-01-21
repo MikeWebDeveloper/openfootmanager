@@ -1,5 +1,5 @@
 #      Openfoot Manager - A free and open source soccer management simulation
-#      Copyright (C) 2020-2024  Pedrenrique G. Guimarães
+#      Copyright (C) 2020-2025  Pedrenrique G. Guimarães
 #
 #      This program is free software: you can redistribute it and/or modify
 #      it under the terms of the GNU General Public License as published by
@@ -15,6 +15,8 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import datetime
 import uuid
+
+from ofm.core.settings import Settings
 
 from ..core.db.generators import TeamGenerator
 from ..core.football.club import Club, PlayerTeam
@@ -47,8 +49,10 @@ def test_get_club_from_mock_file(mock_file):
     assert clubs == expected_teams
 
 
-def test_generate_team_squads(squads_def, confederations_file):
-    team_gen = TeamGenerator(squads_def, confederations_file, datetime.date.today())
+def test_generate_team_squads(squads_def, confederations_file, settings: Settings):
+    team_gen = TeamGenerator(
+        squads_def, confederations_file, settings, datetime.date.today()
+    )
     clubs = team_gen.generate()
     for club in clubs:
         assert len(club.squad) >= 11

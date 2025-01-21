@@ -1,5 +1,5 @@
 #      Openfoot Manager - A free and open source soccer management simulation
-#      Copyright (C) 2020-2024  Pedrenrique G. Guimarães
+#      Copyright (C) 2020-2025  Pedrenrique G. Guimarães
 #
 #      This program is free software: you can redistribute it and/or modify
 #      it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@ import pytest
 from ofm.core.db.generators import TeamGenerator
 from ofm.core.football.formation import FORMATION_STRINGS, Formation, FormationError
 from ofm.core.football.player import Positions
+from ofm.core.settings import Settings
 
 
 def test_invalid_formation():
@@ -79,8 +80,10 @@ def test_add_players_to_formation_and_bench(player_team):
     assert len(formation.bench) == 5
 
 
-def test_formation_get_best_players(squads_def, confederations_file):
-    team_gen = TeamGenerator(squads_def, confederations_file)
+def test_formation_get_best_players(
+    squads_def, confederations_file, settings: Settings
+):
+    team_gen = TeamGenerator(squads_def, confederations_file, settings)
     clubs = team_gen.generate()
 
     formation = Formation("4-4-2")

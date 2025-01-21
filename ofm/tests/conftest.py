@@ -1,5 +1,5 @@
 #      Openfoot Manager - A free and open source soccer management simulation
-#      Copyright (C) 2020-2024  Pedrenrique G. Guimarães
+#      Copyright (C) 2020-2025  Pedrenrique G. Guimarães
 #
 #      This program is free software: you can redistribute it and/or modify
 #      it under the terms of the GNU General Public License as published by
@@ -28,11 +28,26 @@ from ..core.football.playercontract import PlayerContract
 from ..core.football.team_simulation import TeamSimulation
 from ..core.settings import Settings
 from ..core.simulation.simulation import Fixture, LiveGame, SimulationEngine
+from ..defaults import PROJECT_DIR
 
 
 @pytest.fixture
-def player_gen() -> PlayerGenerator:
-    return PlayerGenerator()
+def settings(tmp_path):
+    f = tmp_path / "settings.yaml"
+    settings = Settings(PROJECT_DIR, f)
+    settings.res = tmp_path / "res"
+    settings.res.mkdir(exist_ok=True)
+    settings.db = settings.res / "db"
+    settings.db.mkdir(exist_ok=True)
+    settings.clubs_file = settings.db / "clubs.json"
+    settings.squads_file = settings.db / "squads.json"
+    settings.players_file = settings.db / "players.json"
+    return settings
+
+
+@pytest.fixture
+def player_gen(settings: Settings) -> PlayerGenerator:
+    return PlayerGenerator(settings)
 
 
 @pytest.fixture
@@ -178,17 +193,16 @@ def mock_file() -> list[dict]:
 
 
 @pytest.fixture
-def confederations_file() -> list[dict]:
-    settings = Settings()
+def confederations_file(settings: Settings) -> list[dict]:
     with open(settings.fifa_conf, "r") as fp:
         return json.load(fp)
 
 
 @pytest.fixture
 def simulation_teams(
-    squads_def, confederations_file
+    squads_def, confederations_file, settings: Settings
 ) -> tuple[TeamSimulation, TeamSimulation]:
-    team_gen = TeamGenerator(squads_def, confederations_file)
+    team_gen = TeamGenerator(squads_def, confederations_file, settings)
 
     teams = team_gen.generate()
     home_team, away_team = teams[0], teams[1]
