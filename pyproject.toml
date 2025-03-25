@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "A free and open source football manager game."
 authors = ["sturdy-robot <pedrenriquegg@hotmail.com>"]
 readme = "README.md"
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.10"
