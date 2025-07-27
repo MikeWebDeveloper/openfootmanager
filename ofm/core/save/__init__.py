@@ -14,23 +14,7 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from .base import Base
-from .competition import Competition, CompetitionType
-from .fixture import Fixture, FixtureStatus
-from .league import League
-from .league_season import LeagueSeason
-from .league_table import LeagueTableEntry
-from .save_game import SaveGame, SaveType
+from .save_manager import SaveManager
+from .serializer import SaveSerializer
 
-__all__ = [
-    "Base",
-    "Competition",
-    "CompetitionType",
-    "League",
-    "LeagueSeason",
-    "Fixture",
-    "FixtureStatus",
-    "LeagueTableEntry",
-    "SaveGame",
-    "SaveType",
-]
+__all__ = ["SaveManager", "SaveSerializer"]
