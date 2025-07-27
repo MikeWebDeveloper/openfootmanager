@@ -14,7 +14,17 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from .calendar import CalendarEvent, CalendarEventType, GameCalendar
 from .fixture_generator import FixtureGenerator
+from .promotion_relegation import PromotionRelegationManager, PromotionRelegationResult
 from .season_manager import SeasonManager
 
-__all__ = ["FixtureGenerator", "SeasonManager"]
+__all__ = [
+    "FixtureGenerator",
+    "SeasonManager",
+    "GameCalendar",
+    "CalendarEvent",
+    "CalendarEventType",
+    "PromotionRelegationManager",
+    "PromotionRelegationResult",
+]
