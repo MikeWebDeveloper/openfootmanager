@@ -14,9 +14,11 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import json
 from typing import List
+from uuid import UUID
 
-from sqlalchemy import ForeignKey, Integer, UniqueConstraint
+from sqlalchemy import ForeignKey, Integer, String, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base import Base
@@ -41,8 +43,18 @@ class LeagueSeason(Base):
         "LeagueTableEntry", back_populates="league_season"
     )
     
-    # Teams participating in this season
-    team_ids: Mapped[List[int]] = mapped_column(Integer, nullable=False)  # Will be JSON array
+    # Teams participating in this season (stored as JSON)
+    _team_ids_json: Mapped[str] = mapped_column(String, nullable=False)
+    
+    @property
+    def team_ids(self) -> List[UUID]:
+        """Get team IDs from JSON"""
+        return [UUID(id_str) for id_str in json.loads(self._team_ids_json)]
+    
+    @team_ids.setter
+    def team_ids(self, value: List[UUID]) -> None:
+        """Set team IDs as JSON"""
+        self._team_ids_json = json.dumps([str(id) for id in value])
 
     def __repr__(self) -> str:
         return f"<LeagueSeason(id={self.id}, league_id={self.league_id})>"

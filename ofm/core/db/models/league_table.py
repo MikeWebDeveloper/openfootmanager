@@ -32,7 +32,7 @@ class LeagueTableEntry(Base):
     league_season_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("league_seasons.id"), nullable=False
     )
-    team_id: Mapped[UUID] = mapped_column(String(36), nullable=False)
+    team_id: Mapped[str] = mapped_column(String(36), nullable=False)
     position: Mapped[int] = mapped_column(Integer, nullable=False)
     
     # Match statistics

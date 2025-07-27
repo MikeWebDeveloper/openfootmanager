@@ -73,7 +73,7 @@ def test_fixture_generator_single_round_robin():
     assert len(fixtures) == 6
     
     # Each team should play exactly 3 matches
-    team_match_count = {team: 0 for team in teams}
+    team_match_count = {str(team): 0 for team in teams}
     for fixture in fixtures:
         team_match_count[fixture.home_team_id] += 1
         team_match_count[fixture.away_team_id] += 1
@@ -96,7 +96,7 @@ def test_fixture_generator_double_round_robin():
     assert len(fixtures) == 12
     
     # Each team should play exactly 6 matches
-    team_match_count = {team: 0 for team in teams}
+    team_match_count = {str(team): 0 for team in teams}
     for fixture in fixtures:
         team_match_count[fixture.home_team_id] += 1
         team_match_count[fixture.away_team_id] += 1
@@ -108,8 +108,8 @@ def test_fixture_generator_double_round_robin():
     for team1 in teams:
         for team2 in teams:
             if team1 != team2:
-                home_fixtures = [f for f in fixtures if f.home_team_id == team1 and f.away_team_id == team2]
-                away_fixtures = [f for f in fixtures if f.home_team_id == team2 and f.away_team_id == team1]
+                home_fixtures = [f for f in fixtures if f.home_team_id == str(team1) and f.away_team_id == str(team2)]
+                away_fixtures = [f for f in fixtures if f.home_team_id == str(team2) and f.away_team_id == str(team1)]
                 assert len(home_fixtures) == 1
                 assert len(away_fixtures) == 1
 
@@ -129,7 +129,7 @@ def test_fixture_generator_odd_teams():
     assert len(fixtures) == 10
     
     # Each team should play exactly 4 matches
-    team_match_count = {team: 0 for team in teams}
+    team_match_count = {str(team): 0 for team in teams}
     for fixture in fixtures:
         team_match_count[fixture.home_team_id] += 1
         team_match_count[fixture.away_team_id] += 1

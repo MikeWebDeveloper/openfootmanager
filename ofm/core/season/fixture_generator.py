@@ -55,14 +55,16 @@ class FixtureGenerator:
         Returns:
             List of Fixture objects
         """
-        if len(teams) % 2 != 0:
-            teams.append(None)  # Add dummy team for odd number
+        # Work with a copy to avoid modifying the input
+        teams_copy = teams.copy()
+        if len(teams_copy) % 2 != 0:
+            teams_copy.append(None)  # Add dummy team for odd number
         
-        n_teams = len(teams)
+        n_teams = len(teams_copy)
         fixtures = []
         
         # Generate first round robin
-        rounds = self._generate_round_robin(teams)
+        rounds = self._generate_round_robin(teams_copy)
         
         # Calculate dates for matches
         current_date = self.start_date
@@ -83,8 +85,8 @@ class FixtureGenerator:
                 if home is not None and away is not None:  # Skip dummy team fixtures
                     fixture = Fixture(
                         competition_id=competition_id,
-                        home_team_id=home,
-                        away_team_id=away,
+                        home_team_id=str(home),
+                        away_team_id=str(away),
                         match_date=current_date,
                         match_week=match_week,
                         status=FixtureStatus.SCHEDULED
@@ -112,8 +114,8 @@ class FixtureGenerator:
                         # Reverse home and away
                         fixture = Fixture(
                             competition_id=competition_id,
-                            home_team_id=away,
-                            away_team_id=home,
+                            home_team_id=str(away),
+                            away_team_id=str(home),
                             match_date=current_date,
                             match_week=match_week,
                             status=FixtureStatus.SCHEDULED

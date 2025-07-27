@@ -77,8 +77,9 @@ class SeasonManager:
         league_season = LeagueSeason(
             league_id=league.id,
             competition_id=competition.id,
-            team_ids=teams
+            _team_ids_json=""  # Will be set via property
         )
+        league_season.team_ids = teams
         self.session.add(league_season)
         self.session.flush()
         
@@ -86,7 +87,7 @@ class SeasonManager:
         for team_id in teams:
             entry = LeagueTableEntry(
                 league_season_id=league_season.id,
-                team_id=team_id,
+                team_id=str(team_id),
                 position=0  # Will be updated after sorting
             )
             self.session.add(entry)
@@ -125,7 +126,7 @@ class SeasonManager:
             return
         
         # Find the league season for this fixture
-        competition = self.session.query(Competition).get(fixture.competition_id)
+        competition = self.session.get(Competition, fixture.competition_id)
         league_season = (
             self.session.query(LeagueSeason)
             .filter_by(competition_id=competition.id)

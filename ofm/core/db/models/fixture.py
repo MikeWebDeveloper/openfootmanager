@@ -42,8 +42,8 @@ class Fixture(Base):
     competition_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("competitions.id"), nullable=False
     )
-    home_team_id: Mapped[UUID] = mapped_column(String(36), nullable=False)
-    away_team_id: Mapped[UUID] = mapped_column(String(36), nullable=False)
+    home_team_id: Mapped[str] = mapped_column(String(36), nullable=False)
+    away_team_id: Mapped[str] = mapped_column(String(36), nullable=False)
     match_date: Mapped[datetime] = mapped_column(DateTime, nullable=False)
     match_week: Mapped[int] = mapped_column(Integer, nullable=False)
     status: Mapped[FixtureStatus] = mapped_column(
@@ -84,7 +84,7 @@ class Fixture(Base):
         return self.home_score == self.away_score
 
     @property
-    def winner_id(self) -> Optional[UUID]:
+    def winner_id(self) -> Optional[str]:
         """Returns the ID of the winning team, or None if draw/not completed"""
         if not self.is_completed or self.is_draw:
             return None
