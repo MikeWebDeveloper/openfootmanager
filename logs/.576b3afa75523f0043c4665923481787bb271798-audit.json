@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "/Users/michallatal/Desktop/openfootmanager/logs/.576b3afa75523f0043c4665923481787bb271798-audit.json",
+    "files": [
+        {
+            "date": 1753641325167,
+            "name": "/Users/michallatal/Desktop/openfootmanager/logs/mcp-puppeteer-2025-07-27.log",
+            "hash": "27009a92a12a7424e7a2069d0049001e39d43e40de409dfc6acbff2474f2d574"
+        }
+    ],
+    "hashType": "sha256"
+}
