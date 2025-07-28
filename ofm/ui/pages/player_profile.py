@@ -23,9 +23,7 @@ class OffensiveAttributesFrame(ttk.Frame):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.offensive_label = ttk.Label(
-            self, text="Offensive Attributes", font=("Helvetica", 16)
-        )
+        self.offensive_label = ttk.Label(self, text="Offensive Attributes", font=("Helvetica", 16))
         self.offensive_label.grid(row=0, column=0, padx=10, pady=10, sticky=NSEW)
 
         self.shot_power_value = ttk.IntVar()
@@ -34,19 +32,11 @@ class OffensiveAttributesFrame(ttk.Frame):
         self.penalty_value = ttk.IntVar()
         self.positioning_value = ttk.IntVar()
 
-        self.shot_power_label = ttk.Label(
-            self, text="Shot Power: ", font=("Helvetica", 12)
-        )
-        self.shot_accuracy_label = ttk.Label(
-            self, text="Shot Accuracy: ", font=("Helvetica", 12)
-        )
-        self.free_kick_label = ttk.Label(
-            self, text="Free Kick: ", font=("Helvetica", 12)
-        )
+        self.shot_power_label = ttk.Label(self, text="Shot Power: ", font=("Helvetica", 12))
+        self.shot_accuracy_label = ttk.Label(self, text="Shot Accuracy: ", font=("Helvetica", 12))
+        self.free_kick_label = ttk.Label(self, text="Free Kick: ", font=("Helvetica", 12))
         self.penalty_label = ttk.Label(self, text="Penalty: ", font=("Helvetica", 12))
-        self.positioning_label = ttk.Label(
-            self, text="Positioning: ", font=("Helvetica", 12)
-        )
+        self.positioning_label = ttk.Label(self, text="Positioning: ", font=("Helvetica", 12))
 
         self.shot_power_value_label = ttk.Label(
             self, textvariable=self.shot_power_value, font=("Helvetica", 12)
@@ -71,9 +61,7 @@ class OffensiveAttributesFrame(ttk.Frame):
         self.positioning_label.grid(row=5, column=0, padx=5, pady=10, sticky=NSEW)
 
         self.shot_power_value_label.grid(row=1, column=1, padx=5, pady=10, sticky=NSEW)
-        self.shot_accuracy_value_label.grid(
-            row=2, column=1, padx=5, pady=10, sticky=NSEW
-        )
+        self.shot_accuracy_value_label.grid(row=2, column=1, padx=5, pady=10, sticky=NSEW)
         self.free_kick_value_label.grid(row=3, column=1, padx=5, pady=10, sticky=NSEW)
         self.penalty_value_label.grid(row=4, column=1, padx=5, pady=10, sticky=NSEW)
         self.positioning_value_label.grid(row=5, column=1, padx=5, pady=10, sticky=NSEW)
@@ -83,9 +71,7 @@ class DefensiveAttributesFrame(ttk.Frame):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.defensive_label = ttk.Label(
-            self, text="Defensive Attributes", font=("Helvetica", 16)
-        )
+        self.defensive_label = ttk.Label(self, text="Defensive Attributes", font=("Helvetica", 16))
         self.defensive_label.grid(row=0, column=0, padx=10, pady=10, sticky=NSEW)
 
         self.tackling_value = ttk.IntVar()
@@ -93,12 +79,8 @@ class DefensiveAttributesFrame(ttk.Frame):
         self.positioning_value = ttk.IntVar()
 
         self.tackling_label = ttk.Label(self, text="Tackling: ", font=("Helvetica", 12))
-        self.interception_label = ttk.Label(
-            self, text="Interception: ", font=("Helvetica", 12)
-        )
-        self.positioning_label = ttk.Label(
-            self, text="Positioning: ", font=("Helvetica", 12)
-        )
+        self.interception_label = ttk.Label(self, text="Interception: ", font=("Helvetica", 12))
+        self.positioning_label = ttk.Label(self, text="Positioning: ", font=("Helvetica", 12))
 
         self.tackling_value_label = ttk.Label(
             self, textvariable=self.tackling_value, font=("Helvetica", 12)
@@ -115,9 +97,7 @@ class DefensiveAttributesFrame(ttk.Frame):
         self.positioning_label.grid(row=3, column=0, padx=5, pady=10, sticky=NSEW)
 
         self.tackling_value_label.grid(row=1, column=1, padx=5, pady=10, sticky=NSEW)
-        self.interception_value_label.grid(
-            row=2, column=1, padx=5, pady=10, sticky=NSEW
-        )
+        self.interception_value_label.grid(row=2, column=1, padx=5, pady=10, sticky=NSEW)
         self.positioning_value_label.grid(row=3, column=1, padx=5, pady=10, sticky=NSEW)
 
 
@@ -141,20 +121,12 @@ class IntelligenceAttributesFrame(ttk.Frame):
 
         self.vision_label = ttk.Label(self, text="Vision: ", font=("Helvetica", 12))
         self.passing_label = ttk.Label(self, text="Passing: ", font=("Helvetica", 12))
-        self.dribbling_label = ttk.Label(
-            self, text="Dribbling: ", font=("Helvetica", 12)
-        )
+        self.dribbling_label = ttk.Label(self, text="Dribbling: ", font=("Helvetica", 12))
         self.crossing_label = ttk.Label(self, text="Crossing: ", font=("Helvetica", 12))
-        self.ball_control_label = ttk.Label(
-            self, text="Ball Control: ", font=("Helvetica", 12)
-        )
-        self.dribbling_label = ttk.Label(
-            self, text="Dribbling: ", font=("Helvetica", 12)
-        )
+        self.ball_control_label = ttk.Label(self, text="Ball Control: ", font=("Helvetica", 12))
+        self.dribbling_label = ttk.Label(self, text="Dribbling: ", font=("Helvetica", 12))
         self.skills_label = ttk.Label(self, text="Skills: ", font=("Helvetica", 12))
-        self.team_work_label = ttk.Label(
-            self, text="Team Work: ", font=("Helvetica", 12)
-        )
+        self.team_work_label = ttk.Label(self, text="Team Work: ", font=("Helvetica", 12))
 
         self.vision_value_label = ttk.Label(
             self, textvariable=self.vision_value, font=("Helvetica", 12)
@@ -182,18 +154,14 @@ class IntelligenceAttributesFrame(ttk.Frame):
         self.passing_value_label.grid(row=2, column=1, padx=5, pady=10, sticky=NSEW)
         self.dribbling_value_label.grid(row=3, column=1, padx=5, pady=10, sticky=NSEW)
         self.crossing_value_label.grid(row=4, column=1, padx=5, pady=10, sticky=NSEW)
-        self.ball_control_value_label.grid(
-            row=5, column=1, padx=5, pady=10, sticky=NSEW
-        )
+        self.ball_control_value_label.grid(row=5, column=1, padx=5, pady=10, sticky=NSEW)
 
 
 class PhysicalAttributesFrame(ttk.Frame):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.physical_label = ttk.Label(
-            self, text="Physical Attributes", font=("Helvetica", 16)
-        )
+        self.physical_label = ttk.Label(self, text="Physical Attributes", font=("Helvetica", 16))
         self.physical_label.grid(row=0, column=0, padx=10, pady=10, sticky=NSEW)
 
         self.strength_value = ttk.IntVar()
@@ -201,12 +169,8 @@ class PhysicalAttributesFrame(ttk.Frame):
         self.endurance_value = ttk.IntVar()
 
         self.strength_label = ttk.Label(self, text="Strength: ", font=("Helvetica", 12))
-        self.aggression_label = ttk.Label(
-            self, text="Aggression: ", font=("Helvetica", 12)
-        )
-        self.endurance_label = ttk.Label(
-            self, text="Endurance: ", font=("Helvetica", 12)
-        )
+        self.aggression_label = ttk.Label(self, text="Aggression: ", font=("Helvetica", 12))
+        self.endurance_label = ttk.Label(self, text="Endurance: ", font=("Helvetica", 12))
 
         self.strength_value_label = ttk.Label(
             self, textvariable=self.strength_value, font=("Helvetica", 12)
@@ -231,9 +195,7 @@ class GkAttributesFrame(ttk.Frame):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.gk_attributes_label = ttk.Label(
-            self, text="GK Attributes", font=("Helvetica", 16)
-        )
+        self.gk_attributes_label = ttk.Label(self, text="GK Attributes", font=("Helvetica", 16))
         self.gk_attributes_label.grid(row=0, column=0, padx=10, pady=10, sticky=NSEW)
 
         self.reflexes_value = ttk.IntVar()
@@ -243,9 +205,7 @@ class GkAttributesFrame(ttk.Frame):
 
         self.reflexes_label = ttk.Label(self, text="Reflexes: ", font=("Helvetica", 12))
         self.jumping_label = ttk.Label(self, text="Jumping: ", font=("Helvetica", 12))
-        self.positioning_label = ttk.Label(
-            self, text="Positioning: ", font=("Helvetica", 12)
-        )
+        self.positioning_label = ttk.Label(self, text="Positioning: ", font=("Helvetica", 12))
         self.penalty_label = ttk.Label(self, text="Penalty: ", font=("Helvetica", 12))
 
         self.reflexes_value_label = ttk.Label(
@@ -282,9 +242,7 @@ class PlayerProfilePage(ttk.Frame):
         self.player_list = ttk.Variable(
             value=["Allejo", "Ronaldo", "Ronaldinho", "Messi", "Suarez", "Neymar"]
         )
-        self.player_choice = tk.Listbox(
-            self.player_choice_frame, listvariable=self.player_list
-        )
+        self.player_choice = tk.Listbox(self.player_choice_frame, listvariable=self.player_list)
         self.player_choice.selection_set(0)
         self.player_choice.pack(side=LEFT, fill=BOTH, expand=True)
 
@@ -317,9 +275,7 @@ class PlayerProfilePage(ttk.Frame):
             text="Birth date: ",
             font=("Helvetica", 12),
         )
-        self.player_birth_date_label.grid(
-            row=0, column=0, padx=20, pady=10, sticky=NSEW
-        )
+        self.player_birth_date_label.grid(row=0, column=0, padx=20, pady=10, sticky=NSEW)
 
         self.player_birth_date_value = ttk.StringVar(value="22-09-1995")
 
@@ -328,18 +284,14 @@ class PlayerProfilePage(ttk.Frame):
             textvariable=self.player_birth_date_value,
             font=("Helvetica", 12),
         )
-        self.player_birth_date_label.grid(
-            row=0, column=1, padx=10, pady=10, sticky=NSEW
-        )
+        self.player_birth_date_label.grid(row=0, column=1, padx=10, pady=10, sticky=NSEW)
 
         self.player_nationality_label = ttk.Label(
             self.player_personal_details_frame,
             text="Nationality: ",
             font=("Helvetica", 12),
         )
-        self.player_nationality_label.grid(
-            row=1, column=0, padx=20, pady=10, sticky=NSEW
-        )
+        self.player_nationality_label.grid(row=1, column=0, padx=20, pady=10, sticky=NSEW)
 
         self.player_nationality_value = ttk.StringVar(value="Brazil")
 
@@ -348,9 +300,7 @@ class PlayerProfilePage(ttk.Frame):
             textvariable=self.player_nationality_value,
             font=("Helvetica", 12),
         )
-        self.player_nationality_value_label.grid(
-            row=1, column=1, padx=10, pady=10, sticky=NSEW
-        )
+        self.player_nationality_value_label.grid(row=1, column=1, padx=10, pady=10, sticky=NSEW)
 
         self.positions_value = ttk.StringVar(value="FW")
 
@@ -368,9 +318,7 @@ class PlayerProfilePage(ttk.Frame):
         )
         self.positions_value_label.grid(row=2, column=1, padx=10, pady=10, sticky=NSEW)
 
-        self.player_personal_details_frame.grid(
-            row=1, column=1, padx=10, pady=10, sticky=NSEW
-        )
+        self.player_personal_details_frame.grid(row=1, column=1, padx=10, pady=10, sticky=NSEW)
         self.player_personal_info_frame.grid(
             row=0, column=0, columnspan=3, padx=10, pady=10, sticky=NSEW
         )
@@ -382,40 +330,24 @@ class PlayerProfilePage(ttk.Frame):
             row=4, column=0, columnspan=3, padx=20, pady=10, sticky=NSEW
         )
 
-        self.offensive_attributes_column = OffensiveAttributesFrame(
-            self.player_attributes_frame
-        )
-        self.offensive_attributes_column.grid(
-            row=0, column=0, padx=10, pady=10, sticky=NSEW
-        )
+        self.offensive_attributes_column = OffensiveAttributesFrame(self.player_attributes_frame)
+        self.offensive_attributes_column.grid(row=0, column=0, padx=10, pady=10, sticky=NSEW)
 
-        self.defensive_attributes_column = DefensiveAttributesFrame(
-            self.player_attributes_frame
-        )
-        self.defensive_attributes_column.grid(
-            row=0, column=1, padx=10, pady=10, sticky=NSEW
-        )
+        self.defensive_attributes_column = DefensiveAttributesFrame(self.player_attributes_frame)
+        self.defensive_attributes_column.grid(row=0, column=1, padx=10, pady=10, sticky=NSEW)
 
-        self.physical_attributes_column = PhysicalAttributesFrame(
-            self.player_attributes_frame
-        )
-        self.physical_attributes_column.grid(
-            row=0, column=2, padx=10, pady=10, sticky=NSEW
-        )
+        self.physical_attributes_column = PhysicalAttributesFrame(self.player_attributes_frame)
+        self.physical_attributes_column.grid(row=0, column=2, padx=10, pady=10, sticky=NSEW)
 
         self.intelligence_attributes_column = IntelligenceAttributesFrame(
             self.player_attributes_frame
         )
-        self.intelligence_attributes_column.grid(
-            row=1, column=0, padx=10, pady=10, sticky=NSEW
-        )
+        self.intelligence_attributes_column.grid(row=1, column=0, padx=10, pady=10, sticky=NSEW)
 
         self.gk_attributes_column = GkAttributesFrame(self.player_attributes_frame)
         self.gk_attributes_column.grid(row=1, column=1, padx=10, pady=10, sticky=NSEW)
 
-        self.player_choice_frame.grid(
-            row=0, column=0, rowspan=3, padx=20, pady=20, sticky=NSEW
-        )
+        self.player_choice_frame.grid(row=0, column=0, rowspan=3, padx=20, pady=20, sticky=NSEW)
         self.player_details_frame.grid(row=0, column=1, padx=20, pady=20, sticky=NSEW)
 
         self.button_frame = ttk.Frame(self)
@@ -423,6 +355,4 @@ class PlayerProfilePage(ttk.Frame):
         self.cancel_btn = ttk.Button(self.button_frame, text="Cancel")
         self.cancel_btn.pack(fill=BOTH, side=BOTTOM, padx=20, pady=20)
 
-        self.button_frame.grid(
-            row=1, column=0, columnspan=4, padx=20, pady=20, sticky=NSEW
-        )
+        self.button_frame.grid(row=1, column=0, columnspan=4, padx=20, pady=20, sticky=NSEW)

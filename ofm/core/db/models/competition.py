@@ -20,7 +20,7 @@ from typing import TYPE_CHECKING, List, Optional
 
 from sqlalchemy import Boolean, DateTime
 from sqlalchemy import Enum as SQLEnum
-from sqlalchemy import ForeignKey, Integer, String
+from sqlalchemy import Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base import Base
@@ -44,9 +44,7 @@ class Competition(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String(100), nullable=False)
     short_name: Mapped[str] = mapped_column(String(20), nullable=False)
-    type: Mapped[CompetitionType] = mapped_column(
-        SQLEnum(CompetitionType), nullable=False
-    )
+    type: Mapped[CompetitionType] = mapped_column(SQLEnum(CompetitionType), nullable=False)
     country: Mapped[Optional[str]] = mapped_column(String(3))  # ISO country code
     season: Mapped[int] = mapped_column(Integer, nullable=False)  # e.g., 2024
     start_date: Mapped[datetime] = mapped_column(DateTime, nullable=False)
@@ -54,9 +52,7 @@ class Competition(Base):
     active: Mapped[bool] = mapped_column(Boolean, default=True)
 
     # Relationships
-    fixtures: Mapped[List["Fixture"]] = relationship(
-        "Fixture", back_populates="competition"
-    )
+    fixtures: Mapped[List["Fixture"]] = relationship("Fixture", back_populates="competition")
 
     def __repr__(self) -> str:
         return f"<Competition(id={self.id}, name='{self.name}', season={self.season})>"

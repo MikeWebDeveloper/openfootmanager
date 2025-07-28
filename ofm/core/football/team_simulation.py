@@ -145,9 +145,7 @@ class TeamSimulation:
         minutes: timedelta,
         additional_time: timedelta = timedelta(0),
     ):
-        yellow_card = GameEvent(
-            player, minutes, GameEventType.YELLOW_CARD, additional_time
-        )
+        yellow_card = GameEvent(player, minutes, GameEventType.YELLOW_CARD, additional_time)
         self.yellow_card_history.append(yellow_card)
         self.game_events.append(yellow_card)
 
@@ -168,17 +166,11 @@ class TeamSimulation:
         players = self.formation.players.copy()
         if position == PitchPosition.DEF_BOX:
             probabilities = [0.3]
-            df_prob = [
-                0.5 if player.able_to_play else 0 for player in self.formation.df
-            ]
+            df_prob = [0.5 if player.able_to_play else 0 for player in self.formation.df]
             probabilities.extend(df_prob)
-            mf_prob = [
-                0.1 if player.able_to_play else 0 for player in self.formation.mf
-            ]
+            mf_prob = [0.1 if player.able_to_play else 0 for player in self.formation.mf]
             probabilities.extend(mf_prob)
-            fw_prob = [
-                0.1 if player.able_to_play else 0 for player in self.formation.fw
-            ]
+            fw_prob = [0.1 if player.able_to_play else 0 for player in self.formation.fw]
             probabilities.extend(fw_prob)
         elif position in [
             PitchPosition.DEF_RIGHT,
@@ -188,16 +180,10 @@ class TeamSimulation:
             PitchPosition.DEF_MIDFIELD_RIGHT,
         ]:
             players.remove(self.formation.gk)
-            probabilities = [
-                0.6 if player.able_to_play else 0 for player in self.formation.df
-            ]
-            mf_prob = [
-                0.3 if player.able_to_play else 0 for player in self.formation.mf
-            ]
+            probabilities = [0.6 if player.able_to_play else 0 for player in self.formation.df]
+            mf_prob = [0.3 if player.able_to_play else 0 for player in self.formation.mf]
             probabilities.extend(mf_prob)
-            fw_prob = [
-                0.1 if player.able_to_play else 0 for player in self.formation.fw
-            ]
+            fw_prob = [0.1 if player.able_to_play else 0 for player in self.formation.fw]
             probabilities.extend(fw_prob)
         elif position in [
             PitchPosition.MIDFIELD_RIGHT,
@@ -208,35 +194,20 @@ class TeamSimulation:
             PitchPosition.OFF_MIDFIELD_CENTER,
         ]:
             players.remove(self.formation.gk)
-            probabilities = [
-                0.2 if player.able_to_play else 0 for player in self.formation.df
-            ]
-            mf_prob = [
-                0.5 if player.able_to_play else 0 for player in self.formation.mf
-            ]
+            probabilities = [0.2 if player.able_to_play else 0 for player in self.formation.df]
+            mf_prob = [0.5 if player.able_to_play else 0 for player in self.formation.mf]
             probabilities.extend(mf_prob)
-            fw_prob = [
-                0.3 if player.able_to_play else 0 for player in self.formation.fw
-            ]
+            fw_prob = [0.3 if player.able_to_play else 0 for player in self.formation.fw]
             probabilities.extend(fw_prob)
         else:
             players.remove(self.formation.gk)
-            probabilities = [
-                0.1 if player.able_to_play else 0 for player in self.formation.df
-            ]
-            mf_prob = [
-                0.3 if player.able_to_play else 0 for player in self.formation.mf
-            ]
+            probabilities = [0.1 if player.able_to_play else 0 for player in self.formation.df]
+            mf_prob = [0.3 if player.able_to_play else 0 for player in self.formation.mf]
             probabilities.extend(mf_prob)
-            fw_prob = [
-                0.6 if player.able_to_play else 0 for player in self.formation.fw
-            ]
+            fw_prob = [0.6 if player.able_to_play else 0 for player in self.formation.fw]
             probabilities.extend(fw_prob)
 
-        if (
-            self.player_in_possession is not None
-            and self.player_in_possession in players
-        ):
+        if self.player_in_possession is not None and self.player_in_possession in players:
             idx = players.index(self.player_in_possession)
             players.pop(idx)
             probabilities.pop(idx)
@@ -387,22 +358,14 @@ class TeamStats:
         self.goals = sum(player.statistics.goals for player in players)
         self.yellow_cards = sum(player.statistics.yellow_cards for player in players)
         self.red_cards = sum(player.statistics.red_cards for player in players)
-        self.goals_conceded = sum(
-            player.statistics.goals_conceded for player in players
-        )
+        self.goals_conceded = sum(player.statistics.goals_conceded for player in players)
         self.shots = sum(player.statistics.shots for player in players)
-        self.shots_on_target = sum(
-            player.statistics.shots_on_target for player in players
-        )
+        self.shots_on_target = sum(player.statistics.shots_on_target for player in players)
         self.passes = sum(player.statistics.passes for player in players)
         self.passes_missed = sum(player.statistics.passes_missed for player in players)
         self.crosses = sum(player.statistics.crosses for player in players)
-        self.crosses_missed = sum(
-            player.statistics.crosses_missed for player in players
-        )
+        self.crosses_missed = sum(player.statistics.crosses_missed for player in players)
         self.dribbles = sum(player.statistics.dribbles for player in players)
-        self.dribbles_failed = sum(
-            player.statistics.dribbles_failed for player in players
-        )
+        self.dribbles_failed = sum(player.statistics.dribbles_failed for player in players)
         self.interceptions = sum(player.statistics.interceptions for player in players)
         self.assists = sum(player.statistics.assists for player in players)

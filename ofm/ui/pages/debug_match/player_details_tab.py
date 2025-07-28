@@ -119,9 +119,7 @@ class TeamTableComponent(ttk.Frame):
         )
         self.substitute_team_checkbox.grid(row=3, column=0, padx=10, pady=10, sticky=EW)
         self.substitute_team_btn = ttk.Button(self, text="Substitute")
-        self.substitute_team_btn.grid(
-            row=4, column=0, columnspan=2, padx=10, pady=10, sticky=NSEW
-        )
+        self.substitute_team_btn.grid(row=4, column=0, columnspan=2, padx=10, pady=10, sticky=NSEW)
 
     def enable_substitution_button(self):
         self.substitute_team_btn.config(state=NORMAL)

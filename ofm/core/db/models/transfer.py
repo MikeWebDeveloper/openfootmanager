@@ -10,22 +10,10 @@ This module contains all transfer-related database models including:
 
 from datetime import datetime
 from enum import Enum
-from typing import Optional
 
-from sqlalchemy import (
-    JSON,
-    Boolean,
-    Column,
-    DateTime,
-)
+from sqlalchemy import JSON, Boolean, Column, DateTime
 from sqlalchemy import Enum as SQLEnum
-from sqlalchemy import (
-    Float,
-    ForeignKey,
-    Integer,
-    String,
-    Text,
-)
+from sqlalchemy import Float, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
 from .base import Base
@@ -68,9 +56,7 @@ class PlayerMarketValue(Base):
     __tablename__ = "player_market_values"
 
     id = Column(Integer, primary_key=True)
-    player_id = Column(
-        Integer, nullable=False
-    )  # Removed ForeignKey since Player is not a DB model
+    player_id = Column(Integer, nullable=False)  # Removed ForeignKey since Player is not a DB model
     value = Column(Float, nullable=False)
     date = Column(DateTime, default=datetime.utcnow)
 
@@ -96,12 +82,8 @@ class TransferListing(Base):
     __tablename__ = "transfer_listings"
 
     id = Column(Integer, primary_key=True)
-    player_id = Column(
-        Integer, nullable=False
-    )  # Removed ForeignKey since Player is not a DB model
-    club_id = Column(
-        Integer, nullable=False
-    )  # Removed ForeignKey since Club is not a DB model
+    player_id = Column(Integer, nullable=False)  # Removed ForeignKey since Player is not a DB model
+    club_id = Column(Integer, nullable=False)  # Removed ForeignKey since Club is not a DB model
 
     # Listing details
     asking_price = Column(Float, nullable=False)
@@ -120,8 +102,10 @@ class TransferListing(Base):
     is_public = Column(Boolean, default=True)  # Private listings for agent circulation
 
     # Relationships
-    # player = relationship("Player", back_populates="transfer_listings")  # Commented - not SQLAlchemy model
-    # club = relationship("Club", back_populates="transfer_listings")  # Commented - not SQLAlchemy model
+    # player = relationship("Player", back_populates="transfer_listings")
+    # Commented - not SQLAlchemy model
+    # club = relationship("Club", back_populates="transfer_listings")
+    # Commented - not SQLAlchemy model
     negotiations = relationship("TransferNegotiation", back_populates="listing")
 
 
@@ -132,9 +116,7 @@ class TransferNegotiation(Base):
 
     id = Column(Integer, primary_key=True)
     listing_id = Column(Integer, ForeignKey("transfer_listings.id"))
-    player_id = Column(
-        Integer, nullable=False
-    )  # Removed ForeignKey since Player is not a DB model
+    player_id = Column(Integer, nullable=False)  # Removed ForeignKey since Player is not a DB model
     selling_club_id = Column(Integer, nullable=False)
     buying_club_id = Column(Integer, nullable=False)
 
@@ -152,9 +134,7 @@ class TransferNegotiation(Base):
     signing_bonus = Column(Float, default=0)
 
     # Performance clauses
-    performance_bonuses = Column(
-        JSON
-    )  # Structure: {"appearances": 1000000, "goals": 500000}
+    performance_bonuses = Column(JSON)  # Structure: {"appearances": 1000000, "goals": 500000}
     sell_on_percentage = Column(Float, default=0)  # Future sale percentage
 
     # Loan specific
@@ -176,9 +156,7 @@ class TransferNegotiation(Base):
     # player = relationship("Player", back_populates="transfer_negotiations")
     # selling_club = relationship("Club", foreign_keys=[selling_club_id])
     # buying_club = relationship("Club", foreign_keys=[buying_club_id])
-    contract_offer = relationship(
-        "ContractOffer", back_populates="negotiation", uselist=False
-    )
+    contract_offer = relationship("ContractOffer", back_populates="negotiation", uselist=False)
 
 
 class ContractOffer(Base):
@@ -187,9 +165,7 @@ class ContractOffer(Base):
     __tablename__ = "contract_offers"
 
     id = Column(Integer, primary_key=True)
-    negotiation_id = Column(
-        Integer, ForeignKey("transfer_negotiations.id"), nullable=False
-    )
+    negotiation_id = Column(Integer, ForeignKey("transfer_negotiations.id"), nullable=False)
     player_id = Column(Integer, nullable=False)
     club_id = Column(Integer, nullable=False)
 

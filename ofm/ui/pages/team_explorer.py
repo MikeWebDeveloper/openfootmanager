@@ -25,9 +25,7 @@ class TeamExplorerPage(ttk.Frame):
         super().__init__(*args, **kwargs)
 
         self.title_label = ttk.Label(self, text="Team Explorer", font="Arial 24 bold")
-        self.title_label.grid(
-            row=0, column=0, padx=10, pady=10, columnspan=2, sticky=NS
-        )
+        self.title_label.grid(row=0, column=0, padx=10, pady=10, columnspan=2, sticky=NS)
 
         self.team_details = ttk.Frame(self)
         default_regions = ["UEFA", "CONMEBOL", "CAF", "AFC"]
@@ -62,9 +60,7 @@ class TeamExplorerPage(ttk.Frame):
             selectmode=ttk.BROWSE,
         )
         self.team_selection.selection_set(0)
-        self.team_selection.grid(
-            row=2, column=0, rowspan=2, padx=10, pady=10, sticky=EW
-        )
+        self.team_selection.grid(row=2, column=0, rowspan=2, padx=10, pady=10, sticky=EW)
 
         self.columns = [
             {"text": "Name", "stretch": False},
@@ -107,6 +103,4 @@ class TeamExplorerPage(ttk.Frame):
         self.cancel_btn = ttk.Button(self.button_frame, text="Cancel")
         self.cancel_btn.pack(side="left", padx=10)
 
-        self.button_frame.grid(
-            row=2, column=0, columnspan=2, padx=10, pady=10, sticky=NS
-        )
+        self.button_frame.grid(row=2, column=0, columnspan=2, padx=10, pady=10, sticky=NS)

@@ -89,9 +89,7 @@ def sample_game_state(db_session):
     db_session.flush()
 
     # Create league season
-    season = LeagueSeason(
-        league_id=league.id, competition_id=competition.id, _team_ids_json=""
-    )
+    season = LeagueSeason(league_id=league.id, competition_id=competition.id, _team_ids_json="")
     teams = [uuid.uuid4() for _ in range(4)]
     season.team_ids = teams
     db_session.add(season)

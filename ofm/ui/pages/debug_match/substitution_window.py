@@ -50,12 +50,8 @@ class CornerKickTab(ttk.Frame):
         self.corner_kick_taker_label = ttk.Label(self, text="Corner Kick Taker: ")
         self.corner_kick_taker = ttk.StringVar()
 
-        self.team_table.grid(
-            row=0, column=0, columnspan=2, padx=10, pady=10, sticky=NSEW
-        )
-        self.corner_kick_taker_label.grid(
-            row=1, column=0, padx=10, pady=10, sticky=NSEW
-        )
+        self.team_table.grid(row=0, column=0, columnspan=2, padx=10, pady=10, sticky=NSEW)
+        self.corner_kick_taker_label.grid(row=1, column=0, padx=10, pady=10, sticky=NSEW)
 
     def update_players(self, players: list[tuple[str, str, str, str]]):
         self.team_table.delete(*self.team_table.get_children())
@@ -96,12 +92,8 @@ class PenaltyKickTab(ttk.Frame):
         self.penalty_kick_taker_label = ttk.Label(self, text="Penalty Kick Taker: ")
         self.penalty_kick_taker = ttk.StringVar()
 
-        self.team_table.grid(
-            row=0, column=0, columnspan=2, padx=10, pady=10, sticky=NSEW
-        )
-        self.penalty_kick_taker_label.grid(
-            row=1, column=0, padx=10, pady=10, sticky=NSEW
-        )
+        self.team_table.grid(row=0, column=0, columnspan=2, padx=10, pady=10, sticky=NSEW)
+        self.penalty_kick_taker_label.grid(row=1, column=0, padx=10, pady=10, sticky=NSEW)
 
     def update_players(self, players: list[tuple[str, str, str, str]]):
         self.team_table.delete(*self.team_table.get_children())
@@ -142,9 +134,7 @@ class FreeKickTab(ttk.Frame):
         self.free_kick_taker_label = ttk.Label(self, text="Free Kick Taker: ")
         self.free_kick_taker = ttk.StringVar()
 
-        self.team_table.grid(
-            row=0, column=0, columnspan=2, padx=10, pady=10, sticky=NSEW
-        )
+        self.team_table.grid(row=0, column=0, columnspan=2, padx=10, pady=10, sticky=NSEW)
         self.free_kick_taker_label.grid(row=1, column=0, padx=10, pady=10, sticky=NSEW)
 
     def update_players(self, players: list[tuple[str, str, str, str]]):
@@ -204,20 +194,14 @@ class SubstitutionTab(ttk.Frame):
             height=11,
             show="headings",
         )
-        self.substitutions_left_label = ttk.Label(
-            self.main_frame, text="Substitutions left: 0"
-        )
+        self.substitutions_left_label = ttk.Label(self.main_frame, text="Substitutions left: 0")
 
         self.team_table.grid(row=0, rowspan=2, column=0, padx=10, pady=10, sticky=NSEW)
         self.button_in.grid(row=0, column=1, padx=10, pady=10, sticky=NS)
         self.button_out.grid(row=1, column=1, padx=10, pady=10, sticky=NS)
-        self.reserves_table.grid(
-            row=0, rowspan=2, column=2, padx=10, pady=10, sticky=NSEW
-        )
+        self.reserves_table.grid(row=0, rowspan=2, column=2, padx=10, pady=10, sticky=NSEW)
         self.formation_label.grid(row=3, column=0, padx=10, pady=10, sticky=NSEW)
-        self.formation_combobox.grid(
-            row=2, column=1, columnspan=2, padx=10, pady=10, sticky=NSEW
-        )
+        self.formation_combobox.grid(row=2, column=1, columnspan=2, padx=10, pady=10, sticky=NSEW)
         self.substitutions_left_label.grid(
             row=3, column=0, columnspan=3, padx=10, pady=10, sticky=NSEW
         )
@@ -282,9 +266,7 @@ class SubstitutionWindow(ttk.Toplevel):
 
         self.notebook.grid(row=1, column=0, columnspan=3, padx=10, pady=10, sticky=NSEW)
 
-        self.button_frame.grid(
-            row=2, column=0, columnspan=3, padx=10, pady=10, sticky=NS
-        )
+        self.button_frame.grid(row=2, column=0, columnspan=3, padx=10, pady=10, sticky=NS)
         self.apply_button.grid(row=2, column=0, padx=10, pady=10, sticky=EW)
         self.cancel_button.grid(row=2, column=1, padx=10, pady=10, sticky=EW)
 

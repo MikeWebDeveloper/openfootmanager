@@ -59,9 +59,10 @@ class SaveGame(Base):
     game_state = Column(Text, nullable=False)  # JSON compressed string
 
     # Additional metadata
-    save_metadata = Column(
-        JSON, default=dict
-    )  # Extra info like league position, finances, etc.
+    save_metadata = Column(JSON, default=dict)  # Extra info like league position, finances, etc.
 
     def __repr__(self):
-        return f"<SaveGame(name='{self.name}', manager='{self.manager_name}', date='{self.current_date}')>"
+        return (
+            f"<SaveGame(name='{self.name}', manager='{self.manager_name}', "
+            f"date='{self.current_date}')>"
+        )

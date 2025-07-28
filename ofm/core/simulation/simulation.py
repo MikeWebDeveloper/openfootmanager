@@ -123,9 +123,8 @@ class LiveGame:
     def transition_game_status(self):
         if self.state.status == SimulationStatus.NOT_STARTED:
             self.state.status = SimulationStatus.FIRST_HALF
-        elif (
-            self.state.status == SimulationStatus.FIRST_HALF
-            and self.state.minutes == timedelta(minutes=45)
+        elif self.state.status == SimulationStatus.FIRST_HALF and self.state.minutes == timedelta(
+            minutes=45
         ):
             if not self.state.in_additional_time:
                 self.get_added_time()
@@ -137,9 +136,8 @@ class LiveGame:
                 self.reset_state_additional_time()
         elif self.state.status == SimulationStatus.FIRST_HALF_BREAK:
             self.state.status = SimulationStatus.SECOND_HALF
-        elif (
-            self.state.status == SimulationStatus.SECOND_HALF
-            and self.state.minutes == timedelta(minutes=90)
+        elif self.state.status == SimulationStatus.SECOND_HALF and self.state.minutes == timedelta(
+            minutes=90
         ):
             if not self.state.in_additional_time:
                 self.get_added_time()
@@ -291,9 +289,7 @@ class SimulationEngine:
             self.starting_the_game.in_possession = True
             self.secondary_start.in_possession = False
             self.starting_the_game.player_in_possession = (
-                self.starting_the_game.get_player_on_pitch(
-                    PitchPosition.MIDFIELD_CENTER
-                )
+                self.starting_the_game.get_player_on_pitch(PitchPosition.MIDFIELD_CENTER)
             )
         elif self.state.status in [
             SimulationStatus.FIRST_HALF_BREAK,
@@ -301,8 +297,8 @@ class SimulationEngine:
         ]:
             self.starting_the_game.in_possession = False
             self.secondary_start.in_possession = True
-            self.secondary_start.player_in_possession = (
-                self.secondary_start.get_player_on_pitch(PitchPosition.MIDFIELD_CENTER)
+            self.secondary_start.player_in_possession = self.secondary_start.get_player_on_pitch(
+                PitchPosition.MIDFIELD_CENTER
             )
 
         if self.home_team.in_possession:

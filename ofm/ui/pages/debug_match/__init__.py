@@ -58,9 +58,7 @@ class DebugMatchPage(ttk.Frame):
         self.scores_details = TeamNamesComponent(self)
         self.scores_details.grid(row=1, column=0, columnspan=2)
 
-        self.progress_bar = ttk.Progressbar(
-            self, length=550, maximum=90 * 60, bootstyle="striped"
-        )
+        self.progress_bar = ttk.Progressbar(self, length=550, maximum=90 * 60, bootstyle="striped")
         self.progress_bar.grid(row=3, column=0, columnspan=2, pady=20, sticky=NSEW)
 
         self.minutes_elapsed = ttk.Label(self, text="0'")
@@ -137,9 +135,7 @@ class DebugMatchPage(ttk.Frame):
     def update_live_game(self, live_game_events: list[str]):
         self.live_game_tab.update_live_game_events(live_game_events)
 
-    def update_game_events(
-        self, home_team_events: list[str], away_team_events: list[str]
-    ):
+    def update_game_events(self, home_team_events: list[str], away_team_events: list[str]):
         self.game_events_tab.update_events(home_team_events, away_team_events)
 
     def update_game_progress(self, minutes_elapsed: int):
@@ -150,6 +146,4 @@ class DebugMatchPage(ttk.Frame):
         self.player_details_tab.update_strategy(home_team_strategy, away_team_strategy)
 
     def update_team_formation(self, home_team_formation: str, away_team_formation: str):
-        self.player_details_tab.update_formation(
-            home_team_formation, away_team_formation
-        )
+        self.player_details_tab.update_formation(home_team_formation, away_team_formation)

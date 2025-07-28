@@ -36,9 +36,7 @@ class TeamNamesComponent(ttk.Frame):
         self.away_team_name = ttk.Label(self, text="Argentina", font="Arial 18 bold")
         self.away_team_name.grid(row=0, column=4, padx=10, pady=10, sticky=E)
 
-    def update_team_names(
-        self, home_team_name, home_team_score, away_team_name, away_team_score
-    ):
+    def update_team_names(self, home_team_name, home_team_score, away_team_name, away_team_score):
         self.home_team_name.config(text=f"{home_team_name}")
         self.home_team_score.config(text=f"{home_team_score}")
 

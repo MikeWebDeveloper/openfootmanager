@@ -24,9 +24,7 @@ from ofm.core.simulation.game_state import GameState, SimulationStatus
 def get_corner_kick_event() -> CornerKickEvent:
     return CornerKickEvent(
         EventType.CORNER_KICK,
-        GameState(
-            timedelta(minutes=10), SimulationStatus.FIRST_HALF, PitchPosition.OFF_LEFT
-        ),
+        GameState(timedelta(minutes=10), SimulationStatus.FIRST_HALF, PitchPosition.OFF_LEFT),
     )
 
 
@@ -139,9 +137,7 @@ def test_corner_kick_cross_miss_event(simulation_teams, monkeypatch):
         return EventOutcome.CROSS_MISS
 
     monkeypatch.setattr(CornerKickEvent, "get_corner_kick_type", get_corner_kick_type)
-    monkeypatch.setattr(
-        CrossEvent, "get_cross_primary_outcome", get_cross_primary_outcome
-    )
+    monkeypatch.setattr(CrossEvent, "get_cross_primary_outcome", get_cross_primary_outcome)
     monkeypatch.setattr(CrossEvent, "get_intercept_prob", get_intercept_prob)
     event = get_corner_kick_event()
     home_team, away_team = simulation_teams
@@ -167,9 +163,7 @@ def test_corner_kick_cross_intercept_event(simulation_teams, monkeypatch):
         return EventOutcome.CROSS_INTERCEPT
 
     monkeypatch.setattr(CornerKickEvent, "get_corner_kick_type", get_corner_kick_type)
-    monkeypatch.setattr(
-        CrossEvent, "get_cross_primary_outcome", get_cross_primary_outcome
-    )
+    monkeypatch.setattr(CrossEvent, "get_cross_primary_outcome", get_cross_primary_outcome)
     event = get_corner_kick_event()
     home_team, away_team = simulation_teams
     home_team.in_possession = True
@@ -195,9 +189,7 @@ def test_corner_kick_cross_success_event(simulation_teams, monkeypatch):
         return EventOutcome.CROSS_SUCCESS
 
     monkeypatch.setattr(CornerKickEvent, "get_corner_kick_type", get_corner_kick_type)
-    monkeypatch.setattr(
-        CrossEvent, "get_cross_primary_outcome", get_cross_primary_outcome
-    )
+    monkeypatch.setattr(CrossEvent, "get_cross_primary_outcome", get_cross_primary_outcome)
     event = get_corner_kick_event()
     home_team, away_team = simulation_teams
     home_team.in_possession = True

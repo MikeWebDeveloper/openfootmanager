@@ -126,9 +126,7 @@ class SeasonManager:
         # Find the league season for this fixture
         competition = self.session.get(Competition, fixture.competition_id)
         league_season = (
-            self.session.query(LeagueSeason)
-            .filter_by(competition_id=competition.id)
-            .first()
+            self.session.query(LeagueSeason).filter_by(competition_id=competition.id).first()
         )
 
         if not league_season:
@@ -155,12 +153,8 @@ class SeasonManager:
             home_result, away_result = "D", "D"
 
         # Update entries
-        home_entry.update_after_match(
-            fixture.home_score, fixture.away_score, home_result
-        )
-        away_entry.update_after_match(
-            fixture.away_score, fixture.home_score, away_result
-        )
+        home_entry.update_after_match(fixture.home_score, fixture.away_score, home_result)
+        away_entry.update_after_match(fixture.away_score, fixture.home_score, away_result)
 
         # Update positions
         self._update_table_positions(league_season)
@@ -170,15 +164,11 @@ class SeasonManager:
     def _update_table_positions(self, league_season: LeagueSeason) -> None:
         """Update positions in league table based on points and goal difference"""
         entries = (
-            self.session.query(LeagueTableEntry)
-            .filter_by(league_season_id=league_season.id)
-            .all()
+            self.session.query(LeagueTableEntry).filter_by(league_season_id=league_season.id).all()
         )
 
         # Sort by points (desc), goal difference (desc), goals for (desc)
-        entries.sort(
-            key=lambda e: (e.points, e.goal_difference, e.goals_for), reverse=True
-        )
+        entries.sort(key=lambda e: (e.points, e.goal_difference, e.goals_for), reverse=True)
 
         # Update positions
         for i, entry in enumerate(entries, 1):

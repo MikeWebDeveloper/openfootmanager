@@ -75,9 +75,7 @@ class Formation:
         self, players: list[PlayerTeam], position: Positions
     ) -> list[PlayerTeam]:
         if players_in_position := [
-            player
-            for player in players
-            if player.details.get_best_position() == position
+            player for player in players if player.details.get_best_position() == position
         ]:
             players_in_position.sort(
                 key=lambda x: x.details.attributes.get_overall(position), reverse=True
@@ -107,8 +105,7 @@ class Formation:
                 players.remove(player)
 
         self.bench = [
-            PlayerSimulation(player, player.details.get_best_position())
-            for player in players
+            PlayerSimulation(player, player.details.get_best_position()) for player in players
         ]
         self.bench.sort(key=lambda x: x.current_position.value)
 
@@ -187,9 +184,7 @@ class Formation:
         else:
             raise FormationError("Invalid position!")
 
-    def rearrange_players(
-        self, player_in: PlayerSimulation, player_out: PlayerSimulation
-    ):
+    def rearrange_players(self, player_in: PlayerSimulation, player_out: PlayerSimulation):
         pos = player_in.current_position
         new_pos = player_out.current_position
 

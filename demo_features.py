@@ -21,11 +21,10 @@ from uuid import uuid4
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 # Import after path setup (noqa comments suppress E402)
-from ofm.core.db.database import DB  # noqa: E402
-from ofm.core.db.models import Competition, Fixture, FixtureStatus, League, SaveGame, SaveType  # noqa: E402
-from ofm.core.db.models.base import Base, engine, SessionLocal  # noqa: E402
+from ofm.core.db.models import Fixture, FixtureStatus, League, SaveType  # noqa: E402
+from ofm.core.db.models.base import Base, SessionLocal, engine  # noqa: E402
 from ofm.core.save.save_manager import SaveManager  # noqa: E402
-from ofm.core.season.calendar import GameCalendar, CalendarEventType  # noqa: E402
+from ofm.core.season.calendar import GameCalendar  # noqa: E402
 from ofm.core.season.season_manager import SeasonManager  # noqa: E402
 from ofm.core.settings import Settings  # noqa: E402
 
@@ -55,15 +54,21 @@ def create_test_data(session, settings):
         level=1,
         num_teams=8,  # Use 8 teams for demo
         promotion_places=0,
-        relegation_places=2
+        relegation_places=2,
     )
     session.add(league)
     session.flush()
 
     # Create test team IDs (simulating clubs without actual Club model)
     club_names = [
-        "Manchester United", "Manchester City", "Liverpool", "Chelsea",
-        "Arsenal", "Tottenham", "Newcastle", "Brighton"
+        "Manchester United",
+        "Manchester City",
+        "Liverpool",
+        "Chelsea",
+        "Arsenal",
+        "Tottenham",
+        "Newcastle",
+        "Brighton",
     ]
 
     # Generate team IDs
@@ -101,7 +106,7 @@ def demo_season_management(session, league, team_names, team_ids):
         teams=team_ids,
         season_year=season_year,
         start_date=start_date,
-        end_date=end_date
+        end_date=end_date,
     )
 
     print(f"✓ Created season {season_year}/{season_year + 1}")
@@ -110,20 +115,26 @@ def demo_season_management(session, league, team_names, team_ids):
 
     # Show generated fixtures
     print_section("Generated Fixtures")
-    fixtures = session.query(Fixture).filter_by(
-        competition_id=league_season.competition.id
-    ).order_by(Fixture.match_date).limit(10).all()
+    fixtures = (
+        session.query(Fixture)
+        .filter_by(competition_id=league_season.competition.id)
+        .order_by(Fixture.match_date)
+        .limit(10)
+        .all()
+    )
 
     print("First 10 fixtures:")
     for i, fixture in enumerate(fixtures, 1):
         home_name = team_names.get(fixture.home_team_id, f"Team {fixture.home_team_id[-4:]}")
         away_name = team_names.get(fixture.away_team_id, f"Team {fixture.away_team_id[-4:]}")
-        print(f"{i:2d}. {fixture.match_date.strftime('%Y-%m-%d %H:%M')} - "
-              f"{home_name} vs {away_name}")
+        print(
+            f"{i:2d}. {fixture.match_date.strftime('%Y-%m-%d %H:%M')} - "
+            f"{home_name} vs {away_name}"
+        )
 
-    total_fixtures = session.query(Fixture).filter_by(
-        competition_id=league_season.competition.id
-    ).count()
+    total_fixtures = (
+        session.query(Fixture).filter_by(competition_id=league_season.competition.id).count()
+    )
     print(f"\n✓ Total fixtures generated: {total_fixtures}")
 
     # Simulate some matches
@@ -132,6 +143,7 @@ def demo_season_management(session, league, team_names, team_ids):
     for fixture in fixtures[:5]:  # Simulate first 5 matches
         # Set random scores
         import random
+
         fixture.home_score = random.randint(0, 4)
         fixture.away_score = random.randint(0, 3)
         fixture.status = FixtureStatus.COMPLETED
@@ -148,14 +160,20 @@ def demo_season_management(session, league, team_names, team_ids):
     print_section("League Table")
     table_entries = season_manager.get_league_table(league_season.id)
 
-    print(f"{'Pos':<3} {'Team':<15} {'P':<2} {'W':<2} {'D':<2} {'L':<2} {'GF':<3} {'GA':<3} {'GD':<4} {'Pts':<3}")
+    print(
+        f"{'Pos':<3} {'Team':<15} {'P':<2} {'W':<2} {'D':<2} {'L':<2} "
+        f"{'GF':<3} {'GA':<3} {'GD':<4} {'Pts':<3}"
+    )
     print("-" * 60)
 
     for entry in table_entries:
         team_name = team_names.get(entry.team_id, f"Team {entry.team_id[-4:]}")[:15]
-        print(f"{entry.position:<3} {team_name:<15} "
-              f"{entry.played:<2} {entry.won:<2} {entry.drawn:<2} {entry.lost:<2} "
-              f"{entry.goals_for:<3} {entry.goals_against:<3} {entry.goal_difference:<+4} {entry.points:<3}")
+        print(
+            f"{entry.position:<3} {team_name:<15} "
+            f"{entry.played:<2} {entry.won:<2} {entry.drawn:<2} {entry.lost:<2} "
+            f"{entry.goals_for:<3} {entry.goals_against:<3} "
+            f"{entry.goal_difference:<+4} {entry.points:<3}"
+        )
 
     return league_season
 
@@ -176,8 +194,7 @@ def demo_calendar_system(session, league_season):
     # Show upcoming events
     print_section("Upcoming Events (Next 14 days)")
     upcoming_events = calendar.get_events_range(
-        calendar.current_date,
-        calendar.current_date + timedelta(days=14)
+        calendar.current_date, calendar.current_date + timedelta(days=14)
     )
 
     for event in upcoming_events[:10]:  # Show first 10 events
@@ -203,8 +220,7 @@ def demo_calendar_system(session, league_season):
     print(f"Fixtures for week starting {calendar.current_date.strftime('%Y-%m-%d')}:")
     for fixture in weekly_fixtures:
         status = "✓" if fixture.status == FixtureStatus.COMPLETED else "○"
-        print(f"{status} {fixture.match_date.strftime('%a %H:%M')} - "
-              f"Match scheduled")
+        print(f"{status} {fixture.match_date.strftime('%a %H:%M')} - " f"Match scheduled")
 
     # Check transfer window
     print_section("Transfer Window Status")
@@ -245,8 +261,8 @@ def demo_save_system(session, settings, league_season, calendar):
         metadata={
             "league": league_season.league.name,
             "season": "2024/2025",
-            "difficulty": "normal"
-        }
+            "difficulty": "normal",
+        },
     )
 
     print(f"✓ Created save: '{save_game.name}'")
@@ -263,7 +279,7 @@ def demo_save_system(session, settings, league_season, calendar):
         club_id=club_id,
         current_date=current_date + timedelta(days=7),
         play_time=play_time + 1800,  # Additional 30 minutes
-        metadata={"auto_trigger": "week_advance"}
+        metadata={"auto_trigger": "week_advance"},
     )
 
     print(f"✓ Created autosave: '{autosave.name}'")
@@ -305,6 +321,7 @@ def demo_save_system(session, settings, league_season, calendar):
 
         # Check file size
         import os
+
         file_size = os.path.getsize(export_path)
         print(f"✓ Export file size: {file_size} bytes")
 
@@ -330,7 +347,7 @@ def demo_integration_features(session, settings):
         teams=team_ids,
         season_year=2024,
         start_date=datetime(2024, 8, 15),
-        end_date=datetime(2025, 5, 25)
+        end_date=datetime(2025, 5, 25),
     )
     print("   ✓ Season created with fixtures generated")
 
@@ -352,6 +369,7 @@ def demo_integration_features(session, settings):
         for fixture in weekly_fixtures[:2]:  # 2 matches per week
             if fixture.status != FixtureStatus.COMPLETED:
                 import random
+
                 fixture.home_score = random.randint(0, 3)
                 fixture.away_score = random.randint(0, 3)
                 fixture.status = FixtureStatus.COMPLETED
@@ -368,7 +386,7 @@ def demo_integration_features(session, settings):
             club_id=team_ids[0] if team_ids else "demo_club",
             current_date=calendar.current_date,
             play_time=3600 + (week * 1800),
-            metadata={"week": week + 1, "matches_completed": matches_simulated}
+            metadata={"week": week + 1, "matches_completed": matches_simulated},
         )
 
     print(f"   ✓ Simulated {matches_simulated} matches over 3 weeks")
@@ -400,7 +418,8 @@ def main():
     """Main demo function"""
     print_header("OPENFOOT MANAGER - PHASE 1 FEATURES DEMO")
 
-    print("""
+    print(
+        """
 This demo showcases the implemented Phase 1.1 and 1.2 features:
 
 Phase 1.1 - Season Structure:
@@ -416,7 +435,8 @@ Phase 1.2 - Core Infrastructure:
 • Autosave functionality
 
 All features are working with an in-memory SQLite database.
-    """)
+    """
+    )
 
     try:
         # Initialize core systems
@@ -441,7 +461,8 @@ All features are working with an in-memory SQLite database.
         demo_integration_features(session, settings)
 
         print_header("DEMO COMPLETED SUCCESSFULLY")
-        print("""
+        print(
+            """
 ✅ All Phase 1 features are working correctly!
 
 Key accomplishments demonstrated:
@@ -454,11 +475,13 @@ The core foundation is solid and ready for Phase 2 development.
 
 To run the GUI version: python3 run.py
 (Note: GUI may hang due to missing controller implementations)
-        """)
+        """
+        )
 
     except Exception as e:
         print(f"\n❌ Demo failed with error: {e}")
         import traceback
+
         traceback.print_exc()
         return 1
 
@@ -466,7 +489,7 @@ To run the GUI version: python3 run.py
         # Cleanup
         try:
             session.close()
-        except:
+        except Exception:
             pass
 
     return 0

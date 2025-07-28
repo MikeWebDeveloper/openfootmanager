@@ -52,9 +52,7 @@ class League(Base):
     split_after_rounds: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
 
     # Relationships
-    seasons: Mapped[List["LeagueSeason"]] = relationship(
-        "LeagueSeason", back_populates="league"
-    )
+    seasons: Mapped[List["LeagueSeason"]] = relationship("LeagueSeason", back_populates="league")
 
     def __repr__(self) -> str:
         return f"<League(id={self.id}, name='{self.name}', level={self.level})>"

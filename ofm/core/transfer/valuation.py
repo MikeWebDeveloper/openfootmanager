@@ -76,9 +76,7 @@ class PlayerValuationEngine:
         self.market_inflation = 1.0  # Can be adjusted based on game year
         self.transfer_activity_modifier = 1.0  # Based on recent market activity
 
-    def calculate_value(
-        self, player: Player, detailed: bool = False
-    ) -> float | Tuple[float, Dict]:
+    def calculate_value(self, player: Player, detailed: bool = False) -> float | Tuple[float, Dict]:
         """
         Calculate a player's market value.
 
@@ -280,9 +278,7 @@ class PlayerValuationEngine:
         # Base wage calculation
         # A player worth 25M might earn 100-200k per week
         # So roughly 20-40% of value annually
-        base_wage = (
-            base_value * 1_000_000 * 0.25 / 52
-        )  # 25% of value annually, divided by 52 weeks
+        base_wage = base_value * 1_000_000 * 0.25 / 52  # 25% of value annually, divided by 52 weeks
 
         # Apply modifiers
         age_factor = 1.0
@@ -292,15 +288,11 @@ class PlayerValuationEngine:
             age_factor = 0.8  # Young players accept lower wages
 
         position = player.positions[0] if player.positions else Positions.MF
-        ability_factor = (
-            player.attributes.get_overall(position) / 70
-        )  # Normalized around 70
+        ability_factor = player.attributes.get_overall(position) / 70  # Normalized around 70
 
         return base_wage * fee_factor * age_factor * ability_factor
 
-    def calculate_release_clause(
-        self, player: Player, multiplier: float = 1.5
-    ) -> float:
+    def calculate_release_clause(self, player: Player, multiplier: float = 1.5) -> float:
         """
         Calculate a reasonable release clause for a player.
 

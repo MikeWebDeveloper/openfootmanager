@@ -52,15 +52,11 @@ class FreeKickEvent(SimulationEvent):
         if self.state.position in OFF_POSITIONS:
             self.attacking_player = attacking_team.get_free_kick_taker()
         else:
-            self.attacking_player = attacking_team.get_player_on_pitch(
-                self.state.position
-            )
+            self.attacking_player = attacking_team.get_player_on_pitch(self.state.position)
 
         self.free_kick_type = self.get_free_kick_type()
 
-        self.commentary.append(
-            f"{self.attacking_player} goes to the ball to take the free kick!"
-        )
+        self.commentary.append(f"{self.attacking_player} goes to the ball to take the free kick!")
 
         if self.free_kick_type == FreeKickType.PASS:
             self.sub_event = PassEvent(

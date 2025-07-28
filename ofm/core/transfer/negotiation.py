@@ -67,9 +67,7 @@ class TransferNegotiator:
 
         if initial_offer is None:
             # Calculate initial offer based on buying club's strategy
-            initial_offer = self._calculate_initial_offer(
-                player_value, buying_club, player
-            )
+            initial_offer = self._calculate_initial_offer(player_value, buying_club, player)
 
         negotiation = TransferNegotiation(
             player_id=player.id,
@@ -203,17 +201,13 @@ class TransferNegotiator:
 
         return round(base_offer, 1)
 
-    def _determine_club_strategy(
-        self, club: Club, player: Player
-    ) -> NegotiationStrategy:
+    def _determine_club_strategy(self, club: Club, player: Player) -> NegotiationStrategy:
         """Determine negotiation strategy based on club situation."""
         # TODO: Implement based on club AI personality, needs, finances
         # For now, return fair strategy
         return NegotiationStrategy.FAIR
 
-    def _evaluate_counter_offer(
-        self, negotiation: TransferNegotiation, amount: float
-    ) -> bool:
+    def _evaluate_counter_offer(self, negotiation: TransferNegotiation, amount: float) -> bool:
         """Evaluate if buying club will accept counter-offer."""
         buying_club = negotiation.buying_club
         player = negotiation.player
@@ -236,9 +230,7 @@ class TransferNegotiator:
 
         return False
 
-    def _evaluate_loan_terms(
-        self, negotiation: TransferNegotiation, player: Player
-    ) -> bool:
+    def _evaluate_loan_terms(self, negotiation: TransferNegotiation, player: Player) -> bool:
         """Evaluate if loan terms are acceptable."""
         # Check wage coverage
         if negotiation.wage_percentage < 50:

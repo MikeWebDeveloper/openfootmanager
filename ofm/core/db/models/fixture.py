@@ -17,7 +17,6 @@
 from datetime import datetime
 from enum import Enum
 from typing import TYPE_CHECKING, Optional
-from uuid import UUID
 
 from sqlalchemy import DateTime
 from sqlalchemy import Enum as SQLEnum
@@ -70,9 +69,7 @@ class Fixture(Base):
     attendance: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
 
     # Relationships
-    competition: Mapped["Competition"] = relationship(
-        "Competition", back_populates="fixtures"
-    )
+    competition: Mapped["Competition"] = relationship("Competition", back_populates="fixtures")
 
     def __repr__(self) -> str:
         return (
@@ -113,8 +110,4 @@ class Fixture(Base):
             )
 
         # Regular time
-        return (
-            self.home_team_id
-            if self.home_score > self.away_score
-            else self.away_team_id
-        )
+        return self.home_team_id if self.home_score > self.away_score else self.away_team_id

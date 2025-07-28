@@ -13,46 +13,58 @@ import traceback
 # Add project to path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
+
 def test_basic_imports():
     """Test if all imports work correctly"""
     print("Testing basic imports...")
 
     try:
         import tkinter
+
         print("✓ tkinter imported")
+        del tkinter  # Mark as used
     except ImportError as e:
         print(f"❌ tkinter import failed: {e}")
         return False
 
     try:
         import ttkbootstrap
+
         print("✓ ttkbootstrap imported")
+        del ttkbootstrap  # Mark as used
     except ImportError as e:
         print(f"❌ ttkbootstrap import failed: {e}")
         return False
 
     try:
         from ofm.core.settings import Settings
+
         print("✓ Settings imported")
+        del Settings  # Mark as used
     except ImportError as e:
         print(f"❌ Settings import failed: {e}")
         return False
 
     try:
         from ofm.core.db.database import DB
+
         print("✓ DB imported")
+        del DB  # Mark as used
     except ImportError as e:
         print(f"❌ DB import failed: {e}")
         return False
 
     try:
         from ofm.ui.gui import GUI
+
         print("✓ GUI imported")
+        del GUI  # Mark as used
     except ImportError as e:
         print(f"❌ GUI import failed: {e}")
         return False
 
     return True
+
 
 def test_settings_initialization():
     """Test settings initialization"""
@@ -60,6 +72,7 @@ def test_settings_initialization():
 
     try:
         from ofm.core.settings import Settings
+
         settings = Settings()
         settings.get_settings()
         print("✓ Settings initialized successfully")
@@ -75,13 +88,14 @@ def test_settings_initialization():
         traceback.print_exc()
         return False
 
+
 def test_database_initialization():
     """Test database initialization"""
     print("\nTesting database initialization...")
 
     try:
-        from ofm.core.settings import Settings
         from ofm.core.db.database import DB
+        from ofm.core.settings import Settings
 
         settings = Settings()
         settings.get_settings()
@@ -96,12 +110,14 @@ def test_database_initialization():
         traceback.print_exc()
         return False
 
+
 def test_gui_creation():
     """Test GUI creation without mainloop"""
     print("\nTesting GUI creation...")
 
     try:
         from ofm.ui.gui import GUI
+
         gui = GUI()
         print("✓ GUI created successfully")
 
@@ -127,30 +143,35 @@ def test_gui_creation():
         traceback.print_exc()
         return False
 
+
 def test_controller_imports():
     """Test controller imports"""
     print("\nTesting controller imports...")
 
     try:
         from ofm.ui.controllers import OFMController
+
         print("✓ OFMController imported")
+        del OFMController  # Mark as used
 
         from ofm.ui.controllers.home_controller import HomePageController
+
         print("✓ HomePageController imported")
+        del HomePageController  # Mark as used
 
         # Check other controllers
         controller_modules = [
-            'debug_controller',
-            'debug_match_controller',
-            'team_selection_controller',
-            'settings_controller',
-            'player_profile_controller',
-            'team_explorer_controller'
+            "debug_controller",
+            "debug_match_controller",
+            "team_selection_controller",
+            "settings_controller",
+            "player_profile_controller",
+            "team_explorer_controller",
         ]
 
         for module in controller_modules:
             try:
-                __import__(f'ofm.ui.controllers.{module}')
+                __import__(f"ofm.ui.controllers.{module}")
                 print(f"✓ {module} imported")
             except ImportError as e:
                 print(f"⚠ {module} import failed: {e}")
@@ -161,13 +182,14 @@ def test_controller_imports():
         traceback.print_exc()
         return False
 
+
 def test_minimal_app():
     """Test minimal app creation without running mainloop"""
     print("\nTesting minimal app creation...")
 
     try:
-        from ofm.core.settings import Settings
         from ofm.core.db.database import DB
+        from ofm.core.settings import Settings
         from ofm.ui.controllers import OFMController
 
         # Initialize components
@@ -201,13 +223,15 @@ def test_minimal_app():
         traceback.print_exc()
         return False
 
+
 def test_image_resources():
     """Test if image resources exist"""
     print("\nTesting image resources...")
 
     try:
-        from ofm.core.settings import Settings
         import os
+
+        from ofm.core.settings import Settings
 
         settings = Settings()
         settings.get_settings()
@@ -222,7 +246,7 @@ def test_image_resources():
             # Check alternative locations
             alt_paths = [
                 os.path.join(settings.images, "openfoot.png"),
-                os.path.join(os.path.dirname(settings.root_dir), "images", "openfoot.png")
+                os.path.join(os.path.dirname(settings.root_dir), "images", "openfoot.png"),
             ]
 
             for alt_path in alt_paths:
@@ -238,6 +262,7 @@ def test_image_resources():
         print(f"❌ Image resource test failed: {e}")
         traceback.print_exc()
         return False
+
 
 def run_gui_diagnostics():
     """Run a GUI without starting mainloop to check for issues"""
@@ -276,6 +301,7 @@ def run_gui_diagnostics():
         print(f"❌ GUI diagnostics failed: {e}")
         traceback.print_exc()
         return False
+
 
 def main():
     """Run all tests"""
@@ -327,6 +353,7 @@ def main():
         print(f"\n⚠ {failed} test(s) failed. Fix these issues before running the GUI.")
 
     return 0 if failed == 0 else 1
+
 
 if __name__ == "__main__":
     sys.exit(main())

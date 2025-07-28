@@ -28,8 +28,8 @@ from sqlalchemy.orm import Session, sessionmaker
 sys.path.insert(0, str(Path(__file__).parent.parent))
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
-from ..core.db.models.base import Base
 from ..core.db.generators import PlayerGenerator, TeamGenerator
+from ..core.db.models.base import Base
 from ..core.football.club import PlayerTeam
 from ..core.football.formation import Formation
 from ..core.football.player import Player, PlayerInjury, PlayerSimulation, PreferredFoot
@@ -285,10 +285,10 @@ def test_db_session(test_settings) -> Generator[Session, None, None]:
         connect_args={"check_same_thread": False},
     )
     Base.metadata.create_all(bind=engine)
-    
+
     TestSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
     session = TestSessionLocal()
-    
+
     try:
         yield session
     finally:
@@ -311,19 +311,13 @@ def sample_league(test_db_session):
 @pytest.fixture
 def sample_club(test_db_session, sample_league):
     """Create a sample club."""
-    return TestDataFactory.create_test_club(
-        test_db_session,
-        league=sample_league
-    )
+    return TestDataFactory.create_test_club(test_db_session, league=sample_league)
 
 
 @pytest.fixture
 def sample_player(test_db_session, sample_club):
     """Create a sample player."""
-    return TestDataFactory.create_test_player(
-        test_db_session,
-        club=sample_club
-    )
+    return TestDataFactory.create_test_player(test_db_session, club=sample_club)
 
 
 @pytest.fixture

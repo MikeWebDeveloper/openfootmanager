@@ -80,7 +80,7 @@ def test_player_creation(test_db_session):
         name="Test Player",
         overall=75
     )
-    
+
     assert player.id is not None
     assert player.name == "Test Player"
     assert player.overall == 75
@@ -95,10 +95,10 @@ def test_full_match_simulation(test_db_session):
     """Test complete match simulation."""
     home_team, home_players = TestDataFactory.create_test_team(test_db_session)
     away_team, away_players = TestDataFactory.create_test_team(test_db_session)
-    
+
     # Run match simulation
     result = simulate_match(home_team, away_team)
-    
+
     assert result.home_score >= 0
     assert result.away_score >= 0
 ```

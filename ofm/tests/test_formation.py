@@ -80,9 +80,7 @@ def test_add_players_to_formation_and_bench(player_team):
     assert len(formation.bench) == 5
 
 
-def test_formation_get_best_players(
-    squads_def, confederations_file, settings: Settings
-):
+def test_formation_get_best_players(squads_def, confederations_file, settings: Settings):
     team_gen = TeamGenerator(squads_def, confederations_file, settings)
     clubs = team_gen.generate()
 

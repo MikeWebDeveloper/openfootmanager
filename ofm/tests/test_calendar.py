@@ -21,13 +21,7 @@ import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from ofm.core.db.models import (
-    Base,
-    Competition,
-    CompetitionType,
-    Fixture,
-    FixtureStatus,
-)
+from ofm.core.db.models import Base, Competition, CompetitionType, Fixture, FixtureStatus
 from ofm.core.season import CalendarEventType, GameCalendar
 
 
@@ -87,9 +81,7 @@ def test_set_current_date(db_session):
     calendar = GameCalendar(db_session)
     new_date = datetime(2024, 8, 1)
     calendar.set_current_date(new_date)
-    assert calendar.current_date == new_date.replace(
-        hour=0, minute=0, second=0, microsecond=0
-    )
+    assert calendar.current_date == new_date.replace(hour=0, minute=0, second=0, microsecond=0)
 
 
 def test_advance_days(db_session):

@@ -121,9 +121,7 @@ def test_fixture_generator_double_round_robin():
 def test_fixture_generator_odd_teams():
     """Test fixture generation with odd number of teams"""
     teams = [uuid.uuid4() for _ in range(5)]
-    generator = FixtureGenerator(
-        start_date=datetime(2024, 8, 1), match_days=[6]  # Saturday only
-    )
+    generator = FixtureGenerator(start_date=datetime(2024, 8, 1), match_days=[6])  # Saturday only
 
     fixtures = generator.generate_fixtures(teams, 1, double_round_robin=False)
 
@@ -197,9 +195,7 @@ def test_season_manager_update_table(db_session, sample_league):
     manager.update_table_after_fixture(fixture)
 
     # Check home team entry
-    home_entry = next(
-        e for e in league_season.table_entries if e.team_id == fixture.home_team_id
-    )
+    home_entry = next(e for e in league_season.table_entries if e.team_id == fixture.home_team_id)
     assert home_entry.played == 1
     assert home_entry.won == 1
     assert home_entry.drawn == 0
@@ -210,9 +206,7 @@ def test_season_manager_update_table(db_session, sample_league):
     assert home_entry.form == "W"
 
     # Check away team entry
-    away_entry = next(
-        e for e in league_season.table_entries if e.team_id == fixture.away_team_id
-    )
+    away_entry = next(e for e in league_season.table_entries if e.team_id == fixture.away_team_id)
     assert away_entry.played == 1
     assert away_entry.won == 0
     assert away_entry.drawn == 0

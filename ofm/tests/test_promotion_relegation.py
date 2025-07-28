@@ -171,9 +171,7 @@ def test_calculate_promotion_relegation(db_session, completed_season):
     manager = PromotionRelegationManager(db_session)
     result = manager.calculate_promotion_relegation(completed_season)
 
-    assert (
-        len(result.promoted_teams) == 2
-    )  # Championship has 2 automatic promotion spots
+    assert len(result.promoted_teams) == 2  # Championship has 2 automatic promotion spots
     assert len(result.playoff_teams) == 4  # Championship has 4 playoff spots
     assert len(result.relegated_teams) == 3  # Championship has 3 relegation spots
 
@@ -255,9 +253,7 @@ def test_apply_promotion_relegation(db_session, sample_leagues, completed_season
 
     # Apply promotion/relegation
     manager = PromotionRelegationManager(db_session)
-    teams_up, teams_down = manager.apply_promotion_relegation(
-        premier_league, championship, 2024
-    )
+    teams_up, teams_down = manager.apply_promotion_relegation(premier_league, championship, 2024)
 
     # Should have 2 teams going up from Championship
     assert len(teams_up) == 2

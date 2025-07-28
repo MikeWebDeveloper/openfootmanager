@@ -71,7 +71,7 @@ OpenFootManager is an ambitious open-source football management simulation game 
 # Example League Model
 class League(Base):
     __tablename__ = 'leagues'
-    
+
     id = Column(Integer, primary_key=True)
     name = Column(String(100), nullable=False)
     country = Column(String(3), nullable=False)  # ISO code
@@ -79,7 +79,7 @@ class League(Base):
     num_teams = Column(Integer, nullable=False)
     promotion_places = Column(Integer, default=0)
     relegation_places = Column(Integer, default=0)
-    
+
     # Relationships
     teams = relationship("TeamSeason", back_populates="league")
     fixtures = relationship("Fixture", back_populates="league")
@@ -129,7 +129,7 @@ class SaveGameManager:
     def __init__(self):
         self.version = "1.0.0"
         self.compression_enabled = True
-    
+
     def save_game(self, game_state: GameState, filepath: str):
         """Serialize and save game state"""
         save_data = {
@@ -138,24 +138,24 @@ class SaveGameManager:
             'game_state': self._serialize_game_state(game_state),
             'checksum': self._calculate_checksum(game_state)
         }
-        
+
         if self.compression_enabled:
             self._save_compressed(save_data, filepath)
         else:
             self._save_json(save_data, filepath)
-    
+
     def load_game(self, filepath: str) -> GameState:
         """Load and deserialize game state"""
         save_data = self._load_save_file(filepath)
-        
+
         # Version compatibility check
         if not self._is_compatible_version(save_data['version']):
             save_data = self._migrate_save_data(save_data)
-        
+
         # Integrity check
         if not self._verify_checksum(save_data):
             raise SaveFileCorruptedError()
-        
+
         return self._deserialize_game_state(save_data['game_state'])
 ```
 
@@ -167,15 +167,15 @@ save_file:
     game_version: "0.1.0"
     timestamp: "2024-01-15T10:30:00"
     checksum: "sha256_hash"
-  
+
   game_data:
     current_date: "2024-07-15"
     active_competitions: [...]
-    
+
   player_data:
     manager_profile: {...}
     managed_team: {...}
-    
+
   world_data:
     clubs: [...]
     players: [...]
@@ -198,23 +198,23 @@ class TransferMarket:
     def calculate_player_value(self, player: Player) -> float:
         """Calculate market value based on multiple factors"""
         base_value = self._base_value_by_position[player.position]
-        
+
         # Age factor
         age_multiplier = self._age_curve(player.age)
-        
+
         # Ability factor
         ability_multiplier = player.overall_rating / 100.0
-        
+
         # Form factor
         form_multiplier = 0.8 + (player.recent_form * 0.4)
-        
+
         # Contract factor
         contract_multiplier = min(player.contract_years_left / 3.0, 1.0)
-        
+
         # International reputation
         reputation_bonus = player.international_reputation * 1000000
-        
-        return (base_value * age_multiplier * ability_multiplier * 
+
+        return (base_value * age_multiplier * ability_multiplier *
                 form_multiplier * contract_multiplier) + reputation_bonus
 
 class TransferNegotiation:
@@ -223,18 +223,18 @@ class TransferNegotiation:
         self.selling_club = selling_club
         self.player = player
         self.initial_valuation = TransferMarket().calculate_player_value(player)
-        
+
     def negotiate_transfer_fee(self) -> Optional[float]:
         """AI negotiation logic"""
         # Selling club's minimum price
         min_price = self.initial_valuation * self.selling_club.negotiation_hardness
-        
+
         # Buying club's maximum price
         max_price = min(
             self.initial_valuation * self.buying_club.spending_willingness,
             self.buying_club.transfer_budget
         )
-        
+
         if max_price >= min_price:
             # Negotiation successful
             return (min_price + max_price) / 2
@@ -256,24 +256,24 @@ class FinancialManager:
     def __init__(self, club: Club):
         self.club = club
         self.transactions = []
-        
+
     def calculate_monthly_finances(self) -> FinancialReport:
         # Income
         gate_receipts = self._calculate_gate_receipts()
         tv_revenue = self._calculate_tv_revenue()
         sponsorship = self._calculate_sponsorship()
         merchandise = self._calculate_merchandise()
-        
+
         # Expenses
         wages = self._calculate_total_wages()
         facilities = self._calculate_facility_costs()
         youth_development = self._calculate_youth_costs()
-        
+
         # Net result
         total_income = gate_receipts + tv_revenue + sponsorship + merchandise
         total_expenses = wages + facilities + youth_development
         net_result = total_income - total_expenses
-        
+
         return FinancialReport(
             income=total_income,
             expenses=total_expenses,
@@ -298,20 +298,20 @@ class AIManager:
         self.team = team
         self.personality = personality
         self.decision_engine = DecisionEngine(personality)
-        
+
     def make_tactical_decision(self, match_state: MatchState):
         """AI tactical decisions during matches"""
         if self._should_change_tactics(match_state):
             new_formation = self._select_formation(match_state)
             substitutions = self._plan_substitutions(match_state)
             return TacticalChange(new_formation, substitutions)
-            
+
     def plan_transfers(self, transfer_window: TransferWindow):
         """AI transfer planning"""
         needs = self._analyze_squad_needs()
         budget = self.team.transfer_budget
         targets = self._identify_targets(needs, budget)
-        
+
         for target in targets:
             if self._should_pursue_target(target):
                 self._initiate_transfer(target)
@@ -334,21 +334,21 @@ class TrainingSession:
         self.focus = focus
         self.intensity = intensity
         self.injury_risk = self._calculate_injury_risk(intensity)
-        
+
     def apply_to_player(self, player: Player, coach: Coach):
         """Apply training effects to player"""
         effectiveness = coach.get_training_effectiveness(self.focus)
-        
+
         # Calculate attribute improvements
         improvements = {}
         for attribute in self.focus.affected_attributes:
             base_improvement = self.intensity * effectiveness * 0.1
             age_factor = player.get_development_factor()
             improvements[attribute] = base_improvement * age_factor
-            
+
         # Apply improvements
         player.apply_attribute_changes(improvements)
-        
+
         # Check for injuries
         if random.random() < self.injury_risk:
             player.add_injury(self._generate_training_injury())
@@ -479,12 +479,12 @@ season_structure:
   lead_agents: [backend-nodejs-ecosystem, backend-database-architecture]
   support: [analysis-business, frontend-nextjs-ecosystem]
   pattern: sequential_with_validation
-  
+
 save_load_system:
   lead_agents: [backend-nodejs-ecosystem]
   support: [backend-database-architecture, devops-infrastructure-security]
   pattern: sequential_critical_path
-  
+
 transfer_system:
   lead_agents: [backend-nodejs-ecosystem, analysis-business]
   support: [backend-api-design, frontend-nextjs-ecosystem]

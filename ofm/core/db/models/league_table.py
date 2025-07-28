@@ -15,7 +15,6 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from typing import TYPE_CHECKING
-from uuid import UUID
 
 from sqlalchemy import ForeignKey, Integer, String, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -65,9 +64,7 @@ class LeagueTableEntry(Base):
         """Calculate goal difference"""
         return self.goals_for - self.goals_against
 
-    def update_after_match(
-        self, goals_scored: int, goals_conceded: int, result: str
-    ) -> None:
+    def update_after_match(self, goals_scored: int, goals_conceded: int, result: str) -> None:
         """Update table entry after a match"""
         self.played += 1
         self.goals_for += goals_scored

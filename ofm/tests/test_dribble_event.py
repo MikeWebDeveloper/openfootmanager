@@ -35,9 +35,7 @@ def test_dribble_fail_event(simulation_teams, monkeypatch):
     def get_dribble_primary_outcome(self, distance) -> EventOutcome:
         return EventOutcome.DRIBBLE_FAIL
 
-    monkeypatch.setattr(
-        DribbleEvent, "get_dribble_primary_outcome", get_dribble_primary_outcome
-    )
+    monkeypatch.setattr(DribbleEvent, "get_dribble_primary_outcome", get_dribble_primary_outcome)
     event = get_dribble_event()
     home_team, away_team = simulation_teams
     home_team.in_possession = True
@@ -62,9 +60,7 @@ def test_dribble_success_event(simulation_teams, monkeypatch):
         return EventOutcome.DRIBBLE_SUCCESS
 
     monkeypatch.setattr(DribbleEvent, "get_end_position", get_end_position)
-    monkeypatch.setattr(
-        DribbleEvent, "get_dribble_primary_outcome", get_dribble_primary_outcome
-    )
+    monkeypatch.setattr(DribbleEvent, "get_dribble_primary_outcome", get_dribble_primary_outcome)
     event = get_dribble_event()
     home_team, away_team = simulation_teams
     home_team.in_possession = True

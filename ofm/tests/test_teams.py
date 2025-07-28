@@ -50,9 +50,7 @@ def test_get_club_from_mock_file(mock_file):
 
 
 def test_generate_team_squads(squads_def, confederations_file, settings: Settings):
-    team_gen = TeamGenerator(
-        squads_def, confederations_file, settings, datetime.date.today()
-    )
+    team_gen = TeamGenerator(squads_def, confederations_file, settings, datetime.date.today())
     clubs = team_gen.generate()
     for club in clubs:
         assert len(club.squad) >= 11

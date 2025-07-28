@@ -58,19 +58,13 @@ class SubstitutionWindowController:
         self.get_substitution_amount()
 
     def get_substitution_amount(self):
-        subs = (
-            self.team.max_substitutions
-            - self.team.substitutions
-            - self.team.temporary_subs
-        )
+        subs = self.team.max_substitutions - self.team.substitutions - self.team.temporary_subs
         self.page.update_substitution_amount(subs)
 
     def get_player_data(self, players: list[PlayerSimulation]) -> list[tuple]:
         return [
             (
-                player.player.details.short_name.encode("utf-8").decode(
-                    "unicode_escape"
-                ),
+                player.player.details.short_name.encode("utf-8").decode("unicode_escape"),
                 player.current_position.name.encode("utf-8").decode("unicode_escape"),
                 player.stamina,
                 "Yes" if player.is_injured else "No",
@@ -114,9 +108,7 @@ class SubstitutionWindowController:
     def get_player_from_table(self, player_data: list) -> PlayerSimulation:
         for player in self.team.formation.players:
             pl = [
-                player.player.details.short_name.encode("utf-8").decode(
-                    "unicode_escape"
-                ),
+                player.player.details.short_name.encode("utf-8").decode("unicode_escape"),
                 player.current_position.name.encode("utf-8").decode("unicode_escape"),
                 str(player.stamina),
                 "Yes" if player.is_injured else "No",
@@ -128,9 +120,7 @@ class SubstitutionWindowController:
     def get_player_from_reserves_table(self, player_data: list) -> PlayerSimulation:
         for player in self.team.formation.bench:
             pl = [
-                player.player.details.short_name.encode("utf-8").decode(
-                    "unicode_escape"
-                ),
+                player.player.details.short_name.encode("utf-8").decode("unicode_escape"),
                 player.current_position.name.encode("utf-8").decode("unicode_escape"),
                 str(player.stamina),
                 "Yes" if player.is_injured else "No",

@@ -305,9 +305,7 @@ class PlayerSimulation:
 
     @property
     def current_skill(self) -> int:
-        self._current_skill = self.player.details.attributes.get_overall(
-            self.current_position
-        )
+        self._current_skill = self.player.details.attributes.get_overall(self.current_position)
         return self._current_skill
 
     @property
@@ -346,8 +344,7 @@ class PlayerSimulation:
             ) / 4
         else:
             return (
-                self.attributes.offensive.shot_accuracy
-                + self.attributes.offensive.shot_power
+                self.attributes.offensive.shot_accuracy + self.attributes.offensive.shot_power
             ) / 2
 
     def __eq__(self, other):

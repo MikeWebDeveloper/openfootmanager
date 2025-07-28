@@ -23,9 +23,7 @@ from ofm.core.simulation.game_state import GameState, SimulationStatus
 def get_cross_event() -> CrossEvent:
     return CrossEvent(
         EventType.CROSS,
-        GameState(
-            timedelta(minutes=10), SimulationStatus.FIRST_HALF, PitchPosition.OFF_LEFT
-        ),
+        GameState(timedelta(minutes=10), SimulationStatus.FIRST_HALF, PitchPosition.OFF_LEFT),
     )
 
 
@@ -85,9 +83,7 @@ def test_cross_miss_event(simulation_teams, monkeypatch):
     def get_intercept_prob(self) -> EventOutcome:
         return EventOutcome.CROSS_MISS
 
-    monkeypatch.setattr(
-        CrossEvent, "get_cross_primary_outcome", get_cross_primary_outcome
-    )
+    monkeypatch.setattr(CrossEvent, "get_cross_primary_outcome", get_cross_primary_outcome)
     monkeypatch.setattr(CrossEvent, "get_intercept_prob", get_intercept_prob)
     event = get_cross_event()
     home_team, away_team = simulation_teams
@@ -112,9 +108,7 @@ def test_cross_intercept_event(simulation_teams, monkeypatch):
     def get_intercept_prob(self) -> EventOutcome:
         return EventOutcome.CROSS_INTERCEPT
 
-    monkeypatch.setattr(
-        CrossEvent, "get_cross_primary_outcome", get_cross_primary_outcome
-    )
+    monkeypatch.setattr(CrossEvent, "get_cross_primary_outcome", get_cross_primary_outcome)
     monkeypatch.setattr(CrossEvent, "get_intercept_prob", get_intercept_prob)
     event = get_cross_event()
     home_team, away_team = simulation_teams
@@ -147,9 +141,7 @@ def test_cross_offside_event(simulation_teams, monkeypatch):
         return EventOutcome.CROSS_OFFSIDE
 
     monkeypatch.setattr(CrossEvent, "get_end_position", get_end_position)
-    monkeypatch.setattr(
-        CrossEvent, "get_cross_primary_outcome", get_cross_primary_outcome
-    )
+    monkeypatch.setattr(CrossEvent, "get_cross_primary_outcome", get_cross_primary_outcome)
     monkeypatch.setattr(CrossEvent, "get_secondary_outcome", get_secondary_outcome)
     event = get_cross_event()
     home_team, away_team = simulation_teams
@@ -182,9 +174,7 @@ def test_cross_success_event(simulation_teams, monkeypatch):
         return EventOutcome.CROSS_SUCCESS
 
     monkeypatch.setattr(CrossEvent, "get_end_position", get_end_position)
-    monkeypatch.setattr(
-        CrossEvent, "get_cross_primary_outcome", get_cross_primary_outcome
-    )
+    monkeypatch.setattr(CrossEvent, "get_cross_primary_outcome", get_cross_primary_outcome)
     monkeypatch.setattr(CrossEvent, "get_secondary_outcome", get_secondary_outcome)
     event = get_cross_event()
     home_team, away_team = simulation_teams

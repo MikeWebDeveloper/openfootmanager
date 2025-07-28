@@ -18,12 +18,11 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import ttkbootstrap as ttk  # noqa: E402
 from ttkbootstrap.constants import *  # noqa: E402
 
-from ofm.core.db.models.base import Base, engine, SessionLocal  # noqa: E402
-from ofm.core.db.models import League, Competition, Fixture, FixtureStatus  # noqa: E402
-from ofm.core.season.season_manager import SeasonManager  # noqa: E402
-from ofm.core.season.calendar import GameCalendar  # noqa: E402
+from ofm.core.db.models import Fixture, FixtureStatus, League  # noqa: E402
+from ofm.core.db.models.base import Base, SessionLocal, engine  # noqa: E402
 from ofm.core.save.save_manager import SaveManager  # noqa: E402
-from ofm.core.settings import Settings  # noqa: E402
+from ofm.core.season.calendar import GameCalendar  # noqa: E402
+from ofm.core.season.season_manager import SeasonManager  # noqa: E402
 
 
 class SimpleOFMApp:
@@ -63,7 +62,7 @@ class SimpleOFMApp:
                 level=1,
                 num_teams=4,
                 promotion_places=0,
-                relegation_places=1
+                relegation_places=1,
             )
             self.session.add(self.league)
             self.session.flush()
@@ -73,7 +72,7 @@ class SimpleOFMApp:
                 "team_arsenal",
                 "team_chelsea",
                 "team_liverpool",
-                "team_manchester_united"
+                "team_manchester_united",
             ]
 
             # Create season
@@ -82,13 +81,16 @@ class SimpleOFMApp:
                 teams=self.team_ids,
                 season_year=2024,
                 start_date=datetime(2024, 8, 15),
-                end_date=datetime(2025, 5, 25)
+                end_date=datetime(2025, 5, 25),
             )
 
             # Simulate some matches
-            fixtures = self.session.query(Fixture).filter_by(
-                competition_id=self.league_season.competition.id
-            ).limit(3).all()
+            fixtures = (
+                self.session.query(Fixture)
+                .filter_by(competition_id=self.league_season.competition.id)
+                .limit(3)
+                .all()
+            )
 
             for i, fixture in enumerate(fixtures):
                 fixture.home_score = i + 1
@@ -99,7 +101,9 @@ class SimpleOFMApp:
             self.session.commit()
         else:
             self.league = existing_league
-            self.league_season = self.session.query(League).first().seasons[0] if existing_league.seasons else None
+            self.league_season = (
+                self.session.query(League).first().seasons[0] if existing_league.seasons else None
+            )
 
     def setup_ui(self):
         """Create the user interface"""
@@ -109,9 +113,7 @@ class SimpleOFMApp:
 
         # Title
         title_label = ttk.Label(
-            main_frame,
-            text="OpenFoot Manager - Phase 1 Demo",
-            font=("Arial", 16, "bold")
+            main_frame, text="OpenFoot Manager - Phase 1 Demo", font=("Arial", 16, "bold")
         )
         title_label.pack(pady=(0, 20))
 
@@ -136,9 +138,15 @@ class SimpleOFMApp:
 
         if self.league:
             ttk.Label(info_frame, text=f"Name: {self.league.name}").pack(anchor=W, padx=10, pady=2)
-            ttk.Label(info_frame, text=f"Country: {self.league.country}").pack(anchor=W, padx=10, pady=2)
-            ttk.Label(info_frame, text=f"Level: {self.league.level}").pack(anchor=W, padx=10, pady=2)
-            ttk.Label(info_frame, text=f"Teams: {self.league.num_teams}").pack(anchor=W, padx=10, pady=2)
+            ttk.Label(info_frame, text=f"Country: {self.league.country}").pack(
+                anchor=W, padx=10, pady=2
+            )
+            ttk.Label(info_frame, text=f"Level: {self.league.level}").pack(
+                anchor=W, padx=10, pady=2
+            )
+            ttk.Label(info_frame, text=f"Teams: {self.league.num_teams}").pack(
+                anchor=W, padx=10, pady=2
+            )
 
         # League table
         table_frame = ttk.LabelFrame(league_frame, text="League Table")
@@ -174,7 +182,7 @@ class SimpleOFMApp:
                     str(entry.goals_for),
                     str(entry.goals_against),
                     f"{entry.goal_difference:+d}",
-                    str(entry.points)
+                    str(entry.points),
                 ]
 
                 for i, value in enumerate(data):
@@ -198,17 +206,13 @@ class SimpleOFMApp:
         controls_frame = ttk.Frame(date_frame)
         controls_frame.pack(fill=X, padx=10, pady=5)
 
-        ttk.Button(
-            controls_frame,
-            text="Advance 1 Day",
-            command=self.advance_day
-        ).pack(side=LEFT, padx=5)
+        ttk.Button(controls_frame, text="Advance 1 Day", command=self.advance_day).pack(
+            side=LEFT, padx=5
+        )
 
-        ttk.Button(
-            controls_frame,
-            text="Advance 1 Week",
-            command=self.advance_week
-        ).pack(side=LEFT, padx=5)
+        ttk.Button(controls_frame, text="Advance 1 Week", command=self.advance_week).pack(
+            side=LEFT, padx=5
+        )
 
         # Upcoming events
         events_frame = ttk.LabelFrame(calendar_frame, text="Upcoming Events")
@@ -236,30 +240,26 @@ class SimpleOFMApp:
         button_frame = ttk.Frame(controls_frame)
         button_frame.pack(fill=X, padx=10, pady=10)
 
-        ttk.Button(
-            button_frame,
-            text="Create Manual Save",
-            command=self.create_manual_save
-        ).pack(side=LEFT, padx=5)
+        ttk.Button(button_frame, text="Create Manual Save", command=self.create_manual_save).pack(
+            side=LEFT, padx=5
+        )
 
-        ttk.Button(
-            button_frame,
-            text="Create Autosave",
-            command=self.create_autosave
-        ).pack(side=LEFT, padx=5)
+        ttk.Button(button_frame, text="Create Autosave", command=self.create_autosave).pack(
+            side=LEFT, padx=5
+        )
 
-        ttk.Button(
-            button_frame,
-            text="Refresh List",
-            command=self.update_saves_display
-        ).pack(side=LEFT, padx=5)
+        ttk.Button(button_frame, text="Refresh List", command=self.update_saves_display).pack(
+            side=LEFT, padx=5
+        )
 
         # Saves list
         saves_list_frame = ttk.LabelFrame(saves_frame, text="Available Saves")
         saves_list_frame.pack(fill=BOTH, expand=True, padx=10, pady=10)
 
         self.saves_text = ttk.Text(saves_list_frame, height=15, wrap=WORD)
-        saves_scrollbar = ttk.Scrollbar(saves_list_frame, orient=VERTICAL, command=self.saves_text.yview)
+        saves_scrollbar = ttk.Scrollbar(
+            saves_list_frame, orient=VERTICAL, command=self.saves_text.yview
+        )
         self.saves_text.configure(yscrollcommand=saves_scrollbar.set)
 
         self.saves_text.pack(side=LEFT, fill=BOTH, expand=True, padx=5, pady=5)
@@ -276,29 +276,44 @@ class SimpleOFMApp:
         system_frame = ttk.LabelFrame(status_frame, text="System Status")
         system_frame.pack(fill=X, padx=10, pady=10)
 
-        ttk.Label(system_frame, text="✅ Season Management: Working").pack(anchor=W, padx=10, pady=2)
+        ttk.Label(system_frame, text="✅ Season Management: Working").pack(
+            anchor=W, padx=10, pady=2
+        )
         ttk.Label(system_frame, text="✅ Calendar System: Working").pack(anchor=W, padx=10, pady=2)
         ttk.Label(system_frame, text="✅ Save/Load System: Working").pack(anchor=W, padx=10, pady=2)
         ttk.Label(system_frame, text="✅ Database Models: Working").pack(anchor=W, padx=10, pady=2)
-        ttk.Label(system_frame, text="⚠️ Full GUI: Partial (complex components have issues)").pack(anchor=W, padx=10, pady=2)
+        ttk.Label(system_frame, text="⚠️ Full GUI: Partial (complex components have issues)").pack(
+            anchor=W, padx=10, pady=2
+        )
 
         # Statistics
         stats_frame = ttk.LabelFrame(status_frame, text="Game Statistics")
         stats_frame.pack(fill=X, padx=10, pady=10)
 
         if self.league_season:
-            total_fixtures = self.session.query(Fixture).filter_by(
-                competition_id=self.league_season.competition.id
-            ).count()
+            total_fixtures = (
+                self.session.query(Fixture)
+                .filter_by(competition_id=self.league_season.competition.id)
+                .count()
+            )
 
-            completed_fixtures = self.session.query(Fixture).filter_by(
-                competition_id=self.league_season.competition.id,
-                status=FixtureStatus.COMPLETED
-            ).count()
+            completed_fixtures = (
+                self.session.query(Fixture)
+                .filter_by(
+                    competition_id=self.league_season.competition.id, status=FixtureStatus.COMPLETED
+                )
+                .count()
+            )
 
-            ttk.Label(stats_frame, text=f"Total Fixtures: {total_fixtures}").pack(anchor=W, padx=10, pady=2)
-            ttk.Label(stats_frame, text=f"Completed Fixtures: {completed_fixtures}").pack(anchor=W, padx=10, pady=2)
-            ttk.Label(stats_frame, text=f"Progress: {completed_fixtures / total_fixtures * 100:.1f}%").pack(anchor=W, padx=10, pady=2)
+            ttk.Label(stats_frame, text=f"Total Fixtures: {total_fixtures}").pack(
+                anchor=W, padx=10, pady=2
+            )
+            ttk.Label(stats_frame, text=f"Completed Fixtures: {completed_fixtures}").pack(
+                anchor=W, padx=10, pady=2
+            )
+            ttk.Label(
+                stats_frame, text=f"Progress: {completed_fixtures / total_fixtures * 100:.1f}%"
+            ).pack(anchor=W, padx=10, pady=2)
 
         # Transfer window
         window_frame = ttk.LabelFrame(status_frame, text="Transfer Window")
@@ -327,7 +342,9 @@ class SimpleOFMApp:
             if isinstance(child, ttk.LabelFrame) and child.cget("text") == "Current Date":
                 for label in child.winfo_children():
                     if isinstance(label, ttk.Label) and "Game Date:" in label.cget("text"):
-                        label.config(text=f"Game Date: {self.calendar.current_date.strftime('%Y-%m-%d')}")
+                        label.config(
+                            text=f"Game Date: {self.calendar.current_date.strftime('%Y-%m-%d')}"
+                        )
                         break
                 break
 
@@ -337,13 +354,14 @@ class SimpleOFMApp:
 
         # Get upcoming events
         from datetime import timedelta
+
         events = self.calendar.get_events_range(
-            self.calendar.current_date,
-            self.calendar.current_date + timedelta(days=14)
+            self.calendar.current_date, self.calendar.current_date + timedelta(days=14)
         )
 
         for event in events[:20]:  # Show first 20 events
-            event_text = f"{event.date.strftime('%Y-%m-%d')}: {event.event_type.value} - {event.description}\n"
+            date_str = event.date.strftime("%Y-%m-%d")
+            event_text = f"{date_str}: {event.event_type.value} - {event.description}\n"
             self.events_text.insert(END, event_text)
 
     def create_manual_save(self):
@@ -356,17 +374,15 @@ class SimpleOFMApp:
                 club_id="demo_club",
                 current_date=self.calendar.current_date,
                 play_time=7200,  # 2 hours
-                metadata={"created_via": "demo_gui"}
+                metadata={"created_via": "demo_gui"},
             )
             self.update_saves_display()
             ttk.dialogs.Messagebox.show_info(
-                title="Save Created",
-                message=f"Save '{save_name}' created successfully!"
+                title="Save Created", message=f"Save '{save_name}' created successfully!"
             )
         except Exception as e:
             ttk.dialogs.Messagebox.show_error(
-                title="Save Failed",
-                message=f"Failed to create save: {str(e)}"
+                title="Save Failed", message=f"Failed to create save: {str(e)}"
             )
 
     def create_autosave(self):
@@ -377,17 +393,16 @@ class SimpleOFMApp:
                 club_id="demo_club",
                 current_date=self.calendar.current_date,
                 play_time=7200,
-                metadata={"created_via": "demo_gui"}
+                metadata={"created_via": "demo_gui"},
             )
             self.update_saves_display()
             ttk.dialogs.Messagebox.show_info(
                 title="Autosave Created",
-                message=f"Autosave '{save_game.name}' created successfully!"
+                message=f"Autosave '{save_game.name}' created successfully!",
             )
         except Exception as e:
             ttk.dialogs.Messagebox.show_error(
-                title="Autosave Failed",
-                message=f"Failed to create autosave: {str(e)}"
+                title="Autosave Failed", message=f"Failed to create autosave: {str(e)}"
             )
 
     def update_saves_display(self):
@@ -417,7 +432,7 @@ class SimpleOFMApp:
 
     def cleanup(self):
         """Clean up resources"""
-        if hasattr(self, 'session'):
+        if hasattr(self, "session"):
             self.session.close()
 
 
@@ -435,9 +450,10 @@ def main():
     except Exception as e:
         print(f"Application error: {e}")
         import traceback
+
         traceback.print_exc()
     finally:
-        if 'app' in locals():
+        if "app" in locals():
             app.cleanup()
 
 

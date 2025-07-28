@@ -95,13 +95,9 @@ class DB:
         _clubs = []
         for club in clubs:
             players_ = [
-                Player.get_from_dict(player)
-                for player in players
-                if player["id"] in club["squad"]
+                Player.get_from_dict(player) for player in players if player["id"] in club["squad"]
             ]
-            squad = self.get_player_team_from_dicts(
-                self.load_club_squads(club["id"]), players_
-            )
+            squad = self.get_player_team_from_dicts(self.load_club_squads(club["id"]), players_)
             _clubs.append(Club.get_from_dict(club, squad))
 
         if not _clubs:
@@ -125,9 +121,7 @@ class DB:
         ):
             self.generate_teams_and_squads(clubs_def=None, amount=amount)
 
-    def get_player_object_from_id(
-        self, player_id: uuid.UUID, players: list[dict]
-    ) -> Player:
+    def get_player_object_from_id(self, player_id: uuid.UUID, players: list[dict]) -> Player:
         if not players:
             raise DatabaseLoadError("Players list cannot be empty!")
 

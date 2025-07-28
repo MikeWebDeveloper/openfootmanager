@@ -128,20 +128,14 @@ class DebugMatchController(ControllerInterface):
         formation_team2.get_best_players(team2.squad)
 
         return [
-            TeamSimulation(
-                team1, formation_team1, strategy=random.choice(list(TeamStrategy))
-            ),
-            TeamSimulation(
-                team2, formation_team2, strategy=random.choice(list(TeamStrategy))
-            ),
+            TeamSimulation(team1, formation_team1, strategy=random.choice(list(TeamStrategy))),
+            TeamSimulation(team2, formation_team2, strategy=random.choice(list(TeamStrategy))),
         ]
 
     def get_player_data(self, players: list[PlayerSimulation]):
         return [
             (
-                player.player.details.short_name.encode("utf-8").decode(
-                    "unicode_escape"
-                ),
+                player.player.details.short_name.encode("utf-8").decode("unicode_escape"),
                 player.current_position.name.encode("utf-8").decode("unicode_escape"),
                 player.stamina,
                 f"Yes ({player.injury_type.name})" if player.is_injured else "No",
@@ -153,16 +147,14 @@ class DebugMatchController(ControllerInterface):
     def get_team_stats(self, team: TeamSimulation):
         if team.stats.passes > 0:
             pass_accuracy = int(
-                ((team.stats.passes - team.stats.passes_missed) / team.stats.passes)
-                * 100
+                ((team.stats.passes - team.stats.passes_missed) / team.stats.passes) * 100
             )
         else:
             pass_accuracy = 0
 
         if team.stats.crosses > 0:
             cross_accuracy = int(
-                ((team.stats.crosses - team.stats.crosses_missed) / team.stats.crosses)
-                * 100
+                ((team.stats.crosses - team.stats.crosses_missed) / team.stats.crosses) * 100
             )
         else:
             cross_accuracy = 0
@@ -170,8 +162,8 @@ class DebugMatchController(ControllerInterface):
         if self.live_game is not None:
             if self.live_game.minutes != timedelta(seconds=0):
                 minutes = self.live_game.total_elapsed_time.total_seconds()
-                possession = (team.stats.possession / float(minutes)) * 100
-                possession = f"{possession:.2f}%"
+                possession_value = (team.stats.possession / float(minutes)) * 100
+                possession = f"{possession_value:.2f}%"
             else:
                 possession = "0%"
         else:
@@ -216,12 +208,8 @@ class DebugMatchController(ControllerInterface):
 
     def update_team_strategy(self):
         if self.teams:
-            home_team_strategy = (
-                self.page.player_details_tab.home_team_data.team_strategy.get()
-            )
-            away_team_strategy = (
-                self.page.player_details_tab.away_team_data.team_strategy.get()
-            )
+            home_team_strategy = self.page.player_details_tab.home_team_data.team_strategy.get()
+            away_team_strategy = self.page.player_details_tab.away_team_data.team_strategy.get()
             self.teams[0].team_strategy = TeamStrategy[home_team_strategy]
             self.teams[1].team_strategy = TeamStrategy[away_team_strategy]
 
@@ -240,7 +228,7 @@ class DebugMatchController(ControllerInterface):
 
     def update_game_delay(self):
         delay = self.page.delay_box.get()
-        if self.live_game:
+        if self.live_game is not None:
             match delay:
                 case DelayComboBoxValues.NONE.value:
                     self.live_game.delay = DelayValue.NONE
@@ -255,7 +243,7 @@ class DebugMatchController(ControllerInterface):
 
     def update_commentary_verbosity(self) -> list[CommentaryImportance]:
         commentary_verbosity = self.page.commentary_box.get()
-        if self.live_game:
+        if self.live_game is not None:
             match commentary_verbosity:
                 case CommentaryVerbosity.ALL.value:
                     return list(CommentaryImportance)
@@ -268,12 +256,8 @@ class DebugMatchController(ControllerInterface):
 
     def get_team_strategy(self):
         strategies = [t.name for t in list(TeamStrategy)]
-        self.page.player_details_tab.home_team_data.team_strategy.config(
-            values=strategies
-        )
-        self.page.player_details_tab.away_team_data.team_strategy.config(
-            values=strategies
-        )
+        self.page.player_details_tab.home_team_data.team_strategy.config(values=strategies)
+        self.page.player_details_tab.away_team_data.team_strategy.config(values=strategies)
         if self.teams:
             home_team_strategy = self.teams[0].team_strategy.name
             away_team_strategy = self.teams[1].team_strategy.name
@@ -301,7 +285,7 @@ class DebugMatchController(ControllerInterface):
         # TODO: Add yellow and red cards and substitutions
         home_team_events = []
         away_team_events = []
-        if self.live_game:
+        if self.live_game is not None:
             for event in self.live_game.engine.home_team.game_events:
                 text = ""
                 if event in self.live_game.engine.home_team.goals_history:
@@ -327,11 +311,9 @@ class DebugMatchController(ControllerInterface):
         self.page.update_game_events(home_team_events, away_team_events)
 
     def update_home_team_substitution_button(self):
-        if self.live_game:
+        if self.live_game is not None:
             if self.live_game.engine.started and not self.live_game.is_game_over:
-                if (
-                    self.page.player_details_tab.home_team_data.substitute_team_value.get()
-                ):
+                if self.page.player_details_tab.home_team_data.substitute_team_value.get():
                     self.page.player_details_tab.enable_home_team_substitution_button()
                     self.page.player_reserves_tab.enable_home_team_substitution_button()
                 else:
@@ -342,11 +324,9 @@ class DebugMatchController(ControllerInterface):
             self.page.player_reserves_tab.disable_home_team_substitution_button()
 
     def update_away_team_substitution_button(self):
-        if self.live_game:
+        if self.live_game is not None:
             if self.live_game.engine.started and not self.live_game.is_game_over:
-                if (
-                    self.page.player_details_tab.away_team_data.substitute_team_value.get()
-                ):
+                if self.page.player_details_tab.away_team_data.substitute_team_value.get():
                     self.page.player_details_tab.enable_away_team_substitution_button()
                     self.page.player_reserves_tab.enable_away_team_substitution_button()
                 else:
@@ -357,7 +337,7 @@ class DebugMatchController(ControllerInterface):
             self.page.player_reserves_tab.disable_away_team_substitution_button()
 
     def open_substitution_window(self, team: TeamSimulation):
-        if self.live_game:
+        if self.live_game is not None:
             if self.live_game.engine.started and not self.live_game.is_game_over:
                 self.page.change_pause_button_to_play(self.start_match)
                 self.substitution_window = SubstitutionWindowController(
@@ -368,13 +348,13 @@ class DebugMatchController(ControllerInterface):
                 )
 
     def stop_match(self):
-        if self.live_game:
+        if self.live_game is not None:
             if self.live_game.running:
                 self.live_game.running = False
 
     def close_substitution_window(self):
         if self.substitution_window:
-            if not self.live_game.is_game_over:
+            if self.live_game is not None and not self.live_game.is_game_over:
                 self.live_game.running = True
                 self.start_match()
 
@@ -382,10 +362,12 @@ class DebugMatchController(ControllerInterface):
             self.substitution_window = None
 
     def substitute_home_team(self):
-        self.open_substitution_window(self.live_game.engine.home_team)
+        if self.live_game is not None and self.live_game.engine is not None:
+            self.open_substitution_window(self.live_game.engine.home_team)
 
     def substitute_away_team(self):
-        self.open_substitution_window(self.live_game.engine.away_team)
+        if self.live_game is not None and self.live_game.engine is not None:
+            self.open_substitution_window(self.live_game.engine.away_team)
 
     def go_to_debug_home_page(self):
         self.switch("debug_home")

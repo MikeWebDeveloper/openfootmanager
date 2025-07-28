@@ -43,13 +43,9 @@ class OFMController(ControllerInterface):
                 self.gui.pages["debug_match"],
                 self.db,
             ),
-            "team_selection": TeamSelectionController(
-                self, self.gui.pages["team_selection"]
-            ),
+            "team_selection": TeamSelectionController(self, self.gui.pages["team_selection"]),
             "settings": SettingsController(self, self.gui.pages["settings"]),
-            "player_profile": PlayerProfilePageController(
-                self, self.gui.pages["player_profile"]
-            ),
+            "player_profile": PlayerProfilePageController(self, self.gui.pages["player_profile"]),
             "team_explorer": TeamExplorerController(
                 self,
                 self.gui.pages["team_explorer"],

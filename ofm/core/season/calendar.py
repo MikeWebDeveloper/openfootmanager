@@ -64,9 +64,7 @@ class GameCalendar:
 
     def __init__(self, session: Session):
         self.session = session
-        self.current_date = datetime.now().replace(
-            hour=0, minute=0, second=0, microsecond=0
-        )
+        self.current_date = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
         self._events_cache: Dict[datetime, List[CalendarEvent]] = {}
 
     def set_current_date(self, date: datetime) -> None:
@@ -134,9 +132,7 @@ class GameCalendar:
         self._events_cache[date_only] = events
         return events
 
-    def get_events_range(
-        self, start_date: datetime, end_date: datetime
-    ) -> List[CalendarEvent]:
+    def get_events_range(self, start_date: datetime, end_date: datetime) -> List[CalendarEvent]:
         """Get all events in a date range"""
         events = []
         current = start_date
@@ -182,9 +178,7 @@ class GameCalendar:
 
         return query.order_by(Fixture.match_date).first()
 
-    def get_fixtures_for_week(
-        self, week_start: Optional[datetime] = None
-    ) -> List[Fixture]:
+    def get_fixtures_for_week(self, week_start: Optional[datetime] = None) -> List[Fixture]:
         """Get all fixtures for the week starting from given date"""
         if week_start is None:
             # Find Monday of current week

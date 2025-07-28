@@ -19,19 +19,19 @@ If you can't code, but you have other skills that you can help us, don't worry, 
 
 If you really want to help us directly, thank you very much! We have a few jobs that you might be interested in:
 
-- **Report a problem**  
+- **Report a problem**
   You can report bugs or issues you encounter in the game. Open an Issue and follow the steps to report the problem. Please read carefully the bug reporting issue template before submitting a new bug report. Provide as much information as you can to help us track the bug and solve it as fast as we possibly can.
 
-- **Propose enhancements**  
+- **Propose enhancements**
   You can also propose new enhancements or improvements to the game. We're considering new ideas every day, and you can propose yours by opening an Issue and following the steps to propose enhancements. Just make sure to check the Issues page for similar ideas before opening up a new Issue. We don't want to flood the page with duplicated issues.
 
-- **Documentation**  
+- **Documentation**
   Do you think we can improve our documentation somehow? You can propose changes to the text, or write useful tutorials or examples on how to do certain things in the game.
 
-- **Translation**  
+- **Translation**
   The game is still not translatable, but it soon will be. If you want to translate the game to your own language, you will be able to do that. We will soon provide a platform to do that. You will also be able to translate the documentation to your language.
 
-- **Create new content**  
+- **Create new content**
   You can create content to the game, like images, logos, database improvements, whatever you'd like. Soon this option will be available, and you will be able to submit your new content proposal easily.
 
 ## Submitting code

@@ -106,15 +106,11 @@ class ShotEvent(SimulationEvent):
 
         return random.choice(final_outcomes)
 
-    def get_players_involved(
-        self, attacking_team: TeamSimulation, defending_team: TeamSimulation
-    ):
+    def get_players_involved(self, attacking_team: TeamSimulation, defending_team: TeamSimulation):
         if self.attacking_player is None:
             self.attacking_player = attacking_team.player_in_possession
         if self.defending_player is None:
-            self.defending_player = defending_team.get_player_on_pitch(
-                self.state.position
-            )
+            self.defending_player = defending_team.get_player_on_pitch(self.state.position)
 
     def calculate_event(
         self,
@@ -124,9 +120,7 @@ class ShotEvent(SimulationEvent):
         self.get_players_involved(attacking_team, defending_team)
         self.attacking_player.statistics.shots += 1
 
-        shot_on_goal = self.attacking_player.get_shot_on_goal_probability(
-            self.event_type
-        )
+        shot_on_goal = self.attacking_player.get_shot_on_goal_probability(self.event_type)
 
         self.commentary.append(f"{self.attacking_player} shoots!")
 

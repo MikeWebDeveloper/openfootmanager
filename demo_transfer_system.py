@@ -11,31 +11,26 @@ This demonstrates:
 6. Transfer window simulation
 """
 
-import sys
 import os
+import random
+import sys
 from datetime import datetime, timedelta
 from uuid import uuid4
-import random
 
 # Add the project root to the Python path
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
+from ofm.core.db.models.transfer import TransferWindow  # noqa: E402
+from ofm.core.football.club import Club  # noqa: E402
+from ofm.core.football.detailed_positions import DetailedPosition  # noqa: E402
+
 # Import after path setup (noqa comments suppress E402)
 from ofm.core.football.player import Player, PreferredFoot  # noqa: E402
-from ofm.core.football.club import Club  # noqa: E402
 from ofm.core.football.player_attributes import PlayerAttributes  # noqa: E402
 from ofm.core.football.playercontract import PlayerContract  # noqa: E402
 from ofm.core.football.positions import Positions  # noqa: E402
-from ofm.core.football.detailed_positions import DetailedPosition  # noqa: E402
-
-from ofm.core.transfer import (  # noqa: E402
-    PlayerValuationEngine,
-    TransferMarket,
-    TransferSearchEngine,
-    AITransferManager
-)
+from ofm.core.transfer import AITransferManager, PlayerValuationEngine, TransferMarket  # noqa: E402
 from ofm.core.transfer.search import SearchCriteria  # noqa: E402
-from ofm.core.db.models.transfer import TransferType, TransferWindow  # noqa: E402
 
 # Mock database session for demo
 
@@ -65,63 +60,64 @@ class MockSession:
 
 def create_sample_player(name, age, position, overall, potential, nationality="England"):
     """Create a sample player with given attributes."""
+
     # Generate attributes based on overall rating
     def attr_value(base):
         return max(1, min(99, base + random.randint(-10, 10)))
 
     attributes = PlayerAttributes(
         technical_attributes={
-            'dribbling': attr_value(overall),
-            'finishing': attr_value(overall),
-            'first_touch': attr_value(overall),
-            'free_kick': attr_value(overall - 10),
-            'heading': attr_value(overall - 5),
-            'long_shots': attr_value(overall - 5),
-            'long_throws': attr_value(40),
-            'marking': attr_value(overall - 20),
-            'passing': attr_value(overall),
-            'penalty': attr_value(overall),
-            'tackling': attr_value(overall - 30),
-            'technique': attr_value(overall)
+            "dribbling": attr_value(overall),
+            "finishing": attr_value(overall),
+            "first_touch": attr_value(overall),
+            "free_kick": attr_value(overall - 10),
+            "heading": attr_value(overall - 5),
+            "long_shots": attr_value(overall - 5),
+            "long_throws": attr_value(40),
+            "marking": attr_value(overall - 20),
+            "passing": attr_value(overall),
+            "penalty": attr_value(overall),
+            "tackling": attr_value(overall - 30),
+            "technique": attr_value(overall),
         },
         mental_attributes={
-            'aggression': attr_value(60),
-            'anticipation': attr_value(overall),
-            'bravery': attr_value(65),
-            'composure': attr_value(overall),
-            'concentration': attr_value(overall),
-            'decisions': attr_value(overall),
-            'determination': attr_value(75),
-            'flair': attr_value(overall - 5),
-            'leadership': attr_value(60),
-            'off_the_ball': attr_value(overall),
-            'positioning': attr_value(overall - 10),
-            'teamwork': attr_value(70),
-            'vision': attr_value(overall),
-            'work_rate': attr_value(70)
+            "aggression": attr_value(60),
+            "anticipation": attr_value(overall),
+            "bravery": attr_value(65),
+            "composure": attr_value(overall),
+            "concentration": attr_value(overall),
+            "decisions": attr_value(overall),
+            "determination": attr_value(75),
+            "flair": attr_value(overall - 5),
+            "leadership": attr_value(60),
+            "off_the_ball": attr_value(overall),
+            "positioning": attr_value(overall - 10),
+            "teamwork": attr_value(70),
+            "vision": attr_value(overall),
+            "work_rate": attr_value(70),
         },
         physical_attributes={
-            'acceleration': attr_value(overall - 5),
-            'agility': attr_value(overall - 5),
-            'balance': attr_value(overall - 5),
-            'jumping': attr_value(65),
-            'natural_fitness': attr_value(75),
-            'pace': attr_value(overall - 5),
-            'stamina': attr_value(75),
-            'strength': attr_value(70)
+            "acceleration": attr_value(overall - 5),
+            "agility": attr_value(overall - 5),
+            "balance": attr_value(overall - 5),
+            "jumping": attr_value(65),
+            "natural_fitness": attr_value(75),
+            "pace": attr_value(overall - 5),
+            "stamina": attr_value(75),
+            "strength": attr_value(70),
         },
         goalkeeping_attributes={
-            'aerial_reach': attr_value(30),
-            'command_of_area': attr_value(20),
-            'communication': attr_value(50),
-            'eccentricity': attr_value(10),
-            'handling': attr_value(20),
-            'kicking': attr_value(60),
-            'one_on_ones': attr_value(20),
-            'reflexes': attr_value(30),
-            'rushing_out': attr_value(20),
-            'throwing': attr_value(40)
-        }
+            "aerial_reach": attr_value(30),
+            "command_of_area": attr_value(20),
+            "communication": attr_value(50),
+            "eccentricity": attr_value(10),
+            "handling": attr_value(20),
+            "kicking": attr_value(60),
+            "one_on_ones": attr_value(20),
+            "reflexes": attr_value(30),
+            "rushing_out": attr_value(20),
+            "throwing": attr_value(40),
+        },
     )
 
     birth_year = datetime.now().year - age
@@ -141,7 +137,7 @@ def create_sample_player(name, age, position, overall, potential, nationality="E
         potential_skill=potential,
         international_reputation=min(5, overall // 18),
         preferred_foot=PreferredFoot.RIGHT,
-        value=0  # Will be calculated
+        value=0,  # Will be calculated
     )
 
 
@@ -153,7 +149,7 @@ def create_sample_club(name, country, budget):
         country=country,
         transfer_budget=budget,
         wage_budget=budget / 100,  # 1% of transfer budget
-        reputation=random.randint(60, 90)
+        reputation=random.randint(60, 90),
     )
 
 
@@ -188,10 +184,7 @@ def demo_valuation_system():
 
         # Add contract and show impact
         player.contract = PlayerContract(
-            player_id=player.player_id,
-            club_id=uuid4(),
-            weekly_wage=50000,
-            years_remaining=1
+            player_id=player.player_id, club_id=uuid4(), weekly_wage=50000, years_remaining=1
         )
 
         new_value = valuation_engine.calculate_value(player)
@@ -225,7 +218,7 @@ def demo_transfer_search():
         max_age=28,
         min_overall=80,
         max_value=50000000,
-        sort_by="value"
+        sort_by="value",
     )
 
     print("\nSearch Criteria:")
@@ -259,7 +252,7 @@ def demo_transfer_negotiation():
         player_id=player.player_id,
         club_id=selling_club.club_id,
         weekly_wage=60000,
-        years_remaining=3
+        years_remaining=3,
     )
 
     # Calculate player value
@@ -333,21 +326,21 @@ def demo_ai_transfer_planning():
 
     print(f"\nTransfer Philosophy: {plan['philosophy']}")
     print("\nSquad Needs (Top 3):")
-    for i, need in enumerate(plan['needs'][:3], 1):
+    for i, need in enumerate(plan["needs"][:3], 1):
         print(f"  {i}. {need['position']} - Priority: {need['priority']}/10")
 
     print("\nTransfer Targets:")
-    if not plan['targets']:
+    if not plan["targets"]:
         print("  (Would show recommended players from database)")
     else:
-        for i, target in enumerate(plan['targets'][:3], 1):
+        for i, target in enumerate(plan["targets"][:3], 1):
             print(f"  {i}. {target['player']} ({target['position']}) - £{target['value']:,.1f}M")
 
     print("\nPlayers to Sell:")
-    if not plan['sales']:
+    if not plan["sales"]:
         print("  None identified")
     else:
-        for sale in plan['sales']:
+        for sale in plan["sales"]:
             print(f"  - {sale['player']}: {sale['reason']} (£{sale['asking_price']:,.1f}M)")
 
 
@@ -366,7 +359,7 @@ def demo_transfer_window_simulation():
         season_id=1,
         start_date=datetime.now() - timedelta(days=1),
         end_date=datetime.now() + timedelta(days=30),
-        is_active=True
+        is_active=True,
     )
 
     print(f"\nTransfer Window: {window.name}")

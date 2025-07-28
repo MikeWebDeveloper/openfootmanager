@@ -22,13 +22,7 @@ from uuid import UUID
 
 from sqlalchemy.orm import Session
 
-from ..db.models import (
-    Competition,
-    Fixture,
-    League,
-    LeagueSeason,
-    LeagueTableEntry,
-)
+from ..db.models import Competition, Fixture, League, LeagueSeason, LeagueTableEntry
 
 
 class SaveSerializer:

@@ -353,9 +353,7 @@ class TransferMarket:
             to_club_id=buying_club.id,
             transfer_type=negotiation.transfer_type,
             transfer_fee=negotiation.agreed_fee,
-            total_cost=negotiation.agreed_fee
-            + contract.signing_bonus
-            + contract.agent_fee,
+            total_cost=negotiation.agreed_fee + contract.signing_bonus + contract.agent_fee,
             contract_length=contract.length_years,
             weekly_wage=contract.final_wage or contract.weekly_wage,
             agent_fee=contract.agent_fee,
@@ -402,9 +400,7 @@ class TransferMarket:
 
         # Count active listings
         stats["total_listings"] = (
-            self.session.query(TransferListing)
-            .filter(TransferListing.is_active.is_(True))
-            .count()
+            self.session.query(TransferListing).filter(TransferListing.is_active.is_(True)).count()
         )
 
         # Count active negotiations
@@ -468,9 +464,7 @@ class TransferMarket:
                         transfers.append(
                             {
                                 "player": player.name,
-                                "from": (
-                                    player.club.name if player.club else "Free Agent"
-                                ),
+                                "from": (player.club.name if player.club else "Free Agent"),
                                 "to": club.name,
                                 "fee": info["value"],
                             }
@@ -498,9 +492,7 @@ class TransferMarket:
         """Execute an AI-driven transfer."""
         # Make bid at asking price if listed
         if info["listing"]:
-            negotiation, msg = self.make_transfer_bid(
-                player, club, info["listing"].asking_price
-            )
+            negotiation, msg = self.make_transfer_bid(player, club, info["listing"].asking_price)
 
             if negotiation and negotiation.status == TransferStatus.AGREED:
                 # Make contract offer

@@ -46,9 +46,7 @@ class EventOutcome(Enum):
     SHOT_BLOCKED_CHANGE_POSSESSION = auto()  # Only if SHOT_BLOCKED happened first
     SHOT_BLOCKED_BACK = auto()  # Only if SHOT_BLOCKED happened first
     SHOT_SAVED = auto()  # Only if SHOT_ON_GOAL happened first
-    SHOT_SAVED_SECURED = (
-        auto()
-    )  # Only if SHOT_SAVED happend first. Keeps the ball after saving.
+    SHOT_SAVED_SECURED = auto()  # Only if SHOT_SAVED happend first. Keeps the ball after saving.
     SHOT_HIT_POST = auto()  # Only if SHOT_ON_GOAL happened first
     SHOT_HIT_POST_CHANGE_POSSESSION = (
         auto()

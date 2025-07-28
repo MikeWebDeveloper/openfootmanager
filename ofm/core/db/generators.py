@@ -32,7 +32,6 @@ from ofm.core.football.player_attributes import (
 )
 from ofm.core.football.playercontract import PlayerContract
 from ofm.core.settings import Settings
-from ofm.defaults import NAMES_FILE
 
 
 def generate_skill_values(mu: int, sigma: int) -> int:
@@ -79,9 +78,7 @@ class PlayerAttributeGenerator(Generator):
             generate_skill_values(mu, sigma),
         )
 
-    def generate_intelligence_attributes(
-        self, mu: int, sigma: int
-    ) -> IntelligenceAttributes:
+    def generate_intelligence_attributes(self, mu: int, sigma: int) -> IntelligenceAttributes:
         return IntelligenceAttributes(
             generate_skill_values(mu, sigma),
             generate_skill_values(mu, sigma),
@@ -140,7 +137,8 @@ class PlayerAttributeGenerator(Generator):
 
         I'm capping skill lvls to not return negative values or values above 99.
 
-        The planned skill rating should go from 0 to 99 in this simulation, just like other soccer games do.
+        The planned skill rating should go from 0 to 99 in this simulation,
+        just like other soccer games do.
         """
         if mu is None:
             mu = 50
@@ -172,9 +170,7 @@ class PlayerGenerator(Generator):
         max_skill_lvl: int = 99,
     ):
         if min_age > max_age:
-            raise GeneratePlayerError(
-                "Minimum age must not be greater than maximum age!"
-            )
+            raise GeneratePlayerError("Minimum age must not be greater than maximum age!")
 
         self.players_obj: List[Player] = []
         self.settings = settings
@@ -250,17 +246,13 @@ class PlayerGenerator(Generator):
             potential = min(potential, 99)
         return potential
 
-    def generate_positions(
-        self, desired_pos: Optional[list[Positions]]
-    ) -> list[Positions]:
-        if (
-            desired_pos
-        ):  # might be useful if we want to generate teams later, so we don't get entirely random positions
+    def generate_positions(self, desired_pos: Optional[list[Positions]]) -> list[Positions]:
+        # might be useful if we want to generate teams later,
+        # so we don't get entirely random positions
+        if desired_pos:
             return desired_pos
         positions = list(Positions)
-        return random.choices(
-            positions
-        )  # very naive implementation, I will improve it later
+        return random.choices(positions)  # very naive implementation, I will improve it later
 
     @staticmethod
     def generate_preferred_foot() -> PreferredFoot:
@@ -376,9 +368,7 @@ class PlayerGenerator(Generator):
         region: Optional[str] = None,
         desired_pos: Optional[List[Positions]] = None,
     ):
-        self.players_obj = [
-            self.generate_player(region, desired_pos) for _ in range(amount)
-        ]
+        self.players_obj = [self.generate_player(region, desired_pos) for _ in range(amount)]
 
 
 class GenerateSquadError(Exception):
@@ -406,9 +396,7 @@ class TeamGenerator(Generator):
         self.settings = settings
         self.player_gen = PlayerGenerator(self.settings)
 
-    def _get_nationalities(
-        self, country: str, countries: list
-    ) -> Tuple[list[str], list[float]]:
+    def _get_nationalities(self, country: str, countries: list) -> Tuple[list[str], list[float]]:
         nationalities = []
         probabilities = []
         # native
@@ -436,17 +424,11 @@ class TeamGenerator(Generator):
         bonus_for_def = 0
         position = player.get_best_position()
         if any(x in player.positions for x in [Positions.FW, Positions.MF]):
-            bonus_for_goal = player.value * (
-                (player.attributes.get_overall(position) / 2) / 100
-            )
+            bonus_for_goal = player.value * ((player.attributes.get_overall(position) / 2) / 100)
         if any(x in player.positions for x in [Positions.GK, Positions.DF]):
-            bonus_for_def = player.value * (
-                (player.attributes.get_overall(position) / 2) / 100
-            )
+            bonus_for_def = player.value * ((player.attributes.get_overall(position) / 2) / 100)
 
-        return PlayerContract(
-            wage, contract_started, contract_end, bonus_for_goal, bonus_for_def
-        )
+        return PlayerContract(wage, contract_started, contract_end, bonus_for_goal, bonus_for_def)
 
     def generate_player_team(
         self,
@@ -458,9 +440,7 @@ class TeamGenerator(Generator):
         positions: Optional[list[Positions]],
     ) -> PlayerTeam:
         player = self.player_gen.generate_player(nationality, mu, sigma, positions)
-        return PlayerTeam(
-            player, team_id, shirt_number, self.generate_player_contract(player)
-        )
+        return PlayerTeam(player, team_id, shirt_number, self.generate_player_contract(player))
 
     def generate_squad(
         self, team_id: uuid.UUID, country: str, squad_definition: dict, countries: list
@@ -512,9 +492,7 @@ class TeamGenerator(Generator):
             for i, _ in enumerate(needed_positions)
         ]
 
-    def extract_confederation(
-        self, country: str, confederation: list[dict]
-    ) -> Tuple[str, list]:
+    def extract_confederation(self, country: str, confederation: list[dict]) -> Tuple[str, list]:
         country_conf: str = ""
         countries_list = []
         for element in confederation:

@@ -56,9 +56,7 @@ class FoulEvent(SimulationEvent):
         if foul_seriousness is None:
             return PlayerInjury.NO_INJURY
 
-        foul_seriousness = random.choices(
-            [FoulStrength.MEDIUM, FoulStrength.HIGH], [0.9, 0.1]
-        )[0]
+        foul_seriousness = random.choices([FoulStrength.MEDIUM, FoulStrength.HIGH], [0.9, 0.1])[0]
 
         fouled_player_resistance = (
             fouled_player.attributes.physical.endurance
@@ -160,9 +158,7 @@ class FoulEvent(SimulationEvent):
 
         if offending_player.statistics.yellow_cards == 2:
             self.outcome = EventOutcome.FOUL_RED_CARD
-            self.commentary.append(
-                f"{offending_player} now has 2 yellow cards! That's a send off!"
-            )
+            self.commentary.append(f"{offending_player} now has 2 yellow cards! That's a send off!")
 
         if self.outcome == EventOutcome.FOUL_RED_CARD:
             offending_team.add_red_card(

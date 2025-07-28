@@ -111,9 +111,7 @@ class AITransferManager:
                 {
                     "player": player.name,
                     "reason": reason,
-                    "asking_price": self.market.valuation_engine.calculate_value(
-                        player
-                    ),
+                    "asking_price": self.market.valuation_engine.calculate_value(player),
                 }
                 for player, reason in self.outgoing_players
             ],
@@ -294,17 +292,13 @@ class AITransferManager:
                         position=position,
                         priority=priority,
                         role=(
-                            SquadRole.STARTER
-                            if len(current_players) == 0
-                            else SquadRole.ROTATION
+                            SquadRole.STARTER if len(current_players) == 0 else SquadRole.ROTATION
                         ),
                     )
                 )
             elif len(current_players) == min_required:
                 # Could use depth
-                quality_players = [
-                    p for p in current_players if p.attributes.get_overall() >= 70
-                ]
+                quality_players = [p for p in current_players if p.attributes.get_overall() >= 70]
                 if len(quality_players) < min_required:
                     needs.append(
                         SquadNeed(
@@ -335,11 +329,7 @@ class AITransferManager:
 
         # Add aging players on high wages
         for player in self.club.players:
-            if (
-                player.age > 32
-                and player.contract
-                and player.contract.weekly_wage > 100000
-            ):
+            if player.age > 32 and player.contract and player.contract.weekly_wage > 100000:
                 if not any(p[0].id == player.id for p in surplus):
                     surplus.append((player, "High wages for age"))
 
@@ -420,9 +410,7 @@ class AITransferManager:
 
         return criteria
 
-    def _score_transfer_target(
-        self, player: Player, info: Dict, need: SquadNeed
-    ) -> float:
+    def _score_transfer_target(self, player: Player, info: Dict, need: SquadNeed) -> float:
         """Score a potential transfer target."""
         score = 0.0
 
@@ -520,9 +508,7 @@ class AITransferManager:
 
     def _assess_current_need(self, need: SquadNeed) -> int:
         """Re-assess a squad need (may have changed after signings)."""
-        current_players = [
-            p for p in self.club.players if p.positions.get(need.position, 0) >= 15
-        ]
+        current_players = [p for p in self.club.players if p.positions.get(need.position, 0) >= 15]
 
         if len(current_players) >= 3:
             return 0  # No longer needed
@@ -538,9 +524,7 @@ class AITransferManager:
         position = player.get_best_position()
 
         # Get all players in same position
-        position_players = [
-            p for p in self.club.players if p.get_best_position() == position
-        ]
+        position_players = [p for p in self.club.players if p.get_best_position() == position]
 
         # Sort by ability
         position_players.sort(key=lambda p: p.attributes.get_overall(), reverse=True)

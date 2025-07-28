@@ -59,23 +59,17 @@ class PromotionRelegationManager:
 
         # Determine promoted teams
         if league.promotion_places > 0:
-            promoted_teams = [
-                entry.team_id for entry in table[: league.promotion_places]
-            ]
+            promoted_teams = [entry.team_id for entry in table[: league.promotion_places]]
 
         # Determine playoff teams
         if league.playoff_places > 0:
             playoff_start = league.promotion_places
             playoff_end = playoff_start + league.playoff_places
-            playoff_teams = [
-                entry.team_id for entry in table[playoff_start:playoff_end]
-            ]
+            playoff_teams = [entry.team_id for entry in table[playoff_start:playoff_end]]
 
         # Determine relegated teams
         if league.relegation_places > 0:
-            relegated_teams = [
-                entry.team_id for entry in table[-league.relegation_places :]
-            ]
+            relegated_teams = [entry.team_id for entry in table[-league.relegation_places :]]
 
         return PromotionRelegationResult(
             league_id=league.id,
@@ -172,9 +166,7 @@ class PromotionRelegationManager:
         # Convert back to UUIDs
         return [UUID(team_id) for team_id in new_teams]
 
-    def handle_playoffs(
-        self, playoff_teams: List[str], num_promotion_spots: int
-    ) -> List[str]:
+    def handle_playoffs(self, playoff_teams: List[str], num_promotion_spots: int) -> List[str]:
         """
         Handle promotion playoffs
 
@@ -201,9 +193,7 @@ class PromotionRelegationManager:
 
         return incomplete_count == 0
 
-    def _get_league_season(
-        self, league: League, season_year: int
-    ) -> Optional[LeagueSeason]:
+    def _get_league_season(self, league: League, season_year: int) -> Optional[LeagueSeason]:
         """Get league season for a specific year"""
         return (
             self.session.query(LeagueSeason)

@@ -77,10 +77,7 @@ class FixtureGenerator:
                 current_date += timedelta(days=1)
 
             # Check for winter break
-            if (
-                self.winter_break
-                and self.winter_break[0] <= current_date <= self.winter_break[1]
-            ):
+            if self.winter_break and self.winter_break[0] <= current_date <= self.winter_break[1]:
                 current_date = self.winter_break[1] + timedelta(days=1)
                 while current_date.weekday() not in self.match_days:
                     current_date += timedelta(days=1)
@@ -199,6 +196,4 @@ class FixtureGenerator:
                     # Default time if more fixtures than time slots
                     hour, minute = kick_off_times[0]
 
-                fixture.match_date = fixture.match_date.replace(
-                    hour=hour, minute=minute
-                )
+                fixture.match_date = fixture.match_date.replace(hour=hour, minute=minute)

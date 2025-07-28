@@ -77,9 +77,7 @@ class SearchCriteria:
 class TransferSearchEngine:
     """Advanced search engine for transfer market."""
 
-    def __init__(
-        self, session: Session, valuation_engine: PlayerValuationEngine = None
-    ):
+    def __init__(self, session: Session, valuation_engine: PlayerValuationEngine = None):
         self.session = session
         self.valuation_engine = valuation_engine or PlayerValuationEngine()
 
@@ -242,9 +240,7 @@ class TransferSearchEngine:
     def _apply_availability_filters(self, query, criteria: SearchCriteria):
         """Apply availability filters."""
         if criteria.transfer_listed_only:
-            query = query.join(TransferListing).filter(
-                TransferListing.is_active.is_(True)
-            )
+            query = query.join(TransferListing).filter(TransferListing.is_active.is_(True))
 
         if criteria.free_agents_only:
             query = query.filter(Player.club_id.is_(None))
@@ -316,13 +312,9 @@ class TransferSearchEngine:
         elif criteria.sort_by == "age":
             results.sort(key=lambda x: x[0].age, reverse=not criteria.sort_desc)
         elif criteria.sort_by == "overall":
-            results.sort(
-                key=lambda x: x[0].attributes.get_overall(), reverse=criteria.sort_desc
-            )
+            results.sort(key=lambda x: x[0].attributes.get_overall(), reverse=criteria.sort_desc)
         elif criteria.sort_by == "potential":
-            results.sort(
-                key=lambda x: x[0].potential_ability, reverse=criteria.sort_desc
-            )
+            results.sort(key=lambda x: x[0].potential_ability, reverse=criteria.sort_desc)
         elif criteria.sort_by == "value_for_money":
             # Custom sort for recommendations
             results.sort(
@@ -380,9 +372,7 @@ class TransferSearchEngine:
         score -= age_diff * 2
 
         # Overall ability difference
-        ability_diff = abs(
-            player1.attributes.get_overall() - player2.attributes.get_overall()
-        )
+        ability_diff = abs(player1.attributes.get_overall() - player2.attributes.get_overall())
         score -= ability_diff
 
         # Position match

@@ -36,9 +36,7 @@ class LeagueSeason(Base):
     __table_args__ = (UniqueConstraint("league_id", "competition_id"),)
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    league_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey("leagues.id"), nullable=False
-    )
+    league_id: Mapped[int] = mapped_column(Integer, ForeignKey("leagues.id"), nullable=False)
     competition_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("competitions.id"), nullable=False
     )

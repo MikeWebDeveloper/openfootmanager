@@ -128,7 +128,7 @@ See [DEVELOPMENT_ROADMAP.md](DEVELOPMENT_ROADMAP.md) for the complete developmen
 
 ### Completed Implementation Steps
 1. ✅ Set up SQLAlchemy database schema
-2. ✅ Implement basic season/league structure  
+2. ✅ Implement basic season/league structure
 3. ✅ Create fixture generation algorithm
 4. ✅ Build save/load system foundation
 5. ✅ Develop transfer negotiation mechanics

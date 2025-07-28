@@ -22,9 +22,7 @@ class TeamSelectionPage(ttk.Frame):
         super().__init__(*args, **kwargs)
 
         self.title_label = ttk.Label(self, text="Team Selection", font="Arial 24 bold")
-        self.title_label.grid(
-            row=0, column=0, padx=10, pady=10, columnspan=2, sticky=NS
-        )
+        self.title_label.grid(row=0, column=0, padx=10, pady=10, columnspan=2, sticky=NS)
 
         self.button_frame = ttk.Frame(self)
 
@@ -34,6 +32,4 @@ class TeamSelectionPage(ttk.Frame):
         self.cancel_btn = ttk.Button(self.button_frame, text="Cancel")
         self.cancel_btn.pack(side="left", padx=10)
 
-        self.button_frame.grid(
-            row=1, column=0, columnspan=2, padx=10, pady=10, sticky=NS
-        )
+        self.button_frame.grid(row=1, column=0, columnspan=2, padx=10, pady=10, sticky=NS)
