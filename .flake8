@@ -5,7 +5,7 @@ max-line-length = 100
 max-complexity = 10
 
 # Ignore specific errors
-extend-ignore = 
+extend-ignore =
     # E203: whitespace before ':' (conflicts with black)
     E203,
     # W503: line break before binary operator (conflicts with black)
@@ -37,9 +37,6 @@ per-file-ignores =
     */__init__.py:F401,F403
     # Allow more complex test files
     ofm/tests/*:F811,E712
-
-# McCabe complexity
-max-complexity = 10
 
 # Format for error output
 format = %(path)s:%(row)d:%(col)d: %(code)s %(text)s
