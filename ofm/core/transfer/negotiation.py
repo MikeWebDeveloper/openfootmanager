@@ -228,7 +228,6 @@ class TransferNegotiator:
             return False  # Too expensive
 
         # Check negotiation progress
-        initial_gap = negotiation.initial_offer - amount
         current_gap = negotiation.current_offer - amount
 
         # Accept if gap is closing reasonably

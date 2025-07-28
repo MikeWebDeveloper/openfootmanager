@@ -536,7 +536,6 @@ class AITransferManager:
     def _assess_player_importance(self, player: Player) -> SquadRole:
         """Assess how important a player is to the squad."""
         position = player.get_best_position()
-        ability = player.attributes.get_overall()
 
         # Get all players in same position
         position_players = [

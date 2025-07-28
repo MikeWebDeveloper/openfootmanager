@@ -243,11 +243,11 @@ class TransferSearchEngine:
         """Apply availability filters."""
         if criteria.transfer_listed_only:
             query = query.join(TransferListing).filter(
-                TransferListing.is_active == True
+                TransferListing.is_active.is_(True)
             )
 
         if criteria.free_agents_only:
-            query = query.filter(Player.club_id == None)
+            query = query.filter(Player.club_id.is_(None))
 
         return query
 
@@ -285,7 +285,7 @@ class TransferSearchEngine:
             self.session.query(TransferListing)
             .filter(
                 TransferListing.player_id == player.id,
-                TransferListing.is_active == True,
+                TransferListing.is_active.is_(True),
             )
             .first()
         )

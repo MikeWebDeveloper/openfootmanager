@@ -86,7 +86,8 @@ def test_database_initialization():
         settings = Settings()
         settings.get_settings()
         
-        db = DB(settings)
+        # Test DB initialization
+        DB(settings)
         print("✓ DB initialized successfully")
         
         return True

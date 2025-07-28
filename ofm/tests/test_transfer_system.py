@@ -389,7 +389,6 @@ class TestAITransferManager:
     def test_transfer_philosophy(self, sample_club, mock_session, valuation_engine):
         """Test AI philosophy determination."""
         market = TransferMarket(mock_session)
-        ai_manager = AITransferManager(sample_club, market)
 
         # Rich club should prefer stars
         rich_club = sample_club
@@ -471,8 +470,6 @@ class TestTransferMarket:
 
     def test_complete_transfer(self, sample_player, sample_club, mock_session):
         """Test completing a full transfer."""
-        market = TransferMarket(mock_session)
-
         # Create agreed negotiation
         negotiation = TransferNegotiation(
             player_id=sample_player.player_id,

@@ -54,7 +54,7 @@ class TransferMarket:
             .filter(
                 TransferWindow.start_date <= current_date,
                 TransferWindow.end_date >= current_date,
-                TransferWindow.is_active == True,
+                TransferWindow.is_active.is_(True),
             )
             .first()
         )
@@ -97,7 +97,7 @@ class TransferMarket:
             self.session.query(TransferListing)
             .filter(
                 TransferListing.player_id == player.id,
-                TransferListing.is_active == True,
+                TransferListing.is_active.is_(True),
             )
             .all()
         )
@@ -174,7 +174,7 @@ class TransferMarket:
             self.session.query(TransferListing)
             .filter(
                 TransferListing.player_id == player.id,
-                TransferListing.is_active == True,
+                TransferListing.is_active.is_(True),
             )
             .first()
         )
@@ -233,7 +233,7 @@ class TransferMarket:
                 self.session.query(TransferListing)
                 .filter(
                     TransferListing.player_id == negotiation.player_id,
-                    TransferListing.is_active == True,
+                    TransferListing.is_active.is_(True),
                 )
                 .first()
             )
@@ -373,7 +373,7 @@ class TransferMarket:
             self.session.query(TransferListing)
             .filter(
                 TransferListing.player_id == player.id,
-                TransferListing.is_active == True,
+                TransferListing.is_active.is_(True),
             )
             .first()
         )
@@ -403,7 +403,7 @@ class TransferMarket:
         # Count active listings
         stats["total_listings"] = (
             self.session.query(TransferListing)
-            .filter(TransferListing.is_active == True)
+            .filter(TransferListing.is_active.is_(True))
             .count()
         )
 

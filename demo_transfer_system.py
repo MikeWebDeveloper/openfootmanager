@@ -203,9 +203,9 @@ def demo_transfer_search():
     print("TRANSFER MARKET SEARCH DEMO")
     print("="*60)
     
-    session = MockSession()
-    valuation_engine = PlayerValuationEngine()
-    search_engine = TransferSearchEngine(session, valuation_engine)
+    # In real implementation, these would be used:
+    # session = MockSession()
+    # valuation_engine = PlayerValuationEngine()
     
     # Create a searching club
     club = create_sample_club("Manchester Blue", "England", 100000000)
@@ -213,8 +213,9 @@ def demo_transfer_search():
     print(f"\n{club.name} Transfer Budget: £{club.transfer_budget:,.0f}")
     print("\nSearching for a striker...")
     
-    # Create search criteria
-    criteria = SearchCriteria(
+    # Create search criteria (demonstration only)
+    # In real implementation, this would be used with TransferSearchEngine
+    SearchCriteria(
         positions=[DetailedPosition.ST],
         min_age=21,
         max_age=28,
@@ -352,8 +353,8 @@ def demo_transfer_window_simulation():
     print("TRANSFER WINDOW SIMULATION")
     print("="*60)
     
-    session = MockSession()
-    market = TransferMarket(session)
+    # In real implementation, session would be used
+    # session = MockSession()
     
     # Create transfer window
     window = TransferWindow(

@@ -177,20 +177,11 @@ class TransferCalendarIntegration:
             List of transfer windows for that country
         """
         # Different windows for different regions
-        regional_windows = {
-            "RUS": {  # Russia
-                "summer": (2, 2),  # February to February
-                "winter": (7, 8),  # July to August
-            },
-            "BRA": {  # Brazil
-                "summer": (1, 4),  # January to April
-                "winter": (7, 8),  # July to August
-            },
-            "USA": {  # MLS
-                "primary": (2, 5),  # February to May
-                "secondary": (7, 8),  # July to August
-            },
-        }
+        # TODO: Implement regional windows
+        # Examples:
+        # - Russia: February (summer), July-August (winter)
+        # - Brazil: January-April (summer), July-August (winter)  
+        # - USA/MLS: February-May (primary), July-August (secondary)
 
         # Return standard windows for now
         return []

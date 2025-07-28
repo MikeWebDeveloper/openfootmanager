@@ -349,7 +349,7 @@ class SimpleOFMApp:
         """Create a manual save"""
         try:
             save_name = f"Manual Save {datetime.now().strftime('%Y%m%d_%H%M%S')}"
-            save_game = self.save_manager.create_save(
+            self.save_manager.create_save(
                 name=save_name,
                 manager_name="Demo Manager",
                 club_id="demo_club",
