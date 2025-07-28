@@ -1,5 +1,52 @@
 [flake8]
-ignore = E203, E266, E501, W503, F403, F401, F405, C901
-max-line-length = 89
-max-complexity = 18
-select = B,C,E,F,W,T4,B9
+# Flake8 configuration for OpenFootManager
+
+max-line-length = 100
+max-complexity = 10
+
+# Ignore specific errors
+extend-ignore = 
+    # E203: whitespace before ':' (conflicts with black)
+    E203,
+    # W503: line break before binary operator (conflicts with black)
+    W503,
+    # E501: line too long (handled by black)
+    E501
+
+# Exclude directories
+exclude =
+    .git,
+    __pycache__,
+    docs/source/conf.py,
+    old,
+    build,
+    dist,
+    .eggs,
+    *.egg,
+    .tox,
+    .venv,
+    venv,
+    migrations,
+    .mypy_cache,
+    .pytest_cache,
+    htmlcov
+
+# Per file ignores
+per-file-ignores =
+    # Ignore imports in __init__.py files
+    */__init__.py:F401,F403
+    # Allow more complex test files
+    ofm/tests/*:F811,E712
+
+# McCabe complexity
+max-complexity = 10
+
+# Format for error output
+format = %(path)s:%(row)d:%(col)d: %(code)s %(text)s
+
+# Count errors
+count = True
+statistics = True
+
+# Show source code for errors
+show-source = True

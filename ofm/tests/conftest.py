@@ -15,10 +15,20 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import datetime
 import json
+import sys
 import uuid
+from pathlib import Path
+from typing import Generator
 
 import pytest
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session, sessionmaker
 
+# Add parent directories to path for imports
+sys.path.insert(0, str(Path(__file__).parent.parent))
+sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+
+from ..core.db.models.base import Base
 from ..core.db.generators import PlayerGenerator, TeamGenerator
 from ..core.football.club import PlayerTeam
 from ..core.football.formation import Formation
@@ -29,6 +39,12 @@ from ..core.football.team_simulation import TeamSimulation
 from ..core.settings import Settings
 from ..core.simulation.simulation import Fixture, LiveGame, SimulationEngine
 from ..defaults import PROJECT_DIR
+
+# Import test utilities
+try:
+    from .utils import TestDataFactory
+except ImportError:
+    from ofm.tests.utils import TestDataFactory
 
 
 @pytest.fixture
@@ -247,3 +263,77 @@ def live_game(monkeypatch, simulation_teams) -> LiveGame:
     live_game = LiveGame(fixture, home_team_sim, away_team_sim, False, False, True)
     live_game.running = True
     return live_game
+
+
+# Additional fixtures for enhanced testing
+@pytest.fixture(scope="session")
+def test_settings():
+    """Create test settings."""
+    # Settings uses default initialization
+    settings = Settings()
+    # Ensure test directories exist
+    settings.save.mkdir(exist_ok=True)
+    settings.db.mkdir(exist_ok=True)
+    return settings
+
+
+@pytest.fixture(scope="function")
+def test_db_session(test_settings) -> Generator[Session, None, None]:
+    """Create a test database session."""
+    engine = create_engine(
+        "sqlite:///:memory:",
+        connect_args={"check_same_thread": False},
+    )
+    Base.metadata.create_all(bind=engine)
+    
+    TestSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    session = TestSessionLocal()
+    
+    try:
+        yield session
+    finally:
+        session.close()
+        Base.metadata.drop_all(bind=engine)
+
+
+@pytest.fixture
+def test_factory(test_db_session):
+    """Provide test data factory with database session."""
+    return TestDataFactory()
+
+
+@pytest.fixture
+def sample_league(test_db_session):
+    """Create a sample league."""
+    return TestDataFactory.create_test_league(test_db_session)
+
+
+@pytest.fixture
+def sample_club(test_db_session, sample_league):
+    """Create a sample club."""
+    return TestDataFactory.create_test_club(
+        test_db_session,
+        league=sample_league
+    )
+
+
+@pytest.fixture
+def sample_player(test_db_session, sample_club):
+    """Create a sample player."""
+    return TestDataFactory.create_test_player(
+        test_db_session,
+        club=sample_club
+    )
+
+
+@pytest.fixture
+def sample_team(test_db_session):
+    """Create a complete team with players."""
+    return TestDataFactory.create_test_team(test_db_session)
+
+
+@pytest.fixture(autouse=True)
+def reset_singletons():
+    """Reset any singleton instances between tests."""
+    # Add any singleton resets here if needed
+    yield
