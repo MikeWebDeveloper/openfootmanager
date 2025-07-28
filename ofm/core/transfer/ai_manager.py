@@ -13,6 +13,7 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Dict, List, Optional, Set, Tuple
 
+from ..db.models.transfer import ContractStatus, TransferStatus
 from ..football.club import Club
 from ..football.detailed_positions import DetailedPosition
 from ..football.player import Player
