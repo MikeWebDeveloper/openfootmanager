@@ -21,6 +21,11 @@ from .league import League
 from .league_season import LeagueSeason
 from .league_table import LeagueTableEntry
 from .save_game import SaveGame, SaveType
+from .transfer import (
+    TransferStatus, ContractStatus, TransferType,
+    PlayerMarketValue, TransferListing, TransferNegotiation,
+    ContractOffer, TransferHistory, TransferWindow
+)
 
 __all__ = [
     "Base",
@@ -33,4 +38,14 @@ __all__ = [
     "LeagueTableEntry",
     "SaveGame",
     "SaveType",
+    # Transfer models
+    "TransferStatus",
+    "ContractStatus", 
+    "TransferType",
+    "PlayerMarketValue",
+    "TransferListing",
+    "TransferNegotiation",
+    "ContractOffer",
+    "TransferHistory",
+    "TransferWindow",
 ]

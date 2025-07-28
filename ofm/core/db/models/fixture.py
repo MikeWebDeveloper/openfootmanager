@@ -16,13 +16,18 @@
 
 from datetime import datetime
 from enum import Enum
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 from uuid import UUID
 
-from sqlalchemy import DateTime, Enum as SQLEnum, ForeignKey, Integer, String
+from sqlalchemy import DateTime
+from sqlalchemy import Enum as SQLEnum
+from sqlalchemy import ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base import Base
+
+if TYPE_CHECKING:
+    from .competition import Competition
 
 
 class FixtureStatus(Enum):
@@ -49,23 +54,25 @@ class Fixture(Base):
     status: Mapped[FixtureStatus] = mapped_column(
         SQLEnum(FixtureStatus), default=FixtureStatus.SCHEDULED
     )
-    
+
     # Score fields (null until match is played)
     home_score: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
     away_score: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
-    
+
     # Extra time and penalties (for cup competitions)
     home_score_aet: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
     away_score_aet: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
     home_score_pens: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
     away_score_pens: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
-    
+
     # Stadium/venue
     stadium_name: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
     attendance: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
 
     # Relationships
-    competition: Mapped["Competition"] = relationship("Competition", back_populates="fixtures")
+    competition: Mapped["Competition"] = relationship(
+        "Competition", back_populates="fixtures"
+    )
 
     def __repr__(self) -> str:
         return (
@@ -88,14 +95,26 @@ class Fixture(Base):
         """Returns the ID of the winning team, or None if draw/not completed"""
         if not self.is_completed or self.is_draw:
             return None
-        
+
         # Check penalty shootout first
         if self.home_score_pens is not None and self.away_score_pens is not None:
-            return self.home_team_id if self.home_score_pens > self.away_score_pens else self.away_team_id
-        
+            return (
+                self.home_team_id
+                if self.home_score_pens > self.away_score_pens
+                else self.away_team_id
+            )
+
         # Check after extra time
         if self.home_score_aet is not None and self.away_score_aet is not None:
-            return self.home_team_id if self.home_score_aet > self.away_score_aet else self.away_team_id
-        
+            return (
+                self.home_team_id
+                if self.home_score_aet > self.away_score_aet
+                else self.away_team_id
+            )
+
         # Regular time
-        return self.home_team_id if self.home_score > self.away_score else self.away_team_id
+        return (
+            self.home_team_id
+            if self.home_score > self.away_score
+            else self.away_team_id
+        )

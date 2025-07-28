@@ -39,23 +39,23 @@ class SeasonManager:
         self.current_date = datetime.now()
 
     def create_season(
-        self, 
-        league: League, 
-        teams: List[UUID], 
+        self,
+        league: League,
+        teams: List[UUID],
         season_year: int,
         start_date: datetime,
-        end_date: datetime
+        end_date: datetime,
     ) -> LeagueSeason:
         """
         Create a new season for a league
-        
+
         Args:
             league: League object
             teams: List of team IDs participating
             season_year: Year of the season (e.g., 2024)
             start_date: Season start date
             end_date: Season end date
-            
+
         Returns:
             Created LeagueSeason object
         """
@@ -68,55 +68,53 @@ class SeasonManager:
             season=season_year,
             start_date=start_date,
             end_date=end_date,
-            active=True
+            active=True,
         )
         self.session.add(competition)
         self.session.flush()  # Get competition.id
-        
+
         # Create league season
         league_season = LeagueSeason(
             league_id=league.id,
             competition_id=competition.id,
-            _team_ids_json=""  # Will be set via property
+            _team_ids_json="",  # Will be set via property
         )
         league_season.team_ids = teams
         self.session.add(league_season)
         self.session.flush()
-        
+
         # Create league table entries
         for team_id in teams:
             entry = LeagueTableEntry(
                 league_season_id=league_season.id,
                 team_id=str(team_id),
-                position=0  # Will be updated after sorting
+                position=0,  # Will be updated after sorting
             )
             self.session.add(entry)
-        
+
         # Generate fixtures
         fixture_gen = FixtureGenerator(
             start_date=start_date,
             match_days=[5, 6],  # Friday and Saturday
             winter_break=(
-                datetime(season_year, 12, 20),
-                datetime(season_year + 1, 1, 3)
-            ) if league.country in ["ENG", "GER", "ESP"] else None
+                (datetime(season_year, 12, 20), datetime(season_year + 1, 1, 3))
+                if league.country in ["ENG", "GER", "ESP"]
+                else None
+            ),
         )
-        
+
         fixtures = fixture_gen.generate_fixtures(
-            teams=teams,
-            competition_id=competition.id,
-            double_round_robin=True
+            teams=teams, competition_id=competition.id, double_round_robin=True
         )
-        
+
         # Add kick-off times
         fixture_gen.randomize_fixture_times(
-            fixtures,
-            kick_off_times=[(15, 0), (17, 30), (20, 0)]  # 3pm, 5:30pm, 8pm
+            fixtures, kick_off_times=[(15, 0), (17, 30), (20, 0)]  # 3pm, 5:30pm, 8pm
         )
-        
+
         for fixture in fixtures:
             self.session.add(fixture)
-        
+
         self.session.commit()
         return league_season
 
@@ -124,7 +122,7 @@ class SeasonManager:
         """Update league table entries after a fixture is completed"""
         if not fixture.is_completed:
             return
-        
+
         # Find the league season for this fixture
         competition = self.session.get(Competition, fixture.competition_id)
         league_season = (
@@ -132,10 +130,10 @@ class SeasonManager:
             .filter_by(competition_id=competition.id)
             .first()
         )
-        
+
         if not league_season:
             return
-        
+
         # Get table entries for both teams
         home_entry = (
             self.session.query(LeagueTableEntry)
@@ -147,7 +145,7 @@ class SeasonManager:
             .filter_by(league_season_id=league_season.id, team_id=fixture.away_team_id)
             .first()
         )
-        
+
         # Determine result
         if fixture.home_score > fixture.away_score:
             home_result, away_result = "W", "L"
@@ -155,14 +153,18 @@ class SeasonManager:
             home_result, away_result = "L", "W"
         else:
             home_result, away_result = "D", "D"
-        
+
         # Update entries
-        home_entry.update_after_match(fixture.home_score, fixture.away_score, home_result)
-        away_entry.update_after_match(fixture.away_score, fixture.home_score, away_result)
-        
+        home_entry.update_after_match(
+            fixture.home_score, fixture.away_score, home_result
+        )
+        away_entry.update_after_match(
+            fixture.away_score, fixture.home_score, away_result
+        )
+
         # Update positions
         self._update_table_positions(league_season)
-        
+
         self.session.commit()
 
     def _update_table_positions(self, league_season: LeagueSeason) -> None:
@@ -172,33 +174,30 @@ class SeasonManager:
             .filter_by(league_season_id=league_season.id)
             .all()
         )
-        
+
         # Sort by points (desc), goal difference (desc), goals for (desc)
         entries.sort(
-            key=lambda e: (e.points, e.goal_difference, e.goals_for),
-            reverse=True
+            key=lambda e: (e.points, e.goal_difference, e.goals_for), reverse=True
         )
-        
+
         # Update positions
         for i, entry in enumerate(entries, 1):
             entry.position = i
 
     def get_next_fixtures(
-        self, 
-        days_ahead: int = 7,
-        team_id: Optional[UUID] = None
+        self, days_ahead: int = 7, team_id: Optional[UUID] = None
     ) -> List[Fixture]:
         """Get upcoming fixtures"""
         query = self.session.query(Fixture).filter(
             Fixture.match_date >= self.current_date,
-            Fixture.match_date <= self.current_date + timedelta(days=days_ahead)
+            Fixture.match_date <= self.current_date + timedelta(days=days_ahead),
         )
-        
+
         if team_id:
             query = query.filter(
                 (Fixture.home_team_id == team_id) | (Fixture.away_team_id == team_id)
             )
-        
+
         return query.order_by(Fixture.match_date).all()
 
     def advance_date(self, days: int = 1) -> None:

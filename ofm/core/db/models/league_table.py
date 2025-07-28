@@ -14,12 +14,16 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from typing import TYPE_CHECKING
 from uuid import UUID
 
 from sqlalchemy import ForeignKey, Integer, String, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base import Base
+
+if TYPE_CHECKING:
+    from .league_season import LeagueSeason
 
 
 class LeagueTableEntry(Base):
@@ -34,7 +38,7 @@ class LeagueTableEntry(Base):
     )
     team_id: Mapped[str] = mapped_column(String(36), nullable=False)
     position: Mapped[int] = mapped_column(Integer, nullable=False)
-    
+
     # Match statistics
     played: Mapped[int] = mapped_column(Integer, default=0)
     won: Mapped[int] = mapped_column(Integer, default=0)
@@ -42,7 +46,7 @@ class LeagueTableEntry(Base):
     lost: Mapped[int] = mapped_column(Integer, default=0)
     goals_for: Mapped[int] = mapped_column(Integer, default=0)
     goals_against: Mapped[int] = mapped_column(Integer, default=0)
-    
+
     # Form (last 5 matches: W/D/L)
     form: Mapped[str] = mapped_column(String(5), default="")
 
@@ -68,14 +72,14 @@ class LeagueTableEntry(Base):
         self.played += 1
         self.goals_for += goals_scored
         self.goals_against += goals_conceded
-        
+
         if result == "W":
             self.won += 1
         elif result == "D":
             self.drawn += 1
         else:  # "L"
             self.lost += 1
-        
+
         # Update form (keep last 5 results)
         self.form = (self.form + result)[-5:]
 

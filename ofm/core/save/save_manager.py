@@ -57,7 +57,7 @@ class SaveManager:
         current_date: datetime,
         save_type: SaveType = SaveType.MANUAL,
         play_time: int = 0,
-        metadata: Optional[Dict] = None
+        metadata: Optional[Dict] = None,
     ) -> SaveGame:
         """
         Create a new save game
@@ -78,11 +78,11 @@ class SaveManager:
         game_state = self.serializer.extract_current_game_state()
 
         # Add manager info to game state
-        game_state['manager'] = {
-            'name': manager_name,
-            'club_id': club_id,
-            'current_date': current_date.isoformat(),
-            'play_time': play_time
+        game_state["manager"] = {
+            "name": manager_name,
+            "club_id": club_id,
+            "current_date": current_date.isoformat(),
+            "play_time": play_time,
         }
 
         # Serialize the game state
@@ -99,7 +99,7 @@ class SaveManager:
             club_id=club_id,
             play_time=play_time,
             game_state=compressed_state,
-            save_metadata=metadata or {}
+            save_metadata=metadata or {},
         )
 
         self.session.add(save_game)
@@ -139,7 +139,7 @@ class SaveManager:
         self.serializer.restore_game_state(game_state)
 
         # Return manager info for the game to use
-        return game_state.get('manager', {})
+        return game_state.get("manager", {})
 
     def list_saves(self, save_type: Optional[SaveType] = None) -> List[SaveGame]:
         """
@@ -170,7 +170,7 @@ class SaveManager:
         save_id: int,
         current_date: datetime,
         play_time: int,
-        metadata: Optional[Dict] = None
+        metadata: Optional[Dict] = None,
     ) -> SaveGame:
         """
         Update an existing save (for overwriting)
@@ -192,11 +192,11 @@ class SaveManager:
         game_state = self.serializer.extract_current_game_state()
 
         # Add manager info to game state
-        game_state['manager'] = {
-            'name': save_game.manager_name,
-            'club_id': save_game.club_id,
-            'current_date': current_date.isoformat(),
-            'play_time': play_time
+        game_state["manager"] = {
+            "name": save_game.manager_name,
+            "club_id": save_game.club_id,
+            "current_date": current_date.isoformat(),
+            "play_time": play_time,
         }
 
         # Update save game
@@ -217,7 +217,7 @@ class SaveManager:
         club_id: str,
         current_date: datetime,
         play_time: int = 0,
-        metadata: Optional[Dict] = None
+        metadata: Optional[Dict] = None,
     ) -> SaveGame:
         """Create an autosave"""
         # Generate autosave name with timestamp
@@ -231,7 +231,7 @@ class SaveManager:
             current_date=current_date,
             save_type=SaveType.AUTOSAVE,
             play_time=play_time,
-            metadata=metadata
+            metadata=metadata,
         )
 
     def export_save(self, save_id: int, export_path: str) -> None:
@@ -248,21 +248,22 @@ class SaveManager:
 
         # Create export data
         export_data = {
-            'game_version': save_game.game_version,
-            'save_version': save_game.save_version,
-            'name': save_game.name,
-            'manager_name': save_game.manager_name,
-            'club_id': save_game.club_id,
-            'current_date': save_game.current_date.isoformat(),
-            'created_at': save_game.created_at.isoformat(),
-            'play_time': save_game.play_time,
-            'metadata': save_game.save_metadata,
-            'game_state': save_game.game_state
+            "game_version": save_game.game_version,
+            "save_version": save_game.save_version,
+            "name": save_game.name,
+            "manager_name": save_game.manager_name,
+            "club_id": save_game.club_id,
+            "current_date": save_game.current_date.isoformat(),
+            "created_at": save_game.created_at.isoformat(),
+            "play_time": save_game.play_time,
+            "metadata": save_game.save_metadata,
+            "game_state": save_game.game_state,
         }
 
         # Write to file
         import json
-        with open(export_path, 'w') as f:
+
+        with open(export_path, "w") as f:
             json.dump(export_data, f, indent=2)
 
     def import_save(self, import_path: str, name: Optional[str] = None) -> SaveGame:
@@ -278,21 +279,21 @@ class SaveManager:
         """
         import json
 
-        with open(import_path, 'r') as f:
+        with open(import_path, "r") as f:
             import_data = json.load(f)
 
         # Create new save game
         save_game = SaveGame(
-            name=name or import_data['name'],
+            name=name or import_data["name"],
             save_type=SaveType.MANUAL,
-            game_version=import_data['game_version'],
-            save_version=import_data['save_version'],
-            current_date=datetime.fromisoformat(import_data['current_date']),
-            manager_name=import_data['manager_name'],
-            club_id=import_data['club_id'],
-            play_time=import_data.get('play_time', 0),
-            game_state=import_data['game_state'],
-            save_metadata=import_data.get('metadata', {})
+            game_version=import_data["game_version"],
+            save_version=import_data["save_version"],
+            current_date=datetime.fromisoformat(import_data["current_date"]),
+            manager_name=import_data["manager_name"],
+            club_id=import_data["club_id"],
+            play_time=import_data.get("play_time", 0),
+            game_state=import_data["game_state"],
+            save_metadata=import_data.get("metadata", {}),
         )
 
         self.session.add(save_game)
@@ -302,12 +303,15 @@ class SaveManager:
 
     def _cleanup_old_autosaves(self) -> None:
         """Remove old autosaves beyond the maximum limit"""
-        autosaves = self.session.query(SaveGame).filter_by(
-            save_type=SaveType.AUTOSAVE
-        ).order_by(SaveGame.created_at.desc()).all()
+        autosaves = (
+            self.session.query(SaveGame)
+            .filter_by(save_type=SaveType.AUTOSAVE)
+            .order_by(SaveGame.created_at.desc())
+            .all()
+        )
 
         # Delete excess autosaves
-        for save in autosaves[self.MAX_AUTOSAVES:]:
+        for save in autosaves[self.MAX_AUTOSAVES :]:
             self.session.delete(save)
 
         self.session.commit()
@@ -319,16 +323,16 @@ class SaveManager:
             raise ValueError(f"Save game with ID {save_id} not found")
 
         return {
-            'id': save_game.id,
-            'name': save_game.name,
-            'save_type': save_game.save_type.value,
-            'manager_name': save_game.manager_name,
-            'club_id': save_game.club_id,
-            'current_date': save_game.current_date,
-            'created_at': save_game.created_at,
-            'last_modified': save_game.last_modified,
-            'play_time': save_game.play_time,
-            'game_version': save_game.game_version,
-            'save_version': save_game.save_version,
-            'metadata': save_game.save_metadata
+            "id": save_game.id,
+            "name": save_game.name,
+            "save_type": save_game.save_type.value,
+            "manager_name": save_game.manager_name,
+            "club_id": save_game.club_id,
+            "current_date": save_game.current_date,
+            "created_at": save_game.created_at,
+            "last_modified": save_game.last_modified,
+            "play_time": save_game.play_time,
+            "game_version": save_game.game_version,
+            "save_version": save_game.save_version,
+            "metadata": save_game.save_metadata,
         }

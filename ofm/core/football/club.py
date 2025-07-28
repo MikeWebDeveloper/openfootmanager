@@ -34,6 +34,9 @@ class Club:
     squad: list[PlayerTeam]
     stadium: str
     stadium_capacity: int
+    transfer_budget: float = 0.0
+    wage_budget: float = 0.0
+    reputation: int = 50  # 0-100 scale
 
     @classmethod
     def get_from_dict(cls, club: dict, players: list[PlayerTeam]):
@@ -47,6 +50,9 @@ class Club:
             players,
             club["stadium"],
             club["stadium_capacity"],
+            club.get("transfer_budget", 0.0),
+            club.get("wage_budget", 0.0),
+            club.get("reputation", 50),
         )
 
     def serialize(self) -> dict:
@@ -59,8 +65,21 @@ class Club:
             "squad": [player.details.player_id.int for player in self.squad],
             "stadium": self.stadium,
             "stadium_capacity": self.stadium_capacity,
+            "transfer_budget": self.transfer_budget,
+            "wage_budget": self.wage_budget,
+            "reputation": self.reputation,
         }
 
+    @property
+    def players(self) -> list:
+        """Get list of players (convenience property for transfer system)."""
+        return [player.details for player in self.squad]
+    
+    @property
+    def id(self) -> UUID:
+        """Alias for club_id for consistency with database models."""
+        return self.club_id
+    
     def __repr__(self):
         return self.name.encode("utf-8").decode("unicode_escape")
 

@@ -1,0 +1,29 @@
+# Development and testing dependencies
+-r requirements.txt
+
+# Testing
+pytest>=8.2.2
+pytest-cov>=6.0.0
+hypothesis>=6.104.2
+
+# Code quality
+black>=24.4.2
+isort>=5.13.2
+flake8>=7.1.0
+mypy>=1.13.0
+
+# Pre-commit hooks
+pre-commit>=3.7.1
+
+# Documentation
+sphinx>=7.3.7
+pygments>=2.18.0
+docutils>=0.21.2
+
+# Security
+safety>=4.0.0
+bandit>=1.7.0
+
+# Build tools
+build>=1.0.0
+twine>=6.0.0

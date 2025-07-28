@@ -15,13 +15,18 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import json
-from typing import List
+from typing import TYPE_CHECKING, List
 from uuid import UUID
 
 from sqlalchemy import ForeignKey, Integer, String, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base import Base
+
+if TYPE_CHECKING:
+    from .competition import Competition
+    from .league import League
+    from .league_table import LeagueTableEntry
 
 
 class LeagueSeason(Base):
@@ -31,7 +36,9 @@ class LeagueSeason(Base):
     __table_args__ = (UniqueConstraint("league_id", "competition_id"),)
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    league_id: Mapped[int] = mapped_column(Integer, ForeignKey("leagues.id"), nullable=False)
+    league_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("leagues.id"), nullable=False
+    )
     competition_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("competitions.id"), nullable=False
     )
@@ -42,15 +49,15 @@ class LeagueSeason(Base):
     table_entries: Mapped[List["LeagueTableEntry"]] = relationship(
         "LeagueTableEntry", back_populates="league_season"
     )
-    
+
     # Teams participating in this season (stored as JSON)
     _team_ids_json: Mapped[str] = mapped_column(String, nullable=False)
-    
+
     @property
     def team_ids(self) -> List[UUID]:
         """Get team IDs from JSON"""
         return [UUID(id_str) for id_str in json.loads(self._team_ids_json)]
-    
+
     @team_ids.setter
     def team_ids(self, value: List[UUID]) -> None:
         """Set team IDs as JSON"""

@@ -53,14 +53,15 @@ class SaveSerializer:
         serializable_state = self._prepare_for_serialization(game_state)
 
         # Convert to JSON
-        json_data = json.dumps(serializable_state, separators=(',', ':'))
+        json_data = json.dumps(serializable_state, separators=(",", ":"))
 
         # Compress the data
-        compressed = gzip.compress(json_data.encode('utf-8'))
+        compressed = gzip.compress(json_data.encode("utf-8"))
 
         # Return as base64 string for storage
         import base64
-        return base64.b64encode(compressed).decode('utf-8')
+
+        return base64.b64encode(compressed).decode("utf-8")
 
     def deserialize_game_state(self, compressed_data: str) -> Dict[str, Any]:
         """
@@ -75,10 +76,10 @@ class SaveSerializer:
         import base64
 
         # Decode from base64
-        compressed = base64.b64decode(compressed_data.encode('utf-8'))
+        compressed = base64.b64decode(compressed_data.encode("utf-8"))
 
         # Decompress
-        json_data = gzip.decompress(compressed).decode('utf-8')
+        json_data = gzip.decompress(compressed).decode("utf-8")
 
         # Parse JSON
         game_state = json.loads(json_data)
@@ -89,13 +90,13 @@ class SaveSerializer:
     def extract_current_game_state(self) -> Dict[str, Any]:
         """Extract the current game state from the database"""
         state = {
-            'save_version': self.SAVE_VERSION,
-            'saved_at': datetime.utcnow().isoformat(),
-            'competitions': self._serialize_competitions(),
-            'leagues': self._serialize_leagues(),
-            'league_seasons': self._serialize_league_seasons(),
-            'fixtures': self._serialize_fixtures(),
-            'table_entries': self._serialize_table_entries(),
+            "save_version": self.SAVE_VERSION,
+            "saved_at": datetime.utcnow().isoformat(),
+            "competitions": self._serialize_competitions(),
+            "leagues": self._serialize_leagues(),
+            "league_seasons": self._serialize_league_seasons(),
+            "fixtures": self._serialize_fixtures(),
+            "table_entries": self._serialize_table_entries(),
         }
 
         return state
@@ -103,19 +104,21 @@ class SaveSerializer:
     def restore_game_state(self, game_state: Dict[str, Any]) -> None:
         """Restore the game state to the database"""
         # Check save version compatibility
-        save_version = game_state.get('save_version', 0)
+        save_version = game_state.get("save_version", 0)
         if save_version > self.SAVE_VERSION:
-            raise ValueError(f"Save file version {save_version} is newer than supported version {self.SAVE_VERSION}")
+            raise ValueError(
+                f"Save file version {save_version} is newer than supported version {self.SAVE_VERSION}"
+            )
 
         # Clear existing data (in a real game, this would be more sophisticated)
         # For now, we'll assume we're loading into a fresh database
 
         # Restore data in correct order due to foreign key constraints
-        self._restore_leagues(game_state.get('leagues', []))
-        self._restore_competitions(game_state.get('competitions', []))
-        self._restore_league_seasons(game_state.get('league_seasons', []))
-        self._restore_fixtures(game_state.get('fixtures', []))
-        self._restore_table_entries(game_state.get('table_entries', []))
+        self._restore_leagues(game_state.get("leagues", []))
+        self._restore_competitions(game_state.get("competitions", []))
+        self._restore_league_seasons(game_state.get("league_seasons", []))
+        self._restore_fixtures(game_state.get("fixtures", []))
+        self._restore_table_entries(game_state.get("table_entries", []))
 
         self.session.commit()
 
@@ -150,15 +153,15 @@ class SaveSerializer:
         competitions = self.session.query(Competition).all()
         return [
             {
-                'id': comp.id,
-                'name': comp.name,
-                'short_name': comp.short_name,
-                'type': comp.type.value,
-                'country': comp.country,
-                'season': comp.season,
-                'start_date': comp.start_date.isoformat(),
-                'end_date': comp.end_date.isoformat(),
-                'active': comp.active,
+                "id": comp.id,
+                "name": comp.name,
+                "short_name": comp.short_name,
+                "type": comp.type.value,
+                "country": comp.country,
+                "season": comp.season,
+                "start_date": comp.start_date.isoformat(),
+                "end_date": comp.end_date.isoformat(),
+                "active": comp.active,
             }
             for comp in competitions
         ]
@@ -168,16 +171,16 @@ class SaveSerializer:
         leagues = self.session.query(League).all()
         return [
             {
-                'id': league.id,
-                'name': league.name,
-                'country': league.country,
-                'level': league.level,
-                'num_teams': league.num_teams,
-                'promotion_places': league.promotion_places,
-                'playoff_places': league.playoff_places,
-                'relegation_places': league.relegation_places,
-                'league_above_id': league.league_above_id,
-                'league_below_id': league.league_below_id,
+                "id": league.id,
+                "name": league.name,
+                "country": league.country,
+                "level": league.level,
+                "num_teams": league.num_teams,
+                "promotion_places": league.promotion_places,
+                "playoff_places": league.playoff_places,
+                "relegation_places": league.relegation_places,
+                "league_above_id": league.league_above_id,
+                "league_below_id": league.league_below_id,
             }
             for league in leagues
         ]
@@ -187,10 +190,10 @@ class SaveSerializer:
         seasons = self.session.query(LeagueSeason).all()
         return [
             {
-                'id': season.id,
-                'league_id': season.league_id,
-                'competition_id': season.competition_id,
-                'team_ids': [str(tid) for tid in season.team_ids],
+                "id": season.id,
+                "league_id": season.league_id,
+                "competition_id": season.competition_id,
+                "team_ids": [str(tid) for tid in season.team_ids],
             }
             for season in seasons
         ]
@@ -200,15 +203,15 @@ class SaveSerializer:
         fixtures = self.session.query(Fixture).all()
         return [
             {
-                'id': fixture.id,
-                'competition_id': fixture.competition_id,
-                'home_team_id': fixture.home_team_id,
-                'away_team_id': fixture.away_team_id,
-                'match_date': fixture.match_date.isoformat(),
-                'match_week': fixture.match_week,
-                'status': fixture.status.value,
-                'home_score': fixture.home_score,
-                'away_score': fixture.away_score,
+                "id": fixture.id,
+                "competition_id": fixture.competition_id,
+                "home_team_id": fixture.home_team_id,
+                "away_team_id": fixture.away_team_id,
+                "match_date": fixture.match_date.isoformat(),
+                "match_week": fixture.match_week,
+                "status": fixture.status.value,
+                "home_score": fixture.home_score,
+                "away_score": fixture.away_score,
             }
             for fixture in fixtures
         ]
@@ -218,17 +221,17 @@ class SaveSerializer:
         entries = self.session.query(LeagueTableEntry).all()
         return [
             {
-                'id': entry.id,
-                'league_season_id': entry.league_season_id,
-                'team_id': entry.team_id,
-                'position': entry.position,
-                'played': entry.played,
-                'won': entry.won,
-                'drawn': entry.drawn,
-                'lost': entry.lost,
-                'goals_for': entry.goals_for,
-                'goals_against': entry.goals_against,
-                'form': entry.form,
+                "id": entry.id,
+                "league_season_id": entry.league_season_id,
+                "team_id": entry.team_id,
+                "position": entry.position,
+                "played": entry.played,
+                "won": entry.won,
+                "drawn": entry.drawn,
+                "lost": entry.lost,
+                "goals_for": entry.goals_for,
+                "goals_against": entry.goals_against,
+                "form": entry.form,
             }
             for entry in entries
         ]
@@ -246,13 +249,13 @@ class SaveSerializer:
 
         for data in competitions_data:
             # Convert string back to enum
-            data['type'] = CompetitionType(data['type'])
+            data["type"] = CompetitionType(data["type"])
 
             # Convert to datetime if needed
-            if isinstance(data['start_date'], str):
-                data['start_date'] = datetime.fromisoformat(data['start_date'])
-            if isinstance(data['end_date'], str):
-                data['end_date'] = datetime.fromisoformat(data['end_date'])
+            if isinstance(data["start_date"], str):
+                data["start_date"] = datetime.fromisoformat(data["start_date"])
+            if isinstance(data["end_date"], str):
+                data["end_date"] = datetime.fromisoformat(data["end_date"])
 
             competition = Competition(**data)
             self.session.add(competition)
@@ -262,7 +265,7 @@ class SaveSerializer:
         """Restore league seasons from serialized data"""
         for data in seasons_data:
             # Create season without team_ids first
-            team_ids = data.pop('team_ids', [])
+            team_ids = data.pop("team_ids", [])
             season = LeagueSeason(**data, _team_ids_json="")
 
             # Set team_ids using the property
@@ -277,11 +280,11 @@ class SaveSerializer:
 
         for data in fixtures_data:
             # Convert string back to enum and datetime
-            data['status'] = FixtureStatus(data['status'])
+            data["status"] = FixtureStatus(data["status"])
 
             # Convert to datetime if needed
-            if isinstance(data['match_date'], str):
-                data['match_date'] = datetime.fromisoformat(data['match_date'])
+            if isinstance(data["match_date"], str):
+                data["match_date"] = datetime.fromisoformat(data["match_date"])
 
             fixture = Fixture(**data)
             self.session.add(fixture)

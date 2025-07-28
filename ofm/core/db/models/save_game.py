@@ -24,6 +24,7 @@ from .base import Base
 
 class SaveType(enum.Enum):
     """Type of save game"""
+
     MANUAL = "manual"
     AUTOSAVE = "autosave"
     CHECKPOINT = "checkpoint"
@@ -31,31 +32,36 @@ class SaveType(enum.Enum):
 
 class SaveGame(Base):
     """Represents a saved game state"""
+
     __tablename__ = "save_games"
-    
+
     id = Column(Integer, primary_key=True)
     name = Column(String(100), nullable=False)
     save_type = Column(Enum(SaveType), nullable=False, default=SaveType.MANUAL)
-    
+
     # Version information for compatibility
     game_version = Column(String(20), nullable=False)
     save_version = Column(Integer, nullable=False, default=1)
-    
+
     # Game state
     current_date = Column(DateTime, nullable=False)
     manager_name = Column(String(100), nullable=False)
     club_id = Column(String(36), nullable=False)  # UUID as string
-    
+
     # Save metadata
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    last_modified = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    last_modified = Column(
+        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
+    )
     play_time = Column(Integer, default=0)  # Total playtime in seconds
-    
+
     # Compressed game state
     game_state = Column(Text, nullable=False)  # JSON compressed string
-    
+
     # Additional metadata
-    save_metadata = Column(JSON, default=dict)  # Extra info like league position, finances, etc.
-    
+    save_metadata = Column(
+        JSON, default=dict
+    )  # Extra info like league position, finances, etc.
+
     def __repr__(self):
         return f"<SaveGame(name='{self.name}', manager='{self.manager_name}', date='{self.current_date}')>"

@@ -14,12 +14,15 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from typing import List, Optional
+from typing import TYPE_CHECKING, List, Optional
 
 from sqlalchemy import Boolean, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base import Base
+
+if TYPE_CHECKING:
+    from .league_season import LeagueSeason
 
 
 class League(Base):
@@ -35,7 +38,7 @@ class League(Base):
     promotion_places: Mapped[int] = mapped_column(Integer, default=0)
     playoff_places: Mapped[int] = mapped_column(Integer, default=0)
     relegation_places: Mapped[int] = mapped_column(Integer, default=0)
-    
+
     # League above and below for promotion/relegation
     league_above_id: Mapped[Optional[int]] = mapped_column(
         Integer, ForeignKey("leagues.id"), nullable=True
@@ -43,11 +46,11 @@ class League(Base):
     league_below_id: Mapped[Optional[int]] = mapped_column(
         Integer, ForeignKey("leagues.id"), nullable=True
     )
-    
+
     # Whether the league uses a split system (like Scottish Premiership)
     has_split: Mapped[bool] = mapped_column(Boolean, default=False)
     split_after_rounds: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
-    
+
     # Relationships
     seasons: Mapped[List["LeagueSeason"]] = relationship(
         "LeagueSeason", back_populates="league"

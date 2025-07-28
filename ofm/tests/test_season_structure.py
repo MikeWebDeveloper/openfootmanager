@@ -46,7 +46,7 @@ def sample_league(db_session):
         num_teams=20,
         promotion_places=0,
         playoff_places=0,
-        relegation_places=3
+        relegation_places=3,
     )
     db_session.add(league)
     db_session.commit()
@@ -63,8 +63,7 @@ def test_fixture_generator_single_round_robin():
     """Test fixture generation for single round-robin"""
     teams = [uuid.uuid4() for _ in range(4)]
     generator = FixtureGenerator(
-        start_date=datetime(2024, 8, 1),
-        match_days=[5, 6]  # Friday, Saturday
+        start_date=datetime(2024, 8, 1), match_days=[5, 6]  # Friday, Saturday
     )
 
     fixtures = generator.generate_fixtures(teams, 1, double_round_robin=False)
@@ -85,10 +84,7 @@ def test_fixture_generator_single_round_robin():
 def test_fixture_generator_double_round_robin():
     """Test fixture generation for double round-robin"""
     teams = [uuid.uuid4() for _ in range(4)]
-    generator = FixtureGenerator(
-        start_date=datetime(2024, 8, 1),
-        match_days=[5, 6]
-    )
+    generator = FixtureGenerator(start_date=datetime(2024, 8, 1), match_days=[5, 6])
 
     fixtures = generator.generate_fixtures(teams, 1, double_round_robin=True)
 
@@ -108,8 +104,16 @@ def test_fixture_generator_double_round_robin():
     for team1 in teams:
         for team2 in teams:
             if team1 != team2:
-                home_fixtures = [f for f in fixtures if f.home_team_id == str(team1) and f.away_team_id == str(team2)]
-                away_fixtures = [f for f in fixtures if f.home_team_id == str(team2) and f.away_team_id == str(team1)]
+                home_fixtures = [
+                    f
+                    for f in fixtures
+                    if f.home_team_id == str(team1) and f.away_team_id == str(team2)
+                ]
+                away_fixtures = [
+                    f
+                    for f in fixtures
+                    if f.home_team_id == str(team2) and f.away_team_id == str(team1)
+                ]
                 assert len(home_fixtures) == 1
                 assert len(away_fixtures) == 1
 
@@ -118,8 +122,7 @@ def test_fixture_generator_odd_teams():
     """Test fixture generation with odd number of teams"""
     teams = [uuid.uuid4() for _ in range(5)]
     generator = FixtureGenerator(
-        start_date=datetime(2024, 8, 1),
-        match_days=[6]  # Saturday only
+        start_date=datetime(2024, 8, 1), match_days=[6]  # Saturday only
     )
 
     fixtures = generator.generate_fixtures(teams, 1, double_round_robin=False)
@@ -147,7 +150,7 @@ def test_season_manager_create_season(db_session, sample_league, sample_teams):
         teams=sample_teams,
         season_year=2024,
         start_date=datetime(2024, 8, 10),
-        end_date=datetime(2025, 5, 25)
+        end_date=datetime(2025, 5, 25),
     )
 
     assert league_season is not None
@@ -181,7 +184,7 @@ def test_season_manager_update_table(db_session, sample_league):
         teams=teams,
         season_year=2024,
         start_date=datetime(2024, 8, 1),
-        end_date=datetime(2025, 5, 1)
+        end_date=datetime(2025, 5, 1),
     )
 
     # Get first fixture and simulate result
@@ -194,7 +197,9 @@ def test_season_manager_update_table(db_session, sample_league):
     manager.update_table_after_fixture(fixture)
 
     # Check home team entry
-    home_entry = next(e for e in league_season.table_entries if e.team_id == fixture.home_team_id)
+    home_entry = next(
+        e for e in league_season.table_entries if e.team_id == fixture.home_team_id
+    )
     assert home_entry.played == 1
     assert home_entry.won == 1
     assert home_entry.drawn == 0
@@ -205,7 +210,9 @@ def test_season_manager_update_table(db_session, sample_league):
     assert home_entry.form == "W"
 
     # Check away team entry
-    away_entry = next(e for e in league_season.table_entries if e.team_id == fixture.away_team_id)
+    away_entry = next(
+        e for e in league_season.table_entries if e.team_id == fixture.away_team_id
+    )
     assert away_entry.played == 1
     assert away_entry.won == 0
     assert away_entry.drawn == 0

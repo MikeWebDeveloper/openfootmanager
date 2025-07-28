@@ -105,10 +105,44 @@ class Player:
     preferred_foot: PreferredFoot
     value: float
     injury_type: PlayerInjury = PlayerInjury.NO_INJURY
+    club_id: Optional[UUID] = None
+    contract: Optional[PlayerContract] = None
+    injury: Optional[PlayerInjury] = None
 
     @property
     def is_injured(self) -> bool:
         return self.injury_type != PlayerInjury.NO_INJURY
+    
+    @property
+    def age(self) -> int:
+        """Calculate player's current age."""
+        today = datetime.datetime.today().date()
+        if isinstance(self.dob, datetime.datetime):
+            dob = self.dob.date()
+        else:
+            dob = self.dob
+        return (today - dob).days // 365
+    
+    @property
+    def name(self) -> str:
+        """Get player's full name."""
+        return f"{self.first_name} {self.last_name}"
+    
+    @property
+    def id(self) -> UUID:
+        """Alias for player_id for consistency with database models."""
+        return self.player_id
+    
+    @property
+    def potential_ability(self) -> int:
+        """Alias for potential_skill for consistency."""
+        return self.potential_skill
+    
+    @property
+    def club(self):
+        """Get player's club (would be loaded from relationship in real implementation)."""
+        # This is a placeholder - in real implementation would load from database
+        return None
 
     @classmethod
     def get_from_dict(cls, player_dict: dict):
