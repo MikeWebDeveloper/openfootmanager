@@ -1,3 +1,29 @@
+# WORKFLOW DISABLED: January 28, 2025
+# This GitHub Actions workflow has been disabled to reduce costs.
+# The project has switched to local testing only to save on CI/CD expenses.
+#
+# To re-enable this workflow:
+# 1. Rename this file from 'python-app.yml.disabled' back to 'python-app.yml'
+# 2. Review and update the workflow configuration as needed
+# 3. Consider implementing cost-saving measures like:
+#    - Running only on master/main branch pushes
+#    - Reducing the test matrix size
+#    - Using workflow_dispatch for manual triggers
+#
+# The workflow provided comprehensive CI/CD including:
+# - Multi-platform testing (Ubuntu, Windows, macOS)
+# - Multiple Python version testing (3.10, 3.11, 3.12)
+# - Security scanning (safety, bandit, semgrep)
+# - Code quality checks (black, isort, flake8, mypy)
+# - Performance benchmarking
+# - Coverage reporting
+#
+# For local testing, use the following commands:
+# - Run tests: pytest
+# - Run linting: pre-commit run --all-files
+# - Run security checks: safety check
+# - Run type checking: mypy ofm/
+
 name: Python CI/CD Pipeline
 
 on:

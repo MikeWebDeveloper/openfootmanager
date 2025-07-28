@@ -74,6 +74,40 @@ To run the debug version of the project, use the `run.py` file at the root of th
 pipenv run python run.py
 ```
 
+### CI/CD and Testing
+
+**Note: GitHub Actions Disabled (January 28, 2025)**
+
+The GitHub Actions CI/CD workflow has been temporarily disabled to reduce costs. The project currently relies on local testing only. The disabled workflow file is preserved at `.github/workflows/python-app.yml.disabled` for future reference.
+
+For local development, please ensure you run the following checks before submitting code:
+
+```bash
+# Run all tests
+pipenv run pytest
+
+# Run linting and formatting checks
+pipenv run python -m pre-commit run --all-files
+
+# Run specific test categories
+pipenv run pytest -m unit       # Unit tests only
+pipenv run pytest -m integration # Integration tests only
+pipenv run pytest -m fast       # Fast tests only
+
+# Code quality checks
+pipenv run black --check ofm/ --line-length=100
+pipenv run isort --check-only ofm/ --profile black --line-length=100
+pipenv run flake8 ofm/ --config .flake8
+
+# Type checking (if you have mypy installed)
+pipenv run mypy ofm/ --config-file mypy.ini
+
+# Security checks (if you have safety installed)
+pipenv run safety check
+```
+
+When the workflow is re-enabled, it will automatically run comprehensive tests across multiple Python versions (3.10, 3.11, 3.12) and operating systems (Ubuntu, Windows, macOS), along with security scanning and code quality checks.
+
 ### Understanding the code
 
 Most of the most important features are covered by unit tests. For an overview of how the match simulation works, see [Match Simulation in Openfootmanager](docs/source/simulation.rst).

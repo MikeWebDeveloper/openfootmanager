@@ -18,6 +18,13 @@ help:
 	@echo "  make test-critical - Run critical tests only"
 	@echo "  make coverage      - Generate coverage report"
 	@echo ""
+	@echo "Local Testing:"
+	@echo "  make test-local    - Run local test suite with linting"
+	@echo "  make test-watch    - Run tests in watch mode (continuous)"
+	@echo "  make test-quick    - Run quick tests (fail fast)"
+	@echo "  make test-thorough - Run thorough tests with coverage"
+	@echo "  make test-interactive - Interactive test runner menu"
+	@echo ""
 	@echo "Code Quality:"
 	@echo "  make lint          - Run all linters"
 	@echo "  make format        - Format code with black & isort"
@@ -48,6 +55,27 @@ test-fast:
 
 test-slow:
 	pytest -m slow -v
+
+# Local testing targets
+test-local:
+	@echo "Running local test suite..."
+	@./scripts/local_test.sh
+
+test-watch:
+	@echo "Starting test watch mode..."
+	@./scripts/local_test.sh -w
+
+test-quick:
+	@echo "Running quick tests..."
+	@./scripts/local_test.sh -q
+
+test-thorough:
+	@echo "Running thorough tests with coverage..."
+	@./scripts/local_test.sh -c -v
+
+test-interactive:
+	@echo "Starting interactive test runner..."
+	@python scripts/test_runner.py
 
 test-unit:
 	pytest -m unit -v
