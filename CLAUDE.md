@@ -131,12 +131,13 @@ See [DEVELOPMENT_ROADMAP.md](DEVELOPMENT_ROADMAP.md) for the complete developmen
 2. ✅ Implement basic season/league structure  
 3. ✅ Create fixture generation algorithm
 4. ✅ Build save/load system foundation
+5. ✅ Develop transfer negotiation mechanics
 
 ### Next Implementation Steps
-1. Develop transfer negotiation mechanics
-2. Implement financial system
-3. Create AI manager system
-4. Build training and tactics systems
+1. Implement financial system (Phase 1.4)
+2. Create AI manager system (Phase 1.5)
+3. Build training and tactics systems (Phase 2)
+4. Add UI integration for implemented features
 
 ### Development Guidelines
 - Always write tests for new features
