@@ -180,7 +180,7 @@ class TransferCalendarIntegration:
         # TODO: Implement regional windows
         # Examples:
         # - Russia: February (summer), July-August (winter)
-        # - Brazil: January-April (summer), July-August (winter)  
+        # - Brazil: January-April (summer), July-August (winter)
         # - USA/MLS: February-May (primary), July-August (secondary)
 
         # Return standard windows for now

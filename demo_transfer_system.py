@@ -20,42 +20,45 @@ import random
 # Add the project root to the Python path
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
-from ofm.core.football.player import Player, PreferredFoot
-from ofm.core.football.club import Club
-from ofm.core.football.player_attributes import PlayerAttributes
-from ofm.core.football.playercontract import PlayerContract
-from ofm.core.football.positions import Positions
-from ofm.core.football.detailed_positions import DetailedPosition
+# Import after path setup (noqa comments suppress E402)
+from ofm.core.football.player import Player, PreferredFoot  # noqa: E402
+from ofm.core.football.club import Club  # noqa: E402
+from ofm.core.football.player_attributes import PlayerAttributes  # noqa: E402
+from ofm.core.football.playercontract import PlayerContract  # noqa: E402
+from ofm.core.football.positions import Positions  # noqa: E402
+from ofm.core.football.detailed_positions import DetailedPosition  # noqa: E402
 
-from ofm.core.transfer import (
+from ofm.core.transfer import (  # noqa: E402
     PlayerValuationEngine,
     TransferMarket,
     TransferSearchEngine,
     AITransferManager
 )
-from ofm.core.transfer.search import SearchCriteria
-from ofm.core.db.models.transfer import TransferType, TransferWindow
+from ofm.core.transfer.search import SearchCriteria  # noqa: E402
+from ofm.core.db.models.transfer import TransferType, TransferWindow  # noqa: E402
 
 # Mock database session for demo
+
+
 class MockSession:
     def __init__(self):
         self.data = []
-    
+
     def add(self, obj):
         self.data.append(obj)
-    
+
     def commit(self):
         pass
-    
+
     def query(self, model):
         return self
-    
+
     def filter(self, *args):
         return self
-    
+
     def all(self):
         return []
-    
+
     def first(self):
         return None
 
@@ -63,8 +66,9 @@ class MockSession:
 def create_sample_player(name, age, position, overall, potential, nationality="England"):
     """Create a sample player with given attributes."""
     # Generate attributes based on overall rating
-    attr_value = lambda base: max(1, min(99, base + random.randint(-10, 10)))
-    
+    def attr_value(base):
+        return max(1, min(99, base + random.randint(-10, 10)))
+
     attributes = PlayerAttributes(
         technical_attributes={
             'dribbling': attr_value(overall),
@@ -119,9 +123,9 @@ def create_sample_player(name, age, position, overall, potential, nationality="E
             'throwing': attr_value(40)
         }
     )
-    
+
     birth_year = datetime.now().year - age
-    
+
     return Player(
         player_id=uuid4(),
         nationality=nationality,
@@ -155,12 +159,12 @@ def create_sample_club(name, country, budget):
 
 def demo_valuation_system():
     """Demonstrate player valuation system."""
-    print("\n" + "="*60)
+    print("\n" + "=" * 60)
     print("PLAYER VALUATION SYSTEM DEMO")
-    print("="*60)
-    
+    print("=" * 60)
+
     valuation_engine = PlayerValuationEngine()
-    
+
     # Create players of different profiles
     players = [
         ("Young Wonderkid", create_sample_player("Marcus Young", 19, Positions.FW, 75, 92)),
@@ -168,7 +172,7 @@ def demo_valuation_system():
         ("Aging Veteran", create_sample_player("Frank Old", 33, Positions.MF, 82, 82)),
         ("Average Player", create_sample_player("John Average", 24, Positions.DF, 70, 75)),
     ]
-    
+
     for label, player in players:
         value, details = valuation_engine.calculate_value(player, detailed=True)
         print(f"\n{label}: {player.short_name}")
@@ -176,12 +180,12 @@ def demo_valuation_system():
         print(f"  Overall: {player.attributes.get_overall()}")
         print(f"  Potential: {player.potential_skill}")
         print(f"  Market Value: £{value:,.1f}M")
-        print(f"  Breakdown:")
+        print("  Breakdown:")
         print(f"    - Base Value: £{details['base_value']:,.1f}M")
         print(f"    - Age Modifier: {details['age_modifier']:.2f}x")
         print(f"    - Ability Modifier: {details['ability_modifier']:.2f}x")
         print(f"    - Potential Modifier: {details['potential_modifier']:.2f}x")
-        
+
         # Add contract and show impact
         player.contract = PlayerContract(
             player_id=player.player_id,
@@ -189,30 +193,30 @@ def demo_valuation_system():
             weekly_wage=50000,
             years_remaining=1
         )
-        
+
         new_value = valuation_engine.calculate_value(player)
         print(f"  With 1 year left on contract: £{new_value:,.1f}M")
-        
+
         wage = valuation_engine.estimate_wage_demands(player, value)
         print(f"  Estimated wage demands: £{wage:,.0f}/week")
 
 
 def demo_transfer_search():
     """Demonstrate transfer market search."""
-    print("\n" + "="*60)
+    print("\n" + "=" * 60)
     print("TRANSFER MARKET SEARCH DEMO")
-    print("="*60)
-    
+    print("=" * 60)
+
     # In real implementation, these would be used:
     # session = MockSession()
     # valuation_engine = PlayerValuationEngine()
-    
+
     # Create a searching club
     club = create_sample_club("Manchester Blue", "England", 100000000)
-    
+
     print(f"\n{club.name} Transfer Budget: £{club.transfer_budget:,.0f}")
     print("\nSearching for a striker...")
-    
+
     # Create search criteria (demonstration only)
     # In real implementation, this would be used with TransferSearchEngine
     SearchCriteria(
@@ -223,33 +227,33 @@ def demo_transfer_search():
         max_value=50000000,
         sort_by="value"
     )
-    
+
     print("\nSearch Criteria:")
-    print(f"  - Position: Striker")
-    print(f"  - Age: 21-28")
-    print(f"  - Minimum Overall: 80")
-    print(f"  - Maximum Value: £50M")
-    
+    print("  - Position: Striker")
+    print("  - Age: 21-28")
+    print("  - Minimum Overall: 80")
+    print("  - Maximum Value: £50M")
+
     # Note: In real implementation, this would search actual database
     print("\n(In real implementation, this would return matching players from database)")
 
 
 def demo_transfer_negotiation():
     """Demonstrate transfer negotiation process."""
-    print("\n" + "="*60)
+    print("\n" + "=" * 60)
     print("TRANSFER NEGOTIATION DEMO")
-    print("="*60)
-    
+    print("=" * 60)
+
     session = MockSession()
     market = TransferMarket(session)
-    
+
     # Create clubs and player
     buying_club = create_sample_club("Real Barcelona", "Spain", 150000000)
     selling_club = create_sample_club("Ajax", "Netherlands", 50000000)
     player = create_sample_player("Johan Stars", 23, Positions.MF, 82, 90, "Netherlands")
     player.club_id = selling_club.club_id
     player.club = selling_club
-    
+
     # Add contract
     player.contract = PlayerContract(
         player_id=player.player_id,
@@ -257,59 +261,59 @@ def demo_transfer_negotiation():
         weekly_wage=60000,
         years_remaining=3
     )
-    
+
     # Calculate player value
     value = market.valuation_engine.calculate_value(player)
     print(f"\nPlayer: {player.short_name}")
     print(f"Current Club: {selling_club.name}")
     print(f"Market Value: £{value:,.1f}M")
     print(f"Contract: {player.contract.years_remaining} years remaining")
-    
+
     # List player
     print(f"\n{selling_club.name} lists {player.short_name} for transfer")
     listing = market.list_player(player, selling_club, asking_price=value * 1.2)
     print(f"Asking Price: £{listing.asking_price:,.1f}M")
     print(f"Minimum Price: £{listing.min_price:,.1f}M")
-    
+
     # Make bid
     print(f"\n{buying_club.name} makes initial bid")
     bid_amount = value * 0.9
     print(f"Bid Amount: £{bid_amount:,.1f}M")
-    
+
     # Simulate negotiation rounds
     print("\nNegotiation Progress:")
     print(f"Round 1: {buying_club.name} bids £{bid_amount:,.1f}M - Too low")
-    
+
     bid_amount = value * 1.05
     print(f"Round 2: {buying_club.name} raises to £{bid_amount:,.1f}M - Getting closer")
-    
+
     bid_amount = value * 1.15
     print(f"Round 3: {buying_club.name} final offer £{bid_amount:,.1f}M - ACCEPTED")
-    
+
     # Contract negotiation
     print(f"\n{player.short_name} negotiating personal terms with {buying_club.name}")
     wage_demand = market.valuation_engine.estimate_wage_demands(player, bid_amount)
     print(f"Player wage demands: £{wage_demand:,.0f}/week")
     print(f"Club offers: £{wage_demand * 0.9:,.0f}/week")
     print(f"Agreement reached at: £{wage_demand * 0.95:,.0f}/week")
-    
-    print(f"\nTransfer Complete!")
+
+    print("\nTransfer Complete!")
     print(f"{player.short_name} joins {buying_club.name} for £{bid_amount:,.1f}M")
     print(f"Contract: 4 years, £{wage_demand * 0.95:,.0f}/week")
 
 
 def demo_ai_transfer_planning():
     """Demonstrate AI transfer planning."""
-    print("\n" + "="*60)
+    print("\n" + "=" * 60)
     print("AI TRANSFER PLANNING DEMO")
-    print("="*60)
-    
+    print("=" * 60)
+
     session = MockSession()
     market = TransferMarket(session)
-    
+
     # Create AI-controlled club
     club = create_sample_club("Atletico Milan", "Italy", 80000000)
-    
+
     # Add some existing players
     club.players = [
         create_sample_player("Giuseppe Keeper", 28, Positions.GK, 78, 78, "Italy"),
@@ -317,29 +321,29 @@ def demo_ai_transfer_planning():
         create_sample_player("Luigi Midfielder", 24, Positions.MF, 77, 80, "Italy"),
         create_sample_player("Paolo Striker", 31, Positions.FW, 79, 79, "Italy"),
     ]
-    
+
     ai_manager = AITransferManager(club, market)
-    
+
     print(f"\n{club.name} Transfer Planning")
     print(f"Budget: £{club.transfer_budget:,.0f}")
     print(f"Current Squad Size: {len(club.players)}")
-    
+
     # Get transfer plan
     plan = ai_manager.plan_transfer_window()
-    
+
     print(f"\nTransfer Philosophy: {plan['philosophy']}")
-    print(f"\nSquad Needs (Top 3):")
+    print("\nSquad Needs (Top 3):")
     for i, need in enumerate(plan['needs'][:3], 1):
         print(f"  {i}. {need['position']} - Priority: {need['priority']}/10")
-    
-    print(f"\nTransfer Targets:")
+
+    print("\nTransfer Targets:")
     if not plan['targets']:
         print("  (Would show recommended players from database)")
     else:
         for i, target in enumerate(plan['targets'][:3], 1):
             print(f"  {i}. {target['player']} ({target['position']}) - £{target['value']:,.1f}M")
-    
-    print(f"\nPlayers to Sell:")
+
+    print("\nPlayers to Sell:")
     if not plan['sales']:
         print("  None identified")
     else:
@@ -349,13 +353,13 @@ def demo_ai_transfer_planning():
 
 def demo_transfer_window_simulation():
     """Demonstrate transfer window activity."""
-    print("\n" + "="*60)
+    print("\n" + "=" * 60)
     print("TRANSFER WINDOW SIMULATION")
-    print("="*60)
-    
+    print("=" * 60)
+
     # In real implementation, session would be used
     # session = MockSession()
-    
+
     # Create transfer window
     window = TransferWindow(
         name="Summer 2024",
@@ -364,12 +368,12 @@ def demo_transfer_window_simulation():
         end_date=datetime.now() + timedelta(days=30),
         is_active=True
     )
-    
+
     print(f"\nTransfer Window: {window.name}")
     print(f"Opens: {window.start_date.strftime('%Y-%m-%d')}")
     print(f"Closes: {window.end_date.strftime('%Y-%m-%d')}")
     print(f"Days Remaining: {(window.end_date - datetime.now()).days}")
-    
+
     # Simulate some transfer activity
     print("\nRecent Transfer Activity:")
     transfers = [
@@ -378,15 +382,15 @@ def demo_transfer_window_simulation():
         ("Bruno Creator", "Sporting", "Manchester United", 65.0),
         ("Jadon Winger", "Dortmund", "Manchester United", 73.0),
     ]
-    
+
     total_spending = 0
     for player, from_club, to_club, fee in transfers:
         print(f"  - {player}: {from_club} → {to_club} (£{fee:.1f}M)")
         total_spending += fee
-    
+
     print(f"\nTotal Window Spending: £{total_spending:.1f}M")
-    print(f"Average Transfer Fee: £{total_spending/len(transfers):.1f}M")
-    
+    print(f"Average Transfer Fee: £{total_spending / len(transfers):.1f}M")
+
     # Show deadline day activity
     print("\nDeadline Day Activity:")
     print("  - 3 hours remaining: 15 transfers completed")
@@ -397,11 +401,11 @@ def demo_transfer_window_simulation():
 
 def main():
     """Run all demonstrations."""
-    print("\n" + "#"*60)
-    print("#" + " "*18 + "OPENFOOTMANAGER" + " "*18 + "#")
-    print("#" + " "*13 + "TRANSFER SYSTEM DEMO" + " "*13 + "#")
-    print("#"*60)
-    
+    print("\n" + "#" * 60)
+    print("#" + " " * 18 + "OPENFOOTMANAGER" + " " * 18 + "#")
+    print("#" + " " * 13 + "TRANSFER SYSTEM DEMO" + " " * 13 + "#")
+    print("#" * 60)
+
     demos = [
         ("Player Valuation System", demo_valuation_system),
         ("Transfer Market Search", demo_transfer_search),
@@ -409,14 +413,14 @@ def main():
         ("AI Transfer Planning", demo_ai_transfer_planning),
         ("Transfer Window Simulation", demo_transfer_window_simulation),
     ]
-    
+
     for i, (name, demo_func) in enumerate(demos, 1):
         input(f"\nPress Enter to continue to demo {i}/{len(demos)}: {name}")
         demo_func()
-    
-    print("\n" + "="*60)
+
+    print("\n" + "=" * 60)
     print("DEMO COMPLETE")
-    print("="*60)
+    print("=" * 60)
     print("\nThe Transfer System includes:")
     print("  ✓ Sophisticated player valuation algorithm")
     print("  ✓ Transfer market search with filters")
