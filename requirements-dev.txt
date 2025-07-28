@@ -22,7 +22,7 @@ pygments>=2.18.0
 docutils>=0.21.2
 
 # Security
-safety>=4.0.0
+safety>=3.6.0
 bandit>=1.7.0
 
 # Build tools
