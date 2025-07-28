@@ -21,6 +21,7 @@ from ofm.core.db.models.transfer import (
     TransferNegotiation,
     TransferStatus,
     TransferType,
+    TransferWindow,
 )
 from ofm.core.football.club import Club
 from ofm.core.football.detailed_positions import DetailedPosition
@@ -100,17 +101,38 @@ def sample_player():
     return player
 
 
+def create_test_club(
+    name="Test FC",
+    country="England",
+    transfer_budget=50000000.0,
+    wage_budget=500000.0,
+    reputation=75,
+):
+    """Helper to create a test club with all required parameters."""
+    from ofm.core.football.player import PlayerTeam
+
+    # Create empty squad for now
+    squad = []
+
+    return Club(
+        club_id=uuid4(),
+        name=name,
+        country=country,
+        location="London",
+        default_formation="4-4-2",
+        squad=squad,
+        stadium=f"{name} Stadium",
+        stadium_capacity=50000,
+        transfer_budget=transfer_budget,
+        wage_budget=wage_budget,
+        reputation=reputation,
+    )
+
+
 @pytest.fixture
 def sample_club():
     """Create a sample club for testing."""
-    return Club(
-        club_id=uuid4(),
-        name="Test FC",
-        country="England",
-        transfer_budget=50000000.0,
-        wage_budget=500000.0,
-        reputation=75,
-    )
+    return create_test_club()
 
 
 @pytest.fixture
@@ -216,8 +238,7 @@ class TestTransferNegotiation:
     def test_initiate_negotiation(self, sample_player, sample_club, valuation_engine):
         """Test starting a transfer negotiation."""
         negotiator = TransferNegotiator(valuation_engine)
-        selling_club = Club(
-            club_id=uuid4(),
+        selling_club = create_test_club(
             name="Selling FC",
             country="England",
             transfer_budget=10000000.0,
@@ -235,7 +256,7 @@ class TestTransferNegotiation:
     def test_counter_offer(self, sample_player, sample_club, valuation_engine):
         """Test making counter offers."""
         negotiator = TransferNegotiator(valuation_engine)
-        selling_club = Club(club_id=uuid4(), name="Selling FC", country="England")
+        selling_club = create_test_club(name="Selling FC", country="England")
 
         negotiation = negotiator.initiate_negotiation(
             sample_player, sample_club, selling_club, TransferType.PERMANENT, 20000000
@@ -252,7 +273,7 @@ class TestTransferNegotiation:
     def test_loan_negotiation(self, sample_player, sample_club, valuation_engine):
         """Test loan-specific negotiations."""
         negotiator = TransferNegotiator(valuation_engine)
-        selling_club = Club(club_id=uuid4(), name="Selling FC", country="England")
+        selling_club = create_test_club(name="Selling FC", country="England")
 
         negotiation = negotiator.initiate_negotiation(
             sample_player, sample_club, selling_club, TransferType.LOAN
@@ -388,7 +409,7 @@ class TestAITransferManager:
         ai_manager = AITransferManager(sample_club, market)
 
         # Add some players to club
-        sample_club.players = []
+        sample_club.squad = []
 
         analysis = ai_manager._analyze_squad()
 
