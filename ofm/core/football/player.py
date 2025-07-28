@@ -112,7 +112,7 @@ class Player:
     @property
     def is_injured(self) -> bool:
         return self.injury_type != PlayerInjury.NO_INJURY
-    
+
     @property
     def age(self) -> int:
         """Calculate player's current age."""
@@ -122,22 +122,22 @@ class Player:
         else:
             dob = self.dob
         return (today - dob).days // 365
-    
+
     @property
     def name(self) -> str:
         """Get player's full name."""
         return f"{self.first_name} {self.last_name}"
-    
+
     @property
     def id(self) -> UUID:
         """Alias for player_id for consistency with database models."""
         return self.player_id
-    
+
     @property
     def potential_ability(self) -> int:
         """Alias for potential_skill for consistency."""
         return self.potential_skill
-    
+
     @property
     def club(self):
         """Get player's club (would be loaded from relationship in real implementation)."""

@@ -25,6 +25,17 @@ class PlayerContract:
     bonus_for_goal: float
     bonus_for_def: float
 
+    @property
+    def years_remaining(self) -> float:
+        """Calculate years remaining on contract."""
+        from datetime import datetime
+
+        today = datetime.now().date()
+        if self.contract_end < today:
+            return 0
+        days_remaining = (self.contract_end - today).days
+        return days_remaining / 365.25
+
     @classmethod
     def get_from_dict(cls, contract: dict):
         return cls(

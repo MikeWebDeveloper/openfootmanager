@@ -74,12 +74,12 @@ class Club:
     def players(self) -> list:
         """Get list of players (convenience property for transfer system)."""
         return [player.details for player in self.squad]
-    
+
     @property
     def id(self) -> UUID:
         """Alias for club_id for consistency with database models."""
         return self.club_id
-    
+
     def __repr__(self):
         return self.name.encode("utf-8").decode("unicode_escape")
 
